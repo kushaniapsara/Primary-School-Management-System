@@ -4,16 +4,19 @@ import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import Navbar from "../../components/NavbarTeacher";
 
 const Homework = () => {
   const [homeworkList, setHomeworkList] = useState([]); // State for homework
-  const [showModal, setShowModal] = useState(false); // Modal visibility
-  const [newHomework, setNewHomework] = useState({
+  const [showModal, setShowModal] = useState(false); // Modal visibility (for add/edit)
+  const [editingHomework, setEditingHomework] = useState(null); // Track homework being edited
+  const [homeworkData, setHomeworkData] = useState({
     Homework_task: "",
     Due_date: "",
-    Class_ID: "", // Add Class_ID here
-  }); // New homework state
+    Class_ID: "",
+  });
 
   // Fetch homework
   const fetchHomework = async () => {
@@ -32,26 +35,67 @@ const Homework = () => {
   // Handle form input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewHomework({ ...newHomework, [name]: value });
+    setHomeworkData({ ...homeworkData, [name]: value });
   };
 
-  // Add new homework
-  const handleAddHomework = async () => {
+  // Add or update homework
+  const handleSaveHomework = async () => {
     try {
-      const response = await axios.post("http://localhost:5001/api/homework", newHomework);
-      setHomeworkList([...homeworkList, response.data]); // Update state with new homework
-      setShowModal(false); // Close modal
-      setNewHomework({ Homework_task: "", Due_date: "", Class_ID: "" }); // Reset form
+      if (editingHomework) {
+        // Update existing homework
+        await axios.put(`http://localhost:5001/api/homework/${editingHomework.Homework_ID}`, homeworkData);
+        setHomeworkList(
+          homeworkList.map((hw) => (hw.Homework_ID === editingHomework.Homework_ID ? { ...hw, ...homeworkData } : hw))
+        );
+      } else {
+        // Add new homework
+        const response = await axios.post("http://localhost:5001/api/homework", homeworkData);
+        setHomeworkList([...homeworkList, response.data]);
+      }
+
+      setShowModal(false);
+      setEditingHomework(null);
+      setHomeworkData({ Homework_task: "", Due_date: "", Class_ID: "" });
     } catch (error) {
-      console.error("Error adding homework!", error);
-      alert("Failed to add homework. Please try again.");
+      console.error("Error saving homework!", error);
+      alert("Failed to save homework. Please try again.");
+    }
+  };
+
+  // Open modal for adding/editing
+  const openModal = (homework = null) => {
+    if (homework) {
+      setEditingHomework(homework);
+      setHomeworkData({
+        Homework_task: homework.Homework_task,
+        Due_date: homework.Due_date.split("T")[0], // Format date properly
+        Class_ID: homework.Class_ID,
+      });
+    } else {
+      setEditingHomework(null);
+      setHomeworkData({ Homework_task: "", Due_date: "", Class_ID: "" });
+    }
+    setShowModal(true);
+  };
+
+  // Handle deleting homework
+  const handleDeleteHomework = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this homework?")) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5001/api/homework/${id}`);
+      setHomeworkList(homeworkList.filter((hw) => hw.Homework_ID !== id)); // Update UI after delete
+    } catch (error) {
+      console.error("Error deleting homework!", error);
+      alert("Failed to delete homework. Please try again.");
     }
   };
 
   return (
     <div className="flex h-screen">
       <Navbar />
-
       <div className="flex-1 bg-gray-200">
         <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
           <h1 className="text-2xl font-bold">Homework</h1>
@@ -74,7 +118,7 @@ const Homework = () => {
           </div>
           <button
             className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            onClick={() => setShowModal(true)}
+            onClick={() => openModal()}
           >
             <AddIcon className="mr-2" />
             Add Activity
@@ -82,56 +126,70 @@ const Homework = () => {
         </div>
 
         <div className="px-8">
+          {/* Upcoming Homework Section */}
           <div className="bg-blue-900 text-white p-4 rounded-md mb-6">
             <h2 className="text-xl font-bold mb-4">Upcoming Homework</h2>
             <div className="space-y-4">
-              {homeworkList.filter(hw => new Date(hw.Due_date) > new Date()).map(homework => (
-                <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
-                  <div>
-                    <p className="font-bold">Activity: {homework.Homework_task}</p>
-                    <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
+              {homeworkList
+                .filter((hw) => new Date(hw.Due_date) > new Date())
+                .map((homework) => (
+                  <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
+                    <div>
+                      <p className="font-bold">Activity: {homework.Homework_task}</p>
+                      <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button className="text-blue-600 hover:text-blue-800" onClick={() => openModal(homework)}>
+                        <EditIcon />
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => handleDeleteHomework(homework.Homework_ID)}
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </div>
                   </div>
-                  <button className="text-blue-600 hover:text-blue-800">
-                    <EditIcon />
-                  </button>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
 
+          {/* Recent Activities Section */}
           <div className="bg-blue-900 text-white p-4 rounded-md">
             <h2 className="text-xl font-bold mb-4">Recent Activities</h2>
             <div className="space-y-4">
-              {homeworkList.filter(homework => new Date(homework.Due_date) <= new Date()).map(homework => (
-                <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
-                  <div>
-                    <p className="font-bold">Activity: {homework.Homework_task}</p>
-                    <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
+              {homeworkList
+                .filter((homework) => new Date(homework.Due_date) <= new Date())
+                .map((homework) => (
+                  <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
+                    <div>
+                      <p className="font-bold">Activity: {homework.Homework_task}</p>
+                      <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>
 
-        {/* Modal for Adding Homework */}
+        {/* Modal for Adding/Editing Homework */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded-md">
-              <h2 className="text-xl font-bold mb-4">Add New Homework</h2>
+              <h2 className="text-xl font-bold mb-4">{editingHomework ? "Edit Homework" : "Add New Homework"}</h2>
               <input
                 type="text"
                 name="Homework_task"
                 placeholder="Homework Task"
                 className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                value={newHomework.Homework_task}
+                value={homeworkData.Homework_task}
                 onChange={handleInputChange}
               />
               <input
                 type="date"
                 name="Due_date"
                 className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                value={newHomework.Due_date}
+                value={homeworkData.Due_date}
                 onChange={handleInputChange}
               />
               <input
@@ -139,15 +197,15 @@ const Homework = () => {
                 name="Class_ID"
                 placeholder="Class ID"
                 className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                value={newHomework.Class_ID}
+                value={homeworkData.Class_ID}
                 onChange={handleInputChange}
               />
               <div className="flex justify-end space-x-4">
                 <button className="px-4 py-2 bg-gray-300 rounded-md" onClick={() => setShowModal(false)}>
                   Cancel
                 </button>
-                <button className="px-4 py-2 bg-blue-500 text-white rounded-md" onClick={handleAddHomework}>
-                  Add
+                <button className="px-4 py-2 bg-blue-500 text-white rounded-md" onClick={handleSaveHomework}>
+                  {editingHomework ? "Update" : "Add"}
                 </button>
               </div>
             </div>
