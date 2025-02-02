@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const cors = require('cors'); // Import cors middleware
 const homeworkRoutes = require('./routes/HomeworkRoutes'); // Import homework-related routes
 const authRoutes = require('./routes/authRoutes'); // Import authRoutes
+//const attendanceRoutes = require('./routes/attendanceRoutes'); // Import authRoutes
+const extraCurricularRoutes = require("./routes/extraCurricularRoutes");
 
 dotenv.config();
 
@@ -21,6 +23,10 @@ app.use(cors()); // Allow all origins by default
 // Routes
 app.use('/api/homework', homeworkRoutes); // Homework-related routes
 app.use('/api/auth', authRoutes);  // Authentication-related routes
+//app.use('/api', attendanceRoutes); // Attendance-related routes
+app.use("/api", extraCurricularRoutes);
+
+
 
 // Default route for '/'
 app.get('/', (req, res) => {

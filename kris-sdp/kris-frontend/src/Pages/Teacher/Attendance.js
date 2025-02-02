@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/NavbarTeacher';
+import axios from 'axios';  // Make sure to import axios for sending HTTP requests
 
 const students = [
   'Kushani', 'Kavindu', 'Apsara', 'Thulini', 'Sandani', 'Dinithi', 'Koshali', 'Tharindu', 'Shenal', 'Nimeshika'
@@ -7,21 +8,49 @@ const students = [
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday'];
 
+// Status Mapping: 'green' -> Present (1), 'pink' -> Absent (0)
+const statusMap = {
+  'green': 1,  // Present
+  'pink': 0,   // Absent
+};
+
 function Attendance() {
   const [todayAttendance, setTodayAttendance] = useState(
-    Array(students.length).fill('')
+    Array(students.length).fill('')  // Initialize attendance with empty string
   );
 
   const handleCellClick = (index) => {
     setTodayAttendance((prev) => {
       const updated = [...prev];
-      updated[index] = updated[index] === 'green' ? '' : 'green';
+      updated[index] = updated[index] === 'green' ? '' : 'green';  // Toggle status
       return updated;
     });
   };
 
-  const handleSave = () => {
-    setTodayAttendance((prev) => prev.map(status => (status === '' ? 'pink' : status)));
+  const handleSave = async () => {
+    // Create attendance data with student IDs and status (0 or 1)
+    const attendanceData = students.map((student, i) => ({
+      student_id: i + 1,  // Example: student_id should be mapped correctly to your DB
+      status: statusMap[todayAttendance[i]] || 0,  // Default to 0 (Absent) if no status
+    }));
+
+    const date = new Date().toISOString();  // Current date in ISO format
+
+    try {
+      const response = await axios.post('http://your-backend-url/attendance', {
+        date: date,
+        attendance: attendanceData,  // Array of student IDs and their status
+      });
+
+      if (response.status === 200) {
+        alert('Attendance saved successfully!');
+      } else {
+        alert('Failed to save attendance');
+      }
+    } catch (error) {
+      console.error('Error saving attendance:', error);
+      alert('Error saving attendance');
+    }
   };
 
   return (
@@ -29,8 +58,8 @@ function Attendance() {
       {/* Navigation Bar */}
       <Navbar />
 
-     {/* Main Content */}
-     <div className="flex-1 bg-blue-900">
+      {/* Main Content */}
+      <div className="flex-1 bg-blue-900">
         {/* Header */}
         <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
           <h1 className="text-2xl font-bold">Daily Attendance</h1>
