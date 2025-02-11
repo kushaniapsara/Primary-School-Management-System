@@ -1,7 +1,7 @@
 const db = require("../config/db"); // Make sure you have a database connection
 
 exports.getAllActivities = (req, res) => {
-  const sql = "SELECT Activity_name AS name, Activity_emoji AS img FROM ExtraCurricularActivity";
+  const sql = "SELECT Activity_ID AS id, Activity_name AS name, Activity_emoji AS img FROM ExtraCurricularActivity";
   
   db.query(sql, (err, results) => {
     if (err) {
@@ -34,5 +34,19 @@ exports.addActivity = (req, res) => {
     }
 
     res.status(201).json({ message: "Activity added successfully", id: result.insertId });
+  });
+};
+
+
+exports.getActivityById = (req, res) => {
+  const activityId = req.params.id;
+  db.query("SELECT Activity_name AS name, Activity_emoji AS img FROM ExtraCurricularActivity WHERE Activity_ID = ?", [activityId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Activity not found" });
+    }
+    res.json(result[0]); // Return the first match
   });
 };

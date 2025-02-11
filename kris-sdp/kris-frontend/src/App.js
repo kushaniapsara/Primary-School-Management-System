@@ -11,6 +11,8 @@ import ProgressTeacher from './Pages/Teacher/ProgressTeacher.js';
 import TeacherProfile from './Pages/Teacher/TeacherProfile.js';
 import TeacherHomework from './Pages/Teacher/TeacherHomework.js';
 import TeacherStudyMaterials from './Pages/Teacher/TeacherStudyMaterials.js';
+import ActivityDetails from './Pages/Teacher/ActivityDetails.js'; // Import the new page
+
 
 import ParentDashboard from './Pages/Parent/ParentDashboard.js';
 import ParentProgress from './Pages/Parent/ParentProgress.js';
@@ -62,6 +64,8 @@ function App() {
         <Route path = '/TeacherProfile' element = {<TeacherProfile/>}> </Route>
         <Route path = '/TeacherHomework' element = {<TeacherHomework/>}> </Route>
         <Route path = '/TeacherStudyMaterials' element = {<TeacherStudyMaterials/>}> </Route>
+
+        <Route path="/activity/:id" element={<ActivityDetails />} /> {/* Dynamic route */}
 
 
         <Route path = '/ParentDashboard' element = {<ParentDashboard/>}> </Route>

@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 import EmojiPicker from "emoji-picker-react"; // Import emoji picker
 import Navbar from "../../components/NavbarTeacher";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const ExtraActTeacher = () => {
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Control emoji picker visibility
   const [newActivity, setNewActivity] = useState({ name: "", img: "" });
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch activities from backend
   useEffect(() => {
@@ -42,7 +53,7 @@ const ExtraActTeacher = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setActivities([...activities, data]); // Update activities list
+        setActivities([...activities, { id: data.id, name: newActivity.name, img: newActivity.img }]); // Ensure ID consistency
         setOpen(false); // Close dialog
         setNewActivity({ name: "", img: "" }); // Reset form
       })
@@ -53,6 +64,7 @@ const ExtraActTeacher = () => {
     <div className="flex h-screen overflow-hidden">
       <Navbar />
       <div className="flex-1 bg-blue-900 flex flex-col">
+        {/* Header */}
         <div className="flex justify-between items-center p-6 bg-white border-b">
           <h2 className="text-2xl font-bold">Extra Curricular Activities</h2>
           <div className="text-right">
@@ -61,6 +73,7 @@ const ExtraActTeacher = () => {
           </div>
         </div>
 
+        {/* Add Activity Button */}
         <div className="p-6">
           <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
             Add Activity
@@ -71,10 +84,11 @@ const ExtraActTeacher = () => {
         <div className="flex-1 overflow-y-auto p-6">
           <div className="grid grid-cols-3 gap-6">
             {activities.length > 0 ? (
-              activities.map((activity, index) => (
+              activities.map((activity) => (
                 <div
-                  key={index}
-                  className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-green-700 transition duration-300"
+                  key={activity.id} // Use correct ID field
+                  className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-green-900 transition duration-300 cursor-pointer"
+                  onClick={() => navigate(`/activity/${activity.id}`)} // Use `id`
                 >
                   <div className="flex justify-center mb-4">
                     <Avatar sx={{ width: 150, height: 150, fontSize: "5rem" }} className="bg-blue-100">
@@ -111,7 +125,6 @@ const ExtraActTeacher = () => {
                 label="Emoji"
                 name="img"
                 value={newActivity.img}
-                onChange={handleChange}
                 disabled
               />
               <Button onClick={() => setShowEmojiPicker(!showEmojiPicker)} variant="contained">

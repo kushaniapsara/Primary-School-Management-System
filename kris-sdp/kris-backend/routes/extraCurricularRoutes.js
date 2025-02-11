@@ -7,5 +7,9 @@ router.get("/activities", extraCurricularController.getAllActivities);
 
 router.post("/activities", extraCurricularController.addActivity);
 
+router.get("/activities/:id", extraCurricularController.getActivityById);
+
+
+
 
 module.exports = router;
