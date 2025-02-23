@@ -5,6 +5,11 @@ const homeworkRoutes = require('./routes/HomeworkRoutes'); // Import homework-re
 const authRoutes = require('./routes/authRoutes'); // Import authRoutes
 //const attendanceRoutes = require('./routes/attendanceRoutes'); // Import authRoutes
 const extraCurricularRoutes = require("./routes/extraCurricularRoutes");
+const uploadRoutes = require('./routes/uploadRoutes');
+const imageRoutes = require('./routes/imageRoutes');
+const path = require('path');
+
+
 
 dotenv.config();
 
@@ -25,6 +30,12 @@ app.use('/api/homework', homeworkRoutes); // Homework-related routes
 app.use('/api/auth', authRoutes);  // Authentication-related routes
 //app.use('/api', attendanceRoutes); // Attendance-related routes
 app.use("/api", extraCurricularRoutes);
+app.use('/api', uploadRoutes);
+app.use('/api', imageRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 
