@@ -22,6 +22,14 @@ import ParentPayment from './Pages/Parent/ParentPayment.js';
 import ParentProfile from './Pages/Parent/ParentProfile.js'; 
 
 
+
+import AdminLogin from './Pages/Admin/AdminLogin.js'; 
+import AdminDashboard from './Pages/Admin/AdminDashboard.js'; 
+import StudentManagement from './Pages/Admin/StudentManagement.js'; 
+
+
+
+
 function App() {
   const [teacherData, setTeacherData] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
@@ -75,6 +83,11 @@ function App() {
         <Route path = '/ParentPayment' element = {<ParentPayment/>}> </Route>
         <Route path = '/ParentProfile' element = {<ParentProfile/>}> </Route>
 
+
+
+        <Route path = '/AdminLogin' element = {<AdminLogin/>}> </Route>
+        <Route path = '/AdminDashboard' element = {<AdminDashboard/>}> </Route>
+        <Route path = '/StudentManagement' element = {<StudentManagement/>}> </Route>
 
 
 

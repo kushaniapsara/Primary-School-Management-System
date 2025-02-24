@@ -66,8 +66,8 @@ const TeacherDashboard = () => {
           
         </div>
           <div className="text-right">
-            <p className="font-medium">Teacher_002</p>
-            <p className="text-gray-500">Hansi Perera</p>
+            <p className="font-medium">Admin_001</p>
+            <p className="text-gray-500">Champika Pelpita</p>
           </div>
         </header>
       

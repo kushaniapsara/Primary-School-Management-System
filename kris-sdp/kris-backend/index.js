@@ -8,6 +8,7 @@ const extraCurricularRoutes = require("./routes/extraCurricularRoutes");
 const uploadRoutes = require('./routes/uploadRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const path = require('path');
+const adminAuthRoutes = require('./routes/adminAuthRoutes');
 
 
 
@@ -33,6 +34,8 @@ app.use("/api", extraCurricularRoutes);
 app.use('/api', uploadRoutes);
 app.use('/api', imageRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+//app.use('/api/admin-auth', adminAuthRoutes);
+app.use('/api/admin', adminAuthRoutes);
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
