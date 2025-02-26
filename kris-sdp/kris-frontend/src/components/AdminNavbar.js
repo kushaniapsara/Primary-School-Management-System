@@ -21,7 +21,7 @@ const Navbar = () => {
           <ul className="space-y-4">
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <DashboardIcon className="mr-2" />
-              <Link to = "/TeacherDashboard">Dashboard</Link>
+              <Link to = "/AdminDashboard">Dashboard</Link>
             </li>
 
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">

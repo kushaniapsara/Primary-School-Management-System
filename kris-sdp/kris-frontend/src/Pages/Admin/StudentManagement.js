@@ -10,22 +10,31 @@ import {
 } from "@mui/material";
 import Navbar from "../../components/AdminNavbar";
 
-const ExtraActTeacher = () => {
+const StuManagement = () => {
   const [students, setStudents] = useState([]);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1); // Step control for multi-part form
   const [newStudent, setNewStudent] = useState({
     fullName: "",
+    nameWithInitials: "",
     dob: "",
     gender: "",
     grade: "",
     religion: "",
     vaccination: "",
+    onAnyDrugs: "",
     allergies: "",
     contactNumber: "",
     email: "",
     address: "",
     enrollmentDate: "",
+    syllabus: "",
+    sistersBrothersInSameSchool: "", // Added missing field
+    documents: "",
+    password: "",
+    username: "",
+    adminID: "",
+    //parentID: "",
     fatherName: "",
     fatherContact: "",
     fatherNIC: "",
@@ -61,16 +70,25 @@ const ExtraActTeacher = () => {
         setOpen(false);
         setNewStudent({
           fullName: "",
+          nameWithInitials: "",
           dob: "",
           gender: "",
           grade: "",
           religion: "",
           vaccination: "",
+          onAnyDrugs: "",
           allergies: "",
           contactNumber: "",
           email: "",
           address: "",
           enrollmentDate: "",
+          syllabus: "",
+          sistersBrothersInSameSchool: "", // Ensure it resets
+          documents: "",
+          password: "",
+          username: "",
+          adminID: "",
+          parentID: "",
           fatherName: "",
           fatherContact: "",
           fatherNIC: "",
@@ -107,20 +125,30 @@ const ExtraActTeacher = () => {
             {step === 1 ? (
               <>
                 <TextField fullWidth margin="dense" label="Full Name" name="fullName" value={newStudent.fullName} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Name with Initials" name="nameWithInitials" value={newStudent.nameWithInitials} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Date of Birth" name="dob" type="date" value={newStudent.dob} onChange={handleChange} InputLabelProps={{ shrink: true }} />
                 <TextField fullWidth margin="dense" select label="Gender" name="gender" value={newStudent.gender} onChange={handleChange}>
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
                 </TextField>
                 <TextField fullWidth margin="dense" label="Grade" name="grade" value={newStudent.grade} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Religion" name="religion" value={newStudent.religion} onChange={handleChange} />
+                <TextField fullWidth margin="dense" select label="Syllabus" name="syllabus" value={newStudent.syllabus} onChange={handleChange}>
+                  <MenuItem value="Local">Local</MenuItem>
+                  <MenuItem value="Edexcel">Edexcel</MenuItem>
+                </TextField>
                 <TextField fullWidth margin="dense" label="Vaccination Details" name="vaccination" value={newStudent.vaccination} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Allergies & Drug Usage" name="allergies" value={newStudent.allergies} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="On Any Drugs" name="onAnyDrugs" value={newStudent.onAnyDrugs} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Allergies" name="allergies" value={newStudent.allergies} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Contact Number" name="contactNumber" value={newStudent.contactNumber} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Email" name="email" value={newStudent.email} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Address" name="address" value={newStudent.address} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Sisters/Brothers in the Same School" name="sistersBrothersInSameSchool" value={newStudent.sistersBrothersInSameSchool} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Enrollment Date" name="enrollmentDate" type="date" value={newStudent.enrollmentDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
+                <TextField fullWidth margin="dense" label="Username" name="username" value={newStudent.username} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newStudent.password} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Admin_Id" name="adminID" value={newStudent.adminID} onChange={handleChange} />
+
               </>
             ) : (
               <>
@@ -128,15 +156,16 @@ const ExtraActTeacher = () => {
                 <TextField fullWidth margin="dense" label="Name" name="fatherName" value={newStudent.fatherName} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Contact Number" name="fatherContact" value={newStudent.fatherContact} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="NIC" name="fatherNIC" value={newStudent.fatherNIC} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Address" name="fatherAddress" value={newStudent.fatherAddress} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Occupation" name="fatherOccupation" value={newStudent.fatherOccupation} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Office - Address" name="fatherAddress" value={newStudent.fatherAddress} onChange={handleChange} />
 
                 <h3 className="text-lg font-bold mt-6 mb-4">Mother's Details</h3>
                 <TextField fullWidth margin="dense" label="Name" name="motherName" value={newStudent.motherName} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Contact Number" name="motherContact" value={newStudent.motherContact} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="NIC" name="motherNIC" value={newStudent.motherNIC} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Address" name="motherAddress" value={newStudent.motherAddress} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Occupation" name="motherOccupation" value={newStudent.motherOccupation} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Office - Address" name="motherAddress" value={newStudent.motherAddress} onChange={handleChange} />
+
               </>
             )}
           </DialogContent>
@@ -168,4 +197,4 @@ const ExtraActTeacher = () => {
   );
 };
 
-export default ExtraActTeacher;
+export default StuManagement;
