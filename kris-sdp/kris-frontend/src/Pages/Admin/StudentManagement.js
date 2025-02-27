@@ -10,6 +10,12 @@ import {
 } from "@mui/material";
 import Navbar from "../../components/AdminNavbar";
 
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+
+
 const StuManagement = () => {
   const [students, setStudents] = useState([]);
   const [open, setOpen] = useState(false);
@@ -134,6 +140,45 @@ const StuManagement = () => {
           </Button>
         </div>
 
+
+        <div className="p-5">
+  <table className="w-full border-collapse">
+    <thead>
+      <tr className="bg-gray-100 border-b-2 border-black">
+        <th className="border-2 border-black px-4 py-2 text-center"><b>Full Name</b></th>
+        <th className="border-2 border-black px-4 py-2 text-center"><b>Grade</b></th>
+        <th className="border-2 border-black px-4 py-2 text-center"><b>Contact</b></th>
+        <th className="border-2 border-black px-4 py-2 text-center"><b>Syllabus</b></th>
+        <th className="border-2 border-black px-4 py-2 text-center"><b>Edit</b></th>
+        <th className="border-2 border-black px-4 py-2 text-center"><b>Activate/Deactivate</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      {students.map((student) => (
+        <tr key={student.Student_ID} className="border-b-2 border-black bg-gray-200">
+          <td className="border-2 border-black px-4 py-2 text-center">{student.Full_name}</td>
+          <td className="border-2 border-black px-4 py-2 text-center">{student.Grade}</td>
+          <td className="border-2 border-black px-4 py-2 text-center">{student.Contact_number}</td>
+          <td className="border-2 border-black px-4 py-2 text-center">{student.Syllabus}</td>
+          <td className="border-2 border-black px-4 py-2 text-center">
+            <button className="text-blue-500 hover:text-blue-700">
+              <EditIcon />
+            </button>
+          </td>
+          <td className="border-2 border-black px-4 py-2 text-center">
+            <button className="text-red-500 hover:text-red-700">
+              {student.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+
+        
+
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
           <DialogTitle>{step === 1 ? "Add New Student" : "Parent Details"}</DialogTitle>
           <DialogContent>
@@ -212,5 +257,8 @@ const StuManagement = () => {
     </div>
   );
 };
+
+
+
 
 export default StuManagement;
