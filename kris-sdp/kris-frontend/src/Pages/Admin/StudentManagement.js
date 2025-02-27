@@ -21,6 +21,7 @@ const StuManagement = () => {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1); // Step control for multi-part form
   const [profilePhoto, setProfilePhoto] = useState(null); // Added for profile photo
+  const [selectedStudent, setSelectedStudent] = useState(null); // Added for modal functionality
   const [newStudent, setNewStudent] = useState({
     fullName: "",
     nameWithInitials: "",
@@ -126,6 +127,16 @@ const StuManagement = () => {
   };
   
 
+   // Modal Handling Functions
+   const openModal = (student) => {
+    setSelectedStudent(student);
+  };
+
+  const closeModal = () => {
+    setSelectedStudent(null);
+  };
+
+  
   return (
     <div className="flex h-screen overflow-hidden">
       <Navbar />
@@ -142,42 +153,88 @@ const StuManagement = () => {
 
 
         <div className="p-5">
-  <table className="w-full border-collapse">
-    <thead>
-      <tr className="bg-gray-100 border-b-2 border-black">
-        <th className="border-2 border-black px-4 py-2 text-center"><b>Full Name</b></th>
-        <th className="border-2 border-black px-4 py-2 text-center"><b>Grade</b></th>
-        <th className="border-2 border-black px-4 py-2 text-center"><b>Contact</b></th>
-        <th className="border-2 border-black px-4 py-2 text-center"><b>Syllabus</b></th>
-        <th className="border-2 border-black px-4 py-2 text-center"><b>Edit</b></th>
-        <th className="border-2 border-black px-4 py-2 text-center"><b>Activate/Deactivate</b></th>
-      </tr>
-    </thead>
-    <tbody>
-      {students.map((student) => (
-        <tr key={student.Student_ID} className="border-b-2 border-black bg-gray-200">
-          <td className="border-2 border-black px-4 py-2 text-center">{student.Full_name}</td>
-          <td className="border-2 border-black px-4 py-2 text-center">{student.Grade}</td>
-          <td className="border-2 border-black px-4 py-2 text-center">{student.Contact_number}</td>
-          <td className="border-2 border-black px-4 py-2 text-center">{student.Syllabus}</td>
-          <td className="border-2 border-black px-4 py-2 text-center">
-            <button className="text-blue-500 hover:text-blue-700">
-              <EditIcon />
-            </button>
-          </td>
-          <td className="border-2 border-black px-4 py-2 text-center">
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="bg-gray-100 border-b-2 border-black">
+            <th className="border-2 border-black px-4 py-2 text-center"><b>Full Name</b></th>
+            <th className="border-2 border-black px-4 py-2 text-center"><b>Grade</b></th>
+            <th className="border-2 border-black px-4 py-2 text-center"><b>Contact</b></th>
+            <th className="border-2 border-black px-4 py-2 text-center"><b>Syllabus</b></th>
+            <th className="border-2 border-black px-4 py-2 text-center"><b>Status</b></th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student) => (
+            <tr
+              key={student.Student_ID}
+              className="border-b-2 border-black bg-gray-200 cursor-pointer hover:bg-gray-400"
+              onClick={() => openModal(student)} // ✅ Correctly pass student data
+            >
+              <td className="border-2 border-black px-4 py-2 text-center">{student.Full_name}</td>
+              <td className="border-2 border-black px-4 py-2 text-center">{student.Grade}</td>
+              <td className="border-2 border-black px-4 py-2 text-center">{student.Contact_number}</td>
+              <td className="border-2 border-black px-4 py-2 text-center">{student.Syllabus}</td>
+              
+              <td className="border-2 border-black px-4 py-2 text-center">
             <button className="text-red-500 hover:text-red-700">
               {student.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
             </button>
           </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* 🔹 Student Profile Modal */}
+      {selectedStudent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg w-3/4 max-w-4xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Student Details</h2>
+              <button className="text-red-500 text-xl" onClick={closeModal}>✖</button>
+            </div>
+
+            {/* 🔹 Profile Layout */}
+            <div className="flex">
+              {/* Left Panel - Profile & Basic Info */}
+              <div className="w-1/3 text-center border-r-2 pr-4">
+                <img src={`http://localhost:5001/${selectedStudent.Profile_photo}`}  alt="Profile" className="w-32 h-32 mx-auto rounded-full border-2 border-black" />
+                <h3 className="font-semibold mt-2">{selectedStudent.Full_name}</h3>
+                <p>@{selectedStudent.username}</p>
+                <p className="text-sm">{selectedStudent.Gender} | {selectedStudent.Religion}</p>
+              </div>
+
+              {/* Right Panel - Full Details */}
+              <div className="w-2/3 pl-4">
+                <h3 className="font-semibold">📌 Student Information</h3>
+                <p><b>🎂 DOB:</b> {selectedStudent.Date_of_birth}</p>
+                <p><b>🏠 Address:</b> {selectedStudent.Address}</p>
+                <p><b>📞 Contact:</b> {selectedStudent.Contact_number} | {selectedStudent.Email}</p>
+                <p><b>📚 Syllabus & Grade:</b> {selectedStudent.Syllabus} | {selectedStudent.Grade}</p>
+                <p><b>💉 Vaccination:</b> {selectedStudent.Immunization}</p>
+                <p><b>🏫 Siblings in School?</b> {selectedStudent.Sisters_brothers_in_same_school ? "Yes" : "No"}</p>
+                <p><b>📅 Enrollment Date:</b> {selectedStudent.Joined_date}</p>
+                <p><b>📂 Documents:</b> <a href={selectedStudent.Documents} className="text-blue-500 underline">Download</a></p>
+
+                {/* Parent Info */}
+                <h3 className="font-semibold mt-4">👨‍👩‍👧 Parent Information</h3>
+                <p><b>🧔 Father:</b> {selectedStudent.Father_name} | {selectedStudent.Father_contact}</p>
+                <p><b>👩 Mother:</b> {selectedStudent.Mother_name} | {selectedStudent.Mother_contact}</p>
+
+                {/* Actions */}
+                <div className="mt-4 flex justify-between">
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded">✏️ Edit</button>
+                  <button className="bg-red-500 text-white px-4 py-2 rounded">🗑️ Deactivate</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
 
 
-        
+        {/* add student form */}
 
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
           <DialogTitle>{step === 1 ? "Add New Student" : "Parent Details"}</DialogTitle>
