@@ -14,6 +14,7 @@ const StuManagement = () => {
   const [students, setStudents] = useState([]);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1); // Step control for multi-part form
+  const [profilePhoto, setProfilePhoto] = useState(null); // Added for profile photo
   const [newStudent, setNewStudent] = useState({
     fullName: "",
     nameWithInitials: "",
@@ -59,11 +60,19 @@ const StuManagement = () => {
   };
 
   const handleSubmit = () => {
+    const formData = new FormData();
+    Object.keys(newStudent).forEach((key) => {
+      formData.append(key, newStudent[key]);
+    });
+    if (profilePhoto) {
+      formData.append("profilePhoto", profilePhoto);
+    }
+
     fetch("http://localhost:5001/api/students", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newStudent),
+      body: formData, // Send FormData instead of JSON
     })
+
       .then((res) => res.json())
       .then((data) => {
         setStudents([...students, { ...newStudent, id: data.id }]);
@@ -100,10 +109,16 @@ const StuManagement = () => {
           motherAddress: "",
           motherOccupation: "",
         });
+        setProfilePhoto(null);
         setStep(1);
       })
       .catch((err) => console.error("Error adding student:", err));
   };
+
+  const handleFileChange = (e) => {
+    setProfilePhoto(e.target.files[0]); // Store the selected file in state
+  };
+  
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -148,6 +163,7 @@ const StuManagement = () => {
                 <TextField fullWidth margin="dense" label="Username" name="username" value={newStudent.username} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newStudent.password} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Admin_Id" name="adminID" value={newStudent.adminID} onChange={handleChange} />
+                <input type="file" accept="image/*" onChange={handleFileChange} style={{ marginTop: "15px" }} /> {/* Added file input */}
 
               </>
             ) : (
