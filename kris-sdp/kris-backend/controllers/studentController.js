@@ -27,7 +27,7 @@ exports.addStudent = (req, res) => {
     }
 
     const {
-      fullName, nameWithInitials, email, gender, religion, dob, address, contactNumber, syllabus, vaccination, 
+      fullName, nameWithInitials, email, gender, religion, dob, address, contactNumber, grade, syllabus, vaccination, 
       onAnyDrugs, allergies, sistersBrothersInSameSchool, enrollmentDate, documents, password, adminID, username,
       fatherName, fatherContact, fatherNIC, fatherAddress, fatherOccupation,
       motherName, motherContact, motherNIC, motherAddress, motherOccupation
@@ -57,7 +57,7 @@ exports.addStudent = (req, res) => {
       // Insert Student
       const studentData = {
         Full_name: fullName, Name_with_initials: nameWithInitials, Email: email, Gender: gender, Religion: religion,
-        Date_of_birth: dob, Address: address, Contact_number: contactNumber, Syllabus: syllabus, Immunization: vaccination, 
+        Date_of_birth: dob, Address: address, Contact_number: contactNumber, Grade: grade, Syllabus: syllabus, Immunization: vaccination, 
         On_any_drugs: onAnyDrugs, Allergies: allergies, Sisters_brothers_in_same_school: sistersBrothersInSameSchool, 
         Joined_date: enrollmentDate, Documents: documents, password: password, Admin_ID: adminID, Parent_ID: parentID, username: username,
         Profile_photo: profilePhotoPath // Store image path in database

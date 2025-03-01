@@ -31,7 +31,7 @@ const Navbar = () => {
 
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AssignmentIcon className="mr-2" />
-              <Link to = "/TeacherHomework">Teacher Management</Link>
+              <Link to = "/TeacherManagement">Teacher Management</Link>
             </li>
 
 

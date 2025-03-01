@@ -26,6 +26,7 @@ import ParentProfile from './Pages/Parent/ParentProfile.js';
 import AdminLogin from './Pages/Admin/AdminLogin.js'; 
 import AdminDashboard from './Pages/Admin/AdminDashboard.js'; 
 import StudentManagement from './Pages/Admin/StudentManagement.js'; 
+import TeacherManagement from './Pages/Admin/TeacherManagement.js'; 
 
 
 
@@ -88,6 +89,8 @@ function App() {
         <Route path = '/AdminLogin' element = {<AdminLogin/>}> </Route>
         <Route path = '/AdminDashboard' element = {<AdminDashboard/>}> </Route>
         <Route path = '/StudentManagement' element = {<StudentManagement/>}> </Route>
+        <Route path = '/TeacherManagement' element = {<TeacherManagement/>}> </Route>
+
 
 
 

@@ -99,7 +99,7 @@ const StuManagement = () => {
           address: "",
           enrollmentDate: "",
           syllabus: "",
-          sistersBrothersInSameSchool: "", // Ensure it resets
+          sistersBrothersInSameSchool: "", 
           documents: "",
           password: "",
           username: "",

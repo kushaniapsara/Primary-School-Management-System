@@ -11,6 +11,7 @@ const path = require('path');
 const adminAuthRoutes = require('./routes/adminAuthRoutes');
 const studentRoutes = require("./routes/studentRoutes");
 const parentRoutes = require("./routes/parentRoutes");
+const teacherRoutes = require("./routes/teacherRoutes");
 
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/admin', adminAuthRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/parents", parentRoutes);
+app.use("/api/teachers", teacherRoutes);
 
 
 
