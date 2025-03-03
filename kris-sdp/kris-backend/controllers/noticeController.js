@@ -1,8 +1,8 @@
-const HomeworkModel = require("../models/NoticeModel");
+const noticeModel = require("../models/noticeModel");
 
-// Get all homework
+// Get all notice
 exports.getAllNotice = (req, res) => {
-  HomeworkModel.getAllNotice((err, results) => {
+  noticeModel.getAllNotice((err, results) => {
     if (err) {
       console.error("Error fetching all Notice:", err.message);
       return res.status(500).json({ error: err.message });
@@ -11,53 +11,54 @@ exports.getAllNotice = (req, res) => {
   });
 };
 
-// Add new homework
+// Add new notice
 exports.addNotice = (req, res) => {
-  const { Homework_task, Due_date, Class_ID } = req.body;
-  if (!Homework_task || !Due_date || !Class_ID) {
-    return res.status(400).json({ error: "Homework_task, Due_date, and Class_ID are required" });
+  const { Heading, Date, Description, Admin_ID } = req.body;
+  if (!Heading || !Date || !Description || !Admin_ID) {
+    return res.status(400).json({ error: "Heading, Date, Admin_ID and Description are required" });
   }
 
-  HomeworkModel.addNotice({ Homework_task, Due_date, Class_ID }, (err, results) => {
+  noticeModel.addNotice({ Heading, Date, Description, Admin_ID }, (err, results) => {
     if (err) {
       console.error("Error adding Notice:", err.message);
       return res.status(500).json({ error: err.message });
     }
-    res.status(201).json({ Homework_ID: results.insertId, Homework_task, Due_date, Class_ID });
+    res.status(201).json({ Notice_ID: results.insertId, Heading, Date, Description, Admin_ID });
   });
 };
 
 // Update existing homework
 exports.updateNotice = (req, res) => {
   const { id } = req.params;
-  const { Homework_task, Due_date, Class_ID } = req.body;
+  const { Heading, Date, Description, Admin_ID } = req.body;
 
-  if (!Homework_task || !Due_date || !Class_ID) {
-    return res.status(400).json({ error: "Homework_task, Due_date, and Class_ID are required" });
+  if (!Heading || !Date || !Admin_ID || !Description) {
+    return res.status(400).json({ error: "Heading, Date, Admin_ID and Description are required" });
   }
 
-  HomeworkModel.updateNotice(id, { Homework_task, Due_date, Class_ID }, (err, results) => {
+  noticeModel.updateNotice(id, { Heading, Date, Description, Admin_ID}, (err, results) => {
     if (err) {
-      console.error("Error updating homework:", err.message);
+      console.error("Error updating notice:", err.message);
       return res.status(500).json({ error: err.message });
     }
-    res.json({ message: "Homework updated successfully" });
+    res.json({ message: "notice updated successfully" });
   });
 };
 
-// Delete homework
+// Delete notice
 exports.deleteNotice = (req, res) => {
   const { id } = req.params;
   
-  HomeworkModel.deleteNotice(id, (err, results) => {
+  noticeModel.deleteNotice(id, (err, results) => {
     if (err) {
-      console.error("Error deleting homework:", err.message);
+      console.error("Error deleting notice:", err.message);
       return res.status(500).json({ error: err.message });
     }
-    res.json({ message: "Homework deleted successfully" });
+    res.json({ message: "notice deleted successfully" });
   });
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*// Get upcoming homework
 exports.getUpcomingNotice = (req, res) => {
   HomeworkModel.getUpcomingHomework((err, results) => {

@@ -12,6 +12,7 @@ const adminAuthRoutes = require('./routes/adminAuthRoutes');
 const studentRoutes = require("./routes/studentRoutes");
 const parentRoutes = require("./routes/parentRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
+const NoticeRoutes = require("./routes/NoticeRoutes");
 
 
 dotenv.config();
@@ -41,6 +42,7 @@ app.use('/api/admin', adminAuthRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/parents", parentRoutes);
 app.use("/api/teachers", teacherRoutes);
+app.use('/api/notice', NoticeRoutes); // Homework-related routes
 
 
 

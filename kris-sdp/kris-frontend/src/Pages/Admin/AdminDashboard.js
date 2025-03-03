@@ -13,6 +13,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import Notice from "../Common/Notice"; // Adjust path if needed
+
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -127,7 +129,9 @@ const TeacherDashboard = () => {
         </section>
 
         {/* Special Notices */}
-        <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
+        <Notice />
+
+       {/* <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
           <h2 className="text-lg font-bold">Special Notices</h2>
           <ul className="space-y-2">
             <li className="bg-white px-4 py-2 rounded">
@@ -140,7 +144,7 @@ const TeacherDashboard = () => {
               Chess class will be held every Sunday from 3rd November 2024
             </li>
           </ul>
-        </section>
+        </section>*/}
       </div>
     </div>
   );
