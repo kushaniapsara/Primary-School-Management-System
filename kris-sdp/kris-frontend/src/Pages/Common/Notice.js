@@ -98,9 +98,7 @@ const Notice = () => {
   return (
     <div className="flex h-screen">
       <div className="flex-1 bg-gray-200">
-        <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
-          <h1 className="text-2xl font-bold">Special Notices</h1>
-        </header>
+       
 
         <div className="flex justify-between items-center px-8 py-4">
           <div className="flex space-x-4">
@@ -125,7 +123,7 @@ const Notice = () => {
         <div className="px-8">
           {/* Notice Section */}
           <div className="bg-blue-900 text-white p-4 rounded-md mb-6">
-            <h2 className="text-xl font-bold mb-4">Notices</h2>
+            <h2 className="text-xl font-bold mb-4"> Special Notices</h2>
             <div className="space-y-4">
               {noticeList.length > 0 ? (
                 noticeList.map((notice) => (

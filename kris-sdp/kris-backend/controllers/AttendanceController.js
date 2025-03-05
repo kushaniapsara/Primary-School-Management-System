@@ -1,29 +1,39 @@
-/*const AttendanceModel = require('../models/AttendanceModel');
+const AttendanceModel = require('../models/AttendanceModel');
 
-// Controller function to handle saving attendance data
-const saveAttendance = async (req, res) => {
-  const { date, attendance } = req.body;
-
-  try {
-    // Transform attendance data before saving it (e.g., add student_id and status)
-    const attendanceData = attendance.map(entry => ({
-      student_id: entry.student_id,
-      date: date,
-      status: entry.status,
-    }));
-
-    // Call the model function to save attendance
-    const result = await AttendanceModel.saveAttendance(attendanceData);
-
-    if (result) {
-      return res.status(200).send('Attendance saved successfully');
-    } else {
-      return res.status(500).send('Error saving attendance');
-    }
-  } catch (error) {
-    console.error('Error in controller:', error);
-    return res.status(500).send('Error saving attendance');
-  }
+// Fetch students
+const getStudents = (req, res) => {
+    AttendanceModel.getStudents((error, students) => {
+        if (error) {
+            res.status(500).json({ error: 'Failed to fetch students' });
+            return;
+        }
+        res.json(students);
+    });
 };
 
-module.exports = { saveAttendance };*/
+// Fetch attendance records for the last 5 days
+const getAttendance = (req, res) => {
+    AttendanceModel.getAttendance((error, attendance) => {
+        if (error) {
+            res.status(500).json({ error: 'Failed to fetch attendance' });
+            return;
+        }
+        res.json(attendance);
+    });
+};
+
+// Save attendance records
+const saveAttendance = (req, res) => {
+    const { date, attendance } = req.body;
+
+    AttendanceModel.saveAttendance(date, attendance, (error, result) => {
+        if (error) {
+            res.status(500).json({ error: 'Error saving attendance' });
+            return;
+        }
+
+        res.status(200).json({ message: 'Attendance saved successfully' });
+    });
+};
+
+module.exports = { getStudents, getAttendance, saveAttendance };

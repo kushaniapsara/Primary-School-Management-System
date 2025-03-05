@@ -13,6 +13,7 @@ const studentRoutes = require("./routes/studentRoutes");
 const parentRoutes = require("./routes/parentRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const NoticeRoutes = require("./routes/NoticeRoutes");
+const AttendanceRoutes = require("./routes/AttendanceRoutes");
 
 
 dotenv.config();
@@ -32,7 +33,6 @@ app.use(cors()); // Allow all origins by default
 // Routes
 app.use('/api/homework', homeworkRoutes); // Homework-related routes
 app.use('/api/auth', authRoutes);  // Authentication-related routes
-//app.use('/api', attendanceRoutes); // Attendance-related routes
 app.use("/api", extraCurricularRoutes);
 app.use('/api', uploadRoutes);
 app.use('/api', imageRoutes);
@@ -43,6 +43,7 @@ app.use("/api/students", studentRoutes);
 app.use("/api/parents", parentRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use('/api/notice', NoticeRoutes); // Homework-related routes
+app.use('/api', AttendanceRoutes); // Attendance-related routes
 
 
 

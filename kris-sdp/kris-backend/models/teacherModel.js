@@ -9,3 +9,4 @@ const Teacher = {
 };
 
 module.exports = Teacher;
+//these files for login

@@ -35,7 +35,7 @@ function App() {
   const [teacherData, setTeacherData] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
 
-  // Fetch teacher dashboard data from backend
+  /*// Fetch teacher dashboard data from backend
   useEffect(() => {
     const fetchTeacherData = async () => {
       try {
@@ -57,7 +57,7 @@ function App() {
 
     fetchTeacherData();
     fetchAttendanceData();
-  }, []);
+  }, []); */
 
   return (
     <div>
