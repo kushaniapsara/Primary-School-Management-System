@@ -40,14 +40,24 @@ const ActivityDetails = () => {
   }, [id]);
 
   // Handle multiple image uploads
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const newImages = files.map((file) => ({
-      id: URL.createObjectURL(file), // Temporary URL for preview
-      src: URL.createObjectURL(file),
-    }));
-    setImages((prev) => [...prev, ...newImages]);
-  };
+  const handleImageUpload = async (event) => {
+    const files = event.target.files;
+    const formData = new FormData();
+    formData.append("activityId", id); // Ensure activityId is sent
+    formData.append("image", files[0]); // Assuming single upload for now
+
+    try {
+        const response = await fetch("http://localhost:5001/api/upload", {
+            method: "POST",
+            body: formData,
+        });
+        const data = await response.json();
+        console.log("Upload response:", data);
+    } catch (error) {
+        console.error("Upload error:", error);
+    }
+};
+
 
   // Remove image from state
   const handleRemoveImage = (id) => {
@@ -117,11 +127,8 @@ const ActivityDetails = () => {
             ) : Array.isArray(images) && images.length > 0 ? (
               images.map((image, index) => (
                 <div key={index} className="relative group">
-                  <img
-                    src={image.src}
-                    alt="Activity Achievement"
-                    className="w-40 h-40 object-cover rounded-lg"
-                  />
+                <img src={`http://localhost:5001${image.Image_Path}`} alt="Activity" />
+
                   <IconButton
                     size="small"
                     className="absolute top-2 right-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"

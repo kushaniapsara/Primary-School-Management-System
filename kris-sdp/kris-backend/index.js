@@ -23,6 +23,8 @@ const port = process.env.PORT || 5001;
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // CORS Configuration
 app.use(cors()); // Allow all origins by default
