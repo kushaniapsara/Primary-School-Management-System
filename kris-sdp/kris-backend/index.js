@@ -14,12 +14,13 @@ const parentRoutes = require("./routes/parentRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const NoticeRoutes = require("./routes/NoticeRoutes");
 const AttendanceRoutes = require("./routes/AttendanceRoutes");
+const studyMaterialRoutes = require('./routes/studyMaterialRoutes');
 
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5002;
 
 // Middleware
 app.use(express.json());
@@ -46,7 +47,9 @@ app.use("/api/parents", parentRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use('/api/notice', NoticeRoutes); // Homework-related routes
 app.use('/api', AttendanceRoutes); // Attendance-related routes
+app.use('/api/study-materials', studyMaterialRoutes);
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // Default route for '/'

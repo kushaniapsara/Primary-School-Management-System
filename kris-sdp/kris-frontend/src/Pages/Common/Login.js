@@ -7,29 +7,34 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // React Router hook for navigation
+  const navigate = useNavigate(); 
 
   const handleLogin = async () => {
     try {
-      console.log('Sending login request:', { username, password, role: userType });
-
       const response = await axios.post('http://localhost:5001/api/auth/login', {
         username,
         password,
         role: userType,
       });
 
-      // On successful login, redirect based on role
       if (response.status === 200) {
-        setMessage(response.data.message);
+        const { token } = response.data;
+
+        // Store token in localStorage
+        localStorage.setItem('token', token);
+
+        // Redirect based on role
         if (userType === 'Teacher') {
-          navigate('/TeacherDashboard'); // Redirect to Teacher Dashboard
+          navigate('/TeacherDashboard');
         } else if (userType === 'Student') {
-          navigate('/ParentDashboard'); // Redirect to Student Dashboard
+          navigate('/ParentDashboard');
         }
+
+        // Reload page to apply authentication state
+        window.location.reload();
       }
     } catch (error) {
-      setMessage(error.response?.data?.message || 'An error occurred');
+      setMessage(error.response?.data?.message || 'Invalid username or password');
     }
   };
 

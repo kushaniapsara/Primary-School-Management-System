@@ -43,7 +43,7 @@ const Navbar = () => {
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AccountCircleIcon className="mr-2" />
-                  <Link to = "/TeacherProfile">Profile</Link>
+                  <Link to = "/Profile">Profile</Link>
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AssessmentIcon className="mr-2" />

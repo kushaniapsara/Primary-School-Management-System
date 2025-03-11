@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,19 +6,31 @@ const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [userType, setUserType] = useState(''); // Added userType state
   const navigate = useNavigate();
+
+
+// Retrieve userType from localStorage
+//useEffect(() => {
+  //const storedUserType = localStorage.getItem('userType');
+  //if (storedUserType === 'Admin') {
+    //navigate('/AdminDashboard');
+  //}
+//}, [navigate]);
+
+
+
 
   const handleLogin = async () => {
     try {
-      console.log('Sending login request:', { username, password, role: 'Admin' });
-
       const response = await axios.post('http://localhost:5001/api/admin/login', {
         username,
         password,
-        role: 'Admin',
       });
 
       if (response.status === 200) {
+        localStorage.setItem('token', response.data.token); // Store token
+        setUserType('Admin'); // Set userType to Admin
         setMessage(response.data.message);
         navigate('/AdminDashboard'); // Redirect to Admin Dashboard
       }

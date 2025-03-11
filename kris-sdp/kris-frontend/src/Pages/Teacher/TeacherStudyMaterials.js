@@ -1,12 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from '../../components/NavbarTeacher';
 import SearchIcon from "@mui/icons-material/Search";
 
-
 const StudyMaterials = () => {
+  const navigate = useNavigate(); // Initialize navigation
+
   return (
     <div className="flex h-screen">
-      <Navbar/>
+      <Navbar />
 
       {/* Main Content */}
       <div className="flex-1 bg-blue-900">
@@ -19,7 +21,6 @@ const StudyMaterials = () => {
           </div>
         </header>
 
-
         {/* Search */}
         <div className="px-8 py-4">
           <button className="flex items-center bg-gray-200 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
@@ -29,32 +30,43 @@ const StudyMaterials = () => {
         </div>
 
         {/* Study Material Cards */}
-<div className="grid grid-cols-2 gap-6 px-8 py-4">
-  {/* Music Card */}
-  <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md">
-    <span className="text-9xl mb-4">🎵</span> {/* Music Emoji */}
-    <h2 className="text-xl font-bold">Music</h2>
-  </div>
+        <div className="grid grid-cols-2 gap-6 px-8 py-4">
+          {/* Music Card */}
+          <div
+            className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md cursor-pointer hover:bg-gray-300"
+            onClick={() => navigate("/study-materials/music")}
+          >
+            <span className="text-9xl mb-4">🎵</span>
+            <h2 className="text-xl font-bold">Music</h2>
+          </div>
 
-  {/* Reading Card */}
-  <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md">
-    <span className="text-9xl mb-4">📚</span> {/* Book Emoji */}
-    <h2 className="text-xl font-bold">Reading</h2>
-  </div>
+          {/* Reading Card */}
+          <div
+            className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md cursor-pointer hover:bg-gray-300"
+            onClick={() => navigate("/study-materials/reading")}
+          >
+            <span className="text-9xl mb-4">📚</span>
+            <h2 className="text-xl font-bold">Reading</h2>
+          </div>
 
-  {/* Videos Card */}
-  <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md">
-    <span className="text-9xl mb-4">🎥</span> {/* Movie Camera Emoji */}
-    <h2 className="text-xl font-bold">Videos</h2>
-  </div>
+          {/* Videos Card */}
+          <div
+            className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md cursor-pointer hover:bg-gray-300"
+            onClick={() => navigate("/study-materials/videos")}
+          >
+            <span className="text-9xl mb-4">🎥</span>
+            <h2 className="text-xl font-bold">Videos</h2>
+          </div>
 
-  {/* General Knowledge Card */}
-  <div className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md">
-    <span className="text-9xl mb-4">🌍</span> {/* Earth Globe Emoji */}
-    <h2 className="text-xl font-bold">General Knowledge</h2>
-  </div>
-</div>
-
+          {/* General Knowledge Card */}
+          <div
+            className="bg-gray-200 rounded-md p-4 flex flex-col items-center h-64 shadow-md cursor-pointer hover:bg-gray-300"
+            onClick={() => navigate("/study-materials/general-knowledge")}
+          >
+            <span className="text-9xl mb-4">🌍</span>
+            <h2 className="text-xl font-bold">General Knowledge</h2>
+          </div>
+        </div>
       </div>
     </div>
   );
