@@ -15,6 +15,7 @@ const teacherRoutes = require("./routes/teacherRoutes");
 const NoticeRoutes = require("./routes/NoticeRoutes");
 const AttendanceRoutes = require("./routes/AttendanceRoutes");
 const studyMaterialRoutes = require('./routes/studyMaterialRoutes');
+const AdminRoutes = require("./routes/AdminRoutes");
 
 
 dotenv.config();
@@ -48,6 +49,8 @@ app.use("/api/teachers", teacherRoutes);
 app.use('/api/notice', NoticeRoutes); // Homework-related routes
 app.use('/api', AttendanceRoutes); // Attendance-related routes
 app.use('/api/study-materials', studyMaterialRoutes);
+app.use("/api/admins", AdminRoutes);
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

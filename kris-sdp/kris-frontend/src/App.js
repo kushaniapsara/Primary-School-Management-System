@@ -33,6 +33,8 @@ import AdminLogin from './Pages/Admin/AdminLogin.js';
 import AdminDashboard from './Pages/Admin/AdminDashboard.js'; 
 import StudentManagement from './Pages/Admin/StudentManagement.js'; 
 import TeacherManagement from './Pages/Admin/TeacherManagement.js';
+import AdminDetails from './Pages/Admin/AdminDetails.js';
+
 
 // Utility function to check if the user is authenticated
 const checkAuth = () => {
@@ -136,6 +138,8 @@ function App() {
           <Route path="/AdminDashboard" element={isAuthenticated && userRole === 'Admin' ? <AdminDashboard /> : <Navigate to="/AdminLogin" />} />
           <Route path="/StudentManagement" element={isAuthenticated && userRole === 'Admin' ? <StudentManagement /> : <Navigate to="/AdminLogin" />} />
           <Route path="/TeacherManagement" element={isAuthenticated && userRole === 'Admin' ? <TeacherManagement /> : <Navigate to="/AdminLogin" />} />
+          <Route path="/AdminDetails" element={isAuthenticated && userRole === 'Admin' ? <AdminDetails /> : <Navigate to="/AdminLogin" />} />
+
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,4 +1,4 @@
-const Teacher = require("../models/teacher");
+const Admin = require("../models/Admin");
 const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt");
@@ -14,14 +14,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-exports.getTeachers = (req, res) => {
-  Teacher.getAll((err, results) => {
-    if (err) return res.status(500).json({ error: "Error fetching teachers" });
+exports.getAdmins = (req, res) => {
+  Admin.getAll((err, results) => {
+    if (err) return res.status(500).json({ error: "Error fetching admins" });
     res.json(results);
   });
 };
 
-exports.addTeacher = (req, res) => {
+exports.addAdmin = (req, res) => {
   upload.single("profilePhoto")(req, res, (err) => {
     if (err) {
       console.error("Error uploading file:", err);
@@ -32,7 +32,7 @@ exports.addTeacher = (req, res) => {
       enrollmentDate, documents, password, username, nic, previousSchools,leavingDate, role
     } = req.body;
 
-    console.log("Received teacher data:", req.body); // Debugging
+    console.log("Received admin data:", req.body); // Debugging
 
     const profilePhotoPath = req.file ? req.file.path : null; // Get uploaded file path
 
@@ -46,8 +46,8 @@ exports.addTeacher = (req, res) => {
           }
       
 
-      // Insert Teacher
-      const teacherData = {
+      // Insert Admin
+      const adminData = {
         Full_name: fullName, Name_with_initials: nameWithInitials, Age: age, Contact_number: contactNumber, Email: email, NIC: nic, 
         Previous_Schools: previousSchools, Documents: documents,Joined_date: enrollmentDate, Leaving_date: leavingDate,
         Status: status, password: hashedPassword, username: username, role:role, Gender: gender, Address: address,  
@@ -55,16 +55,16 @@ exports.addTeacher = (req, res) => {
         Profile_photo: profilePhotoPath // Store image path in database
       };
 
-      Teacher.create(teacherData, (err, teacherResult) => {
+      Admin.create(adminData, (err, adminResult) => {
         if (err) {
-          console.error("Error adding teacher:", err);
-          return res.status(500).json({ error: "Error adding teacher" });
+          console.error("Error adding admin:", err);
+          return res.status(500).json({ error: "Error adding admin" });
         }
 
-        console.log("Teacher added with ID:", teacherResult.insertId);
+        console.log("Admin added with ID:", adminResult.insertId);
         res.json({ 
-          message: "Teacher added successfully", 
-          teacherID: teacherResult.insertId,
+          message: "Admin added successfully", 
+          adminID: adminResult.insertId,
           profilePhoto: profilePhotoPath
         });
       });

@@ -2,6 +2,9 @@ const Student = require("../models/Student");
 const Parent = require("../models/Parent");
 const multer = require("multer");
 const path = require("path");
+const bcrypt = require("bcrypt");
+const SALT_ROUNDS = 10; // Number of salt rounds for hashing
+
 
 const storage = multer.diskStorage({
   destination: "./uploads/profile_pics",
@@ -37,6 +40,14 @@ exports.addStudent = (req, res) => {
 
     const profilePhotoPath = req.file ? req.file.path : null; // Get uploaded file path
 
+// Hash the password using callbacks
+    bcrypt.hash(password, SALT_ROUNDS, (err, hashedPassword) => {
+      if (err) {
+        console.error("Error hashing password:", err);
+        return res.status(500).json({ error: "Error processing password" });
+      }
+
+
     // Insert Parent First
     const parentData = {
       Father_name: fatherName, Father_contact: fatherContact, Father_NIC: fatherNIC,
@@ -59,7 +70,7 @@ exports.addStudent = (req, res) => {
         Full_name: fullName, Name_with_initials: nameWithInitials, Email: email, Gender: gender, Religion: religion,
         Date_of_birth: dob, Address: address, Contact_number: contactNumber, Grade: grade, Syllabus: syllabus, Immunization: vaccination, 
         On_any_drugs: onAnyDrugs, Allergies: allergies, Sisters_brothers_in_same_school: sistersBrothersInSameSchool, 
-        Joined_date: enrollmentDate, Documents: documents, password: password, Admin_ID: adminID, Parent_ID: parentID, username: username,
+        Joined_date: enrollmentDate, Documents: documents, password: hashedPassword, Admin_ID: adminID, Parent_ID: parentID, username: username,
         Profile_photo: profilePhotoPath // Store image path in database
       };
 
@@ -79,4 +90,6 @@ exports.addStudent = (req, res) => {
       });
     });
   });
+});
 };
+

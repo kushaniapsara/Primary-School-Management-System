@@ -9,6 +9,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import AttachMoneyIcon from "@mui/icons-material/CalendarToday";
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 
 const Navbar = () => {
@@ -55,10 +56,19 @@ const Navbar = () => {
               <Link to = "/ParentPayment">Payments</Link>
             </li>
 
+
+            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+              <AdminPanelSettingsIcon className="mr-2" />
+                  <Link to = "/AdminDetails">Admin Details</Link>
+            </li>
+
+
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AccountCircleIcon className="mr-2" />
                   <Link to = "/Profile">Profile</Link>
             </li>
+
+          
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AssessmentIcon className="mr-2" />
               <Link to = "/Reports">Reports</Link>
