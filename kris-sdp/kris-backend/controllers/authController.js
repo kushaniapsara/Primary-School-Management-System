@@ -74,4 +74,42 @@ exports.login = async (req, res) => { // Make sure the login function is async
   }
 };
 
-// hash krnn mek withrai wens kre. frnt end ek 1 line add kra to retrive or somethnig
+exports.getProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const { userID, role } = decoded; // Get userID and role from token
+
+    console.log(decoded);
+
+    // Determine the table and ID field based on the role
+    let table, idField;
+    if (role === 'Teacher') {
+      table = 'Teacher';
+      idField = 'Teacher_ID';
+    } else if (role === 'Student') {
+      table = 'Student';
+      idField = 'Student_ID';
+    } else if (role === 'Admin') {
+      table = 'Admin';
+      idField = 'Admin_ID';
+    } else {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
+
+    // Fetch user details from the correct table
+    const query = `SELECT * FROM ?? WHERE ?? = ?`;
+    const results = await queryAsync(query, [table, idField, userID]);
+
+    if (results.length > 0) {
+      return res.status(200).json(results[0]);
+    } else {
+      return res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error('Server error:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};

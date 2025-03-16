@@ -46,20 +46,24 @@ const adminLogin = async (req, res) => { // Make function async
 };
 
 // Get Admin Profile
-const getAdminProfile = (req, res) => {
-  const adminID = req.userID; // Extracted from JWT token
+const getAdminProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get user ID from token
 
-  AdminModel.getAdminByID(adminID, (err, admin) => {
-    if (err) {
-      return res.status(500).json({ message: 'Database error', error: err });
+    const user = await db.User.findOne({
+      where: { id: userId },
+      attributes: ["id", "username", "full_name", "email", "Role", "address", "contact_number", "class"],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if (!admin) {
-      return res.status(404).json({ message: 'Admin not found' });
-    }
-
-    res.json(admin);
-  });
+    res.json(user); // Send all user details to the frontend
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
+
 
 module.exports = { adminLogin, getAdminProfile };

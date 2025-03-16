@@ -21,7 +21,7 @@ const AdminRoutes = require("./routes/AdminRoutes");
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5002;
+const port = process.env.PORT || 5001;
 
 // Middleware
 app.use(express.json());
@@ -50,6 +50,7 @@ app.use('/api/notice', NoticeRoutes); // Homework-related routes
 app.use('/api', AttendanceRoutes); // Attendance-related routes
 app.use('/api/study-materials', studyMaterialRoutes);
 app.use("/api/admins", AdminRoutes);
+app.use("/api/admin/login", adminAuthRoutes);
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

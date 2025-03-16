@@ -7,4 +7,6 @@ const router = express.Router();
 router.post('/login', adminLogin);
 router.get('/profile', verifyToken, getAdminProfile); // Fetch admin profile
 
+
+
 module.exports = router;
