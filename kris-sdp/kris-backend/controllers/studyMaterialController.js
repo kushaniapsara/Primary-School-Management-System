@@ -29,7 +29,7 @@ const upload = multer({ storage }).single('file');
 const uploadStudyMaterial = (req, res) => {
   upload(req, res, (err) => {
     if (err) {
-      return res.status(500).json({ message: 'File upload failed', error: err.message });
+      return res.status(500).json({ message: 'Please upload a valid file', error: err.message });
     }
 
     if (!req.file) {

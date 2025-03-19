@@ -14,6 +14,11 @@ import TeacherHomework from './Pages/Teacher/TeacherHomework.js';
 import TeacherStudyMaterials from './Pages/Teacher/TeacherStudyMaterials.js';
 import ActivityDetails from './Pages/Teacher/ActivityDetails.js';
 
+import ExtraCurricularPage from './Pages/Teacher/ExtraCurricularPage.js';
+import ProgressPage from './Pages/Teacher/ProgressPage.js';
+
+
+
 import Profile from './Pages/Common/Profile.js';
 
 // Import new pages for study materials
@@ -34,6 +39,9 @@ import AdminDashboard from './Pages/Admin/AdminDashboard.js';
 import StudentManagement from './Pages/Admin/StudentManagement.js'; 
 import TeacherManagement from './Pages/Admin/TeacherManagement.js';
 import AdminDetails from './Pages/Admin/AdminDetails.js';
+
+
+import StudentProfiles from './Pages/Common/StudentProfiles.js';
 
 
 // Utility function to check if the user is authenticated
@@ -111,6 +119,13 @@ function App() {
           <Route path="/TeacherStudyMaterials" element={isAuthenticated && userRole === 'Teacher' ? <TeacherStudyMaterials /> : <Navigate to="/" />} />
           <Route path="/Profile" element={isAuthenticated ? <Profile /> : <Navigate to="/" />} />
           <Route path="/activity/:id" element={isAuthenticated && userRole === 'Teacher' ? <ActivityDetails /> : <Navigate to="/" />} />
+          <Route path="/StudentProfiles" element={isAuthenticated && userRole === 'Teacher' ? <StudentProfiles /> : <Navigate to="/" />} />
+          <Route path="/extra-curricular/:studentId" element={isAuthenticated && userRole === 'Teacher' ? <ExtraCurricularPage /> : <Navigate to="/" />} />
+          <Route path="/progress/:studentId" element={isAuthenticated && userRole === 'Teacher' ?<ProgressPage />: <Navigate to="/" />} />
+
+
+
+
 
           {/* Routes for Study Material Pages */}
           <Route path="/study-materials/music" element={isAuthenticated && userRole === 'Teacher' ? <MusicPage /> : <Navigate to="/" />} />
@@ -139,6 +154,9 @@ function App() {
           <Route path="/StudentManagement" element={isAuthenticated && userRole === 'Admin' ? <StudentManagement /> : <Navigate to="/AdminLogin" />} />
           <Route path="/TeacherManagement" element={isAuthenticated && userRole === 'Admin' ? <TeacherManagement /> : <Navigate to="/AdminLogin" />} />
           <Route path="/AdminDetails" element={isAuthenticated && userRole === 'Admin' ? <AdminDetails /> : <Navigate to="/AdminLogin" />} />
+          <Route path="/StudentProfiles" element={isAuthenticated && userRole === 'Teacher' ? <StudentProfiles /> : <Navigate to="/" />} />
+
+
 
         </Routes>
       </BrowserRouter>
