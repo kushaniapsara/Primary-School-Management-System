@@ -1,4 +1,4 @@
-const Teacher = require("../models/teacher");
+const Teacher = require("../models/Teacher");
 const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt");
@@ -15,11 +15,22 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 exports.getTeachers = (req, res) => {
-  Teacher.getAll((err, results) => {
-    if (err) return res.status(500).json({ error: "Error fetching teachers" });
+  const filters = {
+    name: req.query.name || null,
+    className: req.query.className || null,
+    grade: req.query.grade || null,
+    gender: req.query.gender || null,
+  };
+
+  Teacher.getAll(filters, (err, results) => {
+    if (err) {
+      console.error("Error fetching teachers:", err);
+      return res.status(500).json({ error: "Error fetching teachers" });
+    }
     res.json(results);
   });
 };
+
 
 exports.addTeacher = (req, res) => {
   upload.single("profilePhoto")(req, res, (err) => {
@@ -29,7 +40,7 @@ exports.addTeacher = (req, res) => {
     }
     const {
       fullName, nameWithInitials, email, gender, age, address, contactNumber, status, 
-      enrollmentDate, documents, password, username, nic, previousSchools,leavingDate, role
+      enrollmentDate, documents, password, username, nic, previousSchools,leavingDate, role, grade, className, academicYear,
     } = req.body;
 
     console.log("Received teacher data:", req.body); // Debugging
@@ -46,11 +57,30 @@ exports.addTeacher = (req, res) => {
           }
       
 
+      // Handle dynamic Class generation based on grade
+      const generateClassName = (grade) => {
+        const classes = [];
+        for (let i = 1; i <= 3; i++) { // Assuming 3 classes per grade
+          classes.push(`${grade}${String.fromCharCode(64 + i)}`); // 65 -> A, 66 -> B, etc.
+        }
+        return classes;
+      };
+
+      // Get class name based on grade (e.g., "1A", "1B")
+      const classNames = generateClassName(grade);
+
+      if (!classNames.includes(className)) {
+        return res.status(400).json({ error: `Invalid class name for grade ${grade}` });
+      }
+
+
+
+
       // Insert Teacher
       const teacherData = {
         Full_name: fullName, Name_with_initials: nameWithInitials, Age: age, Contact_number: contactNumber, Email: email, NIC: nic, 
         Previous_Schools: previousSchools, Documents: documents,Joined_date: enrollmentDate, Leaving_date: leavingDate,
-        Status: status, password: hashedPassword, username: username, role:role, Gender: gender, Address: address,  
+        Status: status, password: hashedPassword, username: username, role:role, Gender: gender, Address: address, Grade: grade, Class_name: className, Academic_year: academicYear,
              
         Profile_photo: profilePhotoPath // Store image path in database
       };
@@ -61,6 +91,22 @@ exports.addTeacher = (req, res) => {
           return res.status(500).json({ error: "Error adding teacher" });
         }
 
+
+        // Insert into TeacherClass table to link teacher to class
+        const teacherClassData = {
+          Teacher_ID: teacherResult.insertId,
+          Class_name: className,
+          Academic_year: academicYear
+        };
+
+        Teacher.addTeacherToClass(teacherClassData, (err, teacherClassResult) => {
+          if (err) {
+            console.error("Error adding teacher to class:", err);
+            return res.status(500).json({ error: "Error adding teacher to class" });
+          }
+
+
+
         console.log("Teacher added with ID:", teacherResult.insertId);
         res.json({ 
           message: "Teacher added successfully", 
@@ -70,4 +116,5 @@ exports.addTeacher = (req, res) => {
       });
     });
   });
+});
 };

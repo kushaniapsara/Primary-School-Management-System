@@ -39,6 +39,7 @@ const adminLogin = async (req, res) => { // Make function async
         message: 'Login successful',
         token
       });
+      console.log("controller:", res); // debug
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });

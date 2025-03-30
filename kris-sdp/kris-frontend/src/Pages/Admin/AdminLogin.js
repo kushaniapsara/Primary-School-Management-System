@@ -32,6 +32,7 @@ const AdminLogin = () => {
         localStorage.setItem('token', response.data.token); // Store token
         setUserType('Admin'); // Set userType to Admin
         setMessage(response.data.message);
+        console.log("frontend:", response); // debug
         navigate('/AdminDashboard'); // Redirect to Admin Dashboard
       }
     } catch (error) {
