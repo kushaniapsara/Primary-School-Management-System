@@ -49,7 +49,8 @@ const upload = multer({
 const uploadStudyMaterial = (req, res) => {
   upload(req, res, (err) => {
     if (err) {
-      return res.status(400).json({ message: err.message });
+      return res.status(500).json({ message: 'Please upload a valid file', error: err.message });
+
     }
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
