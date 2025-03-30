@@ -19,7 +19,8 @@ const Progress = {
 
   // Fetch all subjects for dropdown
   getAllSubjects: (callback) => {
-    const sql = 'SELECT Subject_ID, Subject_Name FROM Subject'; // Query to fetch all subjects
+    const sql = 'SELECT Subject_ID, Subject_Name FROM Subject'; 
+    console.log(test);// Query to fetch all subjects
     db.query(sql, callback);
   },
 

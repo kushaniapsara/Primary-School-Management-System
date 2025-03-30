@@ -61,4 +61,3 @@ exports.enrollInActivity = (req, res) => {
   }
 };
 
-
