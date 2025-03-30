@@ -1,4 +1,9 @@
+/*
 // backend/routes/studyMaterials.js
+const studyMaterialController = require("../controllers/studyMaterialController");
+
+//uploadStudyMaterial, getStudyMaterials
+
 
 const express = require('express');
 const path = require('path');
@@ -15,27 +20,28 @@ const getFilesFromFolder = (folderName) => {
 };
 
 // API to get all files in the 'music' folder
-router.get('/music', (req, res) => {
+router.getStudyMaterials('/music', (req, res) => {
   const files = getFilesFromFolder('music');
   res.json(files); // Send file paths and names
 });
 
 // API to get all files in the 'reading' folder
-router.get('/reading', (req, res) => {
+router.getStudyMaterials('/reading', (req, res) => {
   const files = getFilesFromFolder('reading');
   res.json(files);
 });
 
 // API to get all files in the 'videos' folder
-router.get('/videos', (req, res) => {
+router.getStudyMaterials('/videos', (req, res) => {
   const files = getFilesFromFolder('videos');
   res.json(files);
 });
 
 // API to get all files in the 'general_knowledge' folder
-router.get('/general-knowledge', (req, res) => {
+router.get('/general_knowledge', (req, res) => {
   const files = getFilesFromFolder('general_knowledge');
   res.json(files);
 });
 
 module.exports = router;
+*/

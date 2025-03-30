@@ -21,12 +21,22 @@ const Homework = () => {
   // Fetch homework
   const fetchHomework = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/api/homework");
+      const token = localStorage.getItem("token"); // Get JWT token from storage
+      if (!token) {
+        console.error("No token found!");
+        return;
+      }
+  
+      const response = await axios.get("http://localhost:5001/api/homework", {
+        headers: { Authorization: token }, // Send token for authentication
+      });
+  
       setHomeworkList(response.data);
     } catch (error) {
       console.error("Error fetching homework data!", error);
     }
   };
+  
 
   useEffect(() => {
     fetchHomework();

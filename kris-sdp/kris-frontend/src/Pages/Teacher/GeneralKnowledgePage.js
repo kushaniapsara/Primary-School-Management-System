@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+/*import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/NavbarTeacher";
 
 const GeneralKnowledgePage = () => {
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
+
+  //display the uploaded files
+  useEffect(() => {
+    fetch("http://localhost:5001/api/study_materials/general_knowledge")
+        .then((response) => response.json())
+        .then((data) => setFile(data))
+        .catch((error) => console.error("Error fetching files:", error));
+}, []);
+
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -15,14 +24,14 @@ const GeneralKnowledgePage = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("/api/study-materials/general-knowledge/upload", {
+      const response = await fetch("http://localhost:5001/api/study_materials/general_knowledge/upload", {
         method: "POST",
         body: formData,
       });
 
       if (response.ok) {
         alert("File uploaded successfully!");
-        navigate("/study-materials");
+        navigate("/study_materials");
       } else {
         alert("Upload failed!");
       }
@@ -56,3 +65,4 @@ const GeneralKnowledgePage = () => {
 };
 
 export default GeneralKnowledgePage;
+*/

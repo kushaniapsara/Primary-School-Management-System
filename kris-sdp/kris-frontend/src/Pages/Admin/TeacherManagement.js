@@ -13,6 +13,8 @@ import Navbar from "../../components/AdminNavbar";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 
+import { FormControl, InputLabel, Select } from '@mui/material';
+
 
 const TeacherManagement = () => {
   const [teachers, setTeachers] = useState([]);
@@ -20,6 +22,15 @@ const TeacherManagement = () => {
   //const [step, setStep] = useState(1); // Step control for multi-part form
   const [profilePhoto, setProfilePhoto] = useState(null); // Added for profile photo
   const [selectedTeacher, setSelectedTeacher] = useState(null); // Added for modal functionality
+  
+  const [className, setClassName] = useState(""); // Store selected class
+
+  const [filters, setFilters] = useState({
+    grade: "",
+    className: "",
+    name: ""
+  });
+
   const [newTeacher, setNewTeacher] = useState({
     fullName: "",
     nameWithInitials: "",
@@ -37,16 +48,49 @@ const TeacherManagement = () => {
     status: "",
     leavingDate: "",
     role: "",
+    grade: "",
+    className: ""
+
 
     
   });
 
   useEffect(() => {
     fetch("http://localhost:5001/api/teachers")
-      .then((res) => res.json())
-      .then((data) => setTeachers(data))
-      .catch((err) => console.error("Error fetching teachers:", err));
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched Data:", data); // Check if data is received
+        setTeachers(data);
+      })
+      .catch((error) => console.error("Error fetching teachers:", error));
   }, []);
+
+  // Function to handle grade selection and generate class options
+const handleGradeChange = (event) => {
+  const selectedGrade = event.target.value;
+  setNewTeacher({
+      ...newTeacher,
+      grade: selectedGrade,
+      className: `${selectedGrade}A`  // Set default class as "1A" for example
+  });
+};
+
+// Generate class options based on grade
+const generateClassOptions = () => {
+  const classes = [];
+  const grade = newTeacher.grade;
+
+  if (grade) {
+      for (let i = 1; i <= 3; i++) {  // assuming you have 3 classes per grade
+          classes.push(`${grade}${String.fromCharCode(64 + i)}`); // 65 -> A, 66 -> B, etc.
+      }
+  }
+
+  return classes;
+};
+
+
+
 
   const handleChange = (e) => {
     setNewTeacher({ ...newTeacher, [e.target.name]: e.target.value });
@@ -60,6 +104,7 @@ const TeacherManagement = () => {
     if (profilePhoto) {
       formData.append("profilePhoto", profilePhoto);
     }
+    formData.append("academicYear", new Date().getFullYear()); // Add Academic Year
 
     fetch("http://localhost:5001/api/teachers", {
       method: "POST",
@@ -86,7 +131,8 @@ const TeacherManagement = () => {
           previousSchools: "",
           status: "",
           leavingDate: "",
-          role: ""
+          role: "",
+          grade:""
         });
         setProfilePhoto(null);
         
@@ -94,10 +140,11 @@ const TeacherManagement = () => {
       .catch((err) => console.error("Error adding teacher:", err));
   };
 
+
+
   const handleFileChange = (e) => {
     setProfilePhoto(e.target.files[0]); // Store the selected file in state
-  };
-  
+  };  
 
    // Modal Handling Functions
    const openModal = (teacher) => {
@@ -108,6 +155,21 @@ const TeacherManagement = () => {
     setSelectedTeacher(null);
   };
 
+
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const handleFilterApply = () => {
+    setTeachers((prevTeachers) => prevTeachers.filter((teacher) => {
+      return (
+        (filters.grade === "" || teacher.Grade === filters.grade) &&
+        (filters.className === "" || teacher.Class_name === filters.className) &&
+        (filters.name === "" || teacher.Full_name.toLowerCase().includes(filters.name.toLowerCase()))  // Add name filtering here
+
+      );
+    }));
+  };
   
   return (
     <div className="flex h-screen overflow-hidden">
@@ -122,6 +184,49 @@ const TeacherManagement = () => {
             Add New Teacher
           </Button>
         </div>
+
+        <div className="p-7 flex gap-4 bg-white rounded-md shadow-md mx-4">
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Grade</InputLabel>
+            <Select name="grade" value={filters.grade} onChange={handleFilterChange}>
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="1">1</MenuItem>
+              <MenuItem value="2">2</MenuItem>
+              <MenuItem value="3">3</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Class</InputLabel>
+            <Select name="className" value={filters.className} onChange={handleFilterChange}>
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="1A">1A</MenuItem>
+              <MenuItem value="1B">1B</MenuItem>
+              <MenuItem value="1C">1C</MenuItem>
+              <MenuItem value="2A">2A</MenuItem>
+              <MenuItem value="2B">2B</MenuItem>
+              <MenuItem value="2C">2C</MenuItem>
+              <MenuItem value="3A">3A</MenuItem>
+              <MenuItem value="3B">3B</MenuItem>
+              <MenuItem value="3C">3C</MenuItem>
+            </Select>
+          </FormControl>
+
+
+          <FormControl sx={{ minWidth: 200 }}>
+              <TextField
+                label="Name"
+                name="name"
+                value={filters.name}
+                onChange={handleFilterChange}
+                fullWidth
+              />
+            </FormControl>
+          
+          <Button variant="contained" color="primary" onClick={handleFilterApply}>Filter</Button>
+        </div>
+
+
 
 
         <div className="p-5">
@@ -142,7 +247,7 @@ const TeacherManagement = () => {
               onClick={() => openModal(teacher)} // ✅ Correctly pass teacher data
             >
               <td className="border-2 border-black px-4 py-2 text-center">{teacher.Full_name}</td>
-              <td className="border-2 border-black px-4 py-2 text-center">{teacher.Class}</td>
+              <td className="border-2 border-black px-4 py-2 text-center">{teacher.Class_name}</td>
               <td className="border-2 border-black px-4 py-2 text-center">{teacher.Contact_number}</td>
               
               <td className="border-2 border-black px-4 py-2 text-center">
@@ -198,7 +303,7 @@ const TeacherManagement = () => {
     </div>
 
 
-        {/* Add Student Form */}
+        {/* Add Teacher Form */}
 <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
   <DialogTitle>Add New Teacher</DialogTitle>
   <DialogContent>
@@ -223,6 +328,41 @@ const TeacherManagement = () => {
     <TextField fullWidth margin="dense" label="NIC" name="nic"  value={newTeacher.nic} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newTeacher.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
     <TextField fullWidth margin="dense" label="Role" name="role" value={newTeacher.role} onChange={handleChange} />
+
+    <FormControl fullWidth margin="dense">
+                <InputLabel>Grade</InputLabel>
+                <Select
+                    name="grade"
+                    value={newTeacher.grade}
+                    onChange={handleGradeChange}
+                >
+                    <MenuItem value="">Select Grade</MenuItem>
+                    <MenuItem value="1">1</MenuItem>
+                    <MenuItem value="2">2</MenuItem>
+                    <MenuItem value="3">3</MenuItem>
+                    {/* Add more grades as needed */}
+                </Select>
+                </FormControl>
+
+            {newTeacher.grade && (
+                <FormControl fullWidth margin="dense">
+                    <InputLabel>Class</InputLabel>
+                    <Select
+                        name="className"
+                        value={newTeacher.className}
+                        onChange={handleChange}
+                    >
+                        {generateClassOptions().map((classOption) => (
+                            <MenuItem key={classOption} value={classOption}>
+                                {classOption}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            )}
+
+
+
 
     <input type="file" accept="image/*" onChange={handleFileChange} style={{ marginTop: "15px" }} /> {/* Profile Photo Input */}
   </DialogContent>
