@@ -14,7 +14,7 @@ const parentRoutes = require("./routes/parentRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const NoticeRoutes = require("./routes/NoticeRoutes");
 const AttendanceRoutes = require("./routes/AttendanceRoutes");
-//const studyMaterialRoutes = require('./routes/studyMaterialRoutes');
+const studyMaterialRoutes = require('./routes/studyMaterialRoutes');
 const AdminRoutes = require("./routes/AdminRoutes");
 const progressRoutes = require('./routes/progressRoutes');
 
@@ -51,11 +51,8 @@ app.use("/api/parents", parentRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use('/api/notice', NoticeRoutes); // Homework-related routes
 app.use('/api', AttendanceRoutes); // Attendance-related routes
-//app.use('/api/study_materials', studyMaterialRoutes);
+app.use('/api/study-materials', studyMaterialRoutes);
 app.use("/api/admins", AdminRoutes);
-
-
-app.use('/api/enroll', enrollmentRoutes);
 
 
 app.use('/api/enroll', enrollmentRoutes);

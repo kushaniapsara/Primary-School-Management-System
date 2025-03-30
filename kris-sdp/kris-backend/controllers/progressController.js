@@ -29,15 +29,13 @@ exports.updateProgress = (req, res) => {
 
 // Inside progressController.js
 exports.getAllSubjects = (req, res) => {
-  console.log("getAllSubjects function is called");  // Debug log
-  Progress.getAllSubjects((err, results) => {
+    Progress.getAllSubjects((err, results) => {
       if (err) {
-          console.error("Error fetching subjects:", err);
-          return res.status(500).json({ message: "Error fetching subjects", error: err });
+        console.error("Error fetching subjects:", err);
+        return res.status(500).json({ message: "Error fetching subjects", error: err });
       }
-      console.log("Subjects fetched:", results);
+      console.log("Subjects fetched:", results);  // Log the results
       res.json(results);
-  });
-};
-
+    });
+  };
   

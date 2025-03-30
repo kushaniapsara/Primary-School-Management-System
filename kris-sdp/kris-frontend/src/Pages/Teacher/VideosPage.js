@@ -7,13 +7,6 @@ const VideosPage = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const navigate = useNavigate();
 
-    useEffect(() => {
-        fetch("http://localhost:5000/api/study-materials/videos")
-            .then((response) => response.json())
-            .then((data) => setFile(data))
-            .catch((error) => console.error("Error fetching files:", error));
-    }, []);
-
   // Handle file selection
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);

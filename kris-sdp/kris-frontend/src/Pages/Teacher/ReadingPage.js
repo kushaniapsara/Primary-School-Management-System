@@ -1,18 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/NavbarTeacher";
 
 const ReadingPage = () => {
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
-
-
-    useEffect(() => {
-        fetch("http://localhost:5000/api/study-materials/reading")
-            .then((response) => response.json())
-            .then((data) => setFile(data))
-            .catch((error) => console.error("Error fetching files:", error));
-    }, []);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
