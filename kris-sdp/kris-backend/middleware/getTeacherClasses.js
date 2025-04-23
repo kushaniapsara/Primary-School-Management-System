@@ -1,4 +1,4 @@
-const db = require("../config/db"); // Ensure correct database connection
+/*const db = require("../config/db"); // Ensure correct database connection
 
 
 const getTeacherClasses = (req, res, next) => {
@@ -21,4 +21,4 @@ const getTeacherClasses = (req, res, next) => {
   });
 };
 
-module.exports = getTeacherClasses;
+module.exports = getTeacherClasses;*/

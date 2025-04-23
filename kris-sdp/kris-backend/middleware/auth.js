@@ -10,8 +10,13 @@ const verifyToken = (req, res, next) => {
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) return res.status(401).json({ message: "Invalid token" });
 
+    // 👇 Print the whole decoded token
+    console.log("Decoded Token:", decoded);
+
     req.userID = decoded.userID;
     req.userRole = decoded.role;
+    req.classID = decoded.class_id;
+
     next();
   });
 };

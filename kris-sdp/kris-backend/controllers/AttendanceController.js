@@ -1,15 +1,22 @@
 const AttendanceModel = require('../models/AttendanceModel');
 
 // Fetch students
-const getStudents = (req, res) => {
-    AttendanceModel.getStudents((error, students) => {
-        if (error) {
-            res.status(500).json({ error: 'Failed to fetch students' });
-            return;
-        }
-        res.json(students);
+// New function for class-specific student list for teacher
+const getStudentsByClass = (req, res) => {
+    const classID = req.classID;
+  
+    if (!classID) {
+      return res.status(403).json({ error: "Class ID missing in token" });
+    }
+  
+    AttendanceModel.getStudentsByClass(classID, (err, results) => {
+      if (err) {
+        console.error("Error fetching students by class:", err.message);
+        return res.status(500).json({ error: "Internal server error" });
+      }
+      res.json(results);
     });
-};
+  };
 
 // Fetch attendance records for the last 5 days
 const getAttendance = (req, res) => {
@@ -36,4 +43,15 @@ const saveAttendance = (req, res) => {
     });
 };
 
-module.exports = { getStudents, getAttendance, saveAttendance };
+//for dashboard
+const getAttendanceChartData = (req, res) => {
+    AttendanceModel.getAttendanceChartData((error, data) => {
+        if (error) {
+            res.status(500).json({ error: 'Failed to fetch chart data' });
+            return;
+        }
+        res.json(data);
+    });
+};
+
+module.exports = { getStudentsByClass, getAttendance, saveAttendance, getAttendanceChartData };

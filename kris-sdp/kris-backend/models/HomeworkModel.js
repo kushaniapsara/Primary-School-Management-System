@@ -1,9 +1,12 @@
 const db = require("../config/db");
 
 const HomeworkModel = {
-  getAllHomework: (callback) => {
-    db.query("SELECT * FROM Homework", callback);
+  // Get all homework for a specific class
+  getAllHomeworkByClass: (classId, callback) => {
+    const sql = "SELECT * FROM Homework WHERE Class_ID = ?";
+    db.query(sql, [classId], callback);
   },
+
 
   addHomework: (homework, callback) => {
     const sql = "INSERT INTO Homework (Homework_task, Due_date, Class_ID) VALUES (?, ?, ?)";
@@ -19,14 +22,14 @@ const HomeworkModel = {
     db.query("DELETE FROM Homework WHERE Homework_ID = ?", [id], callback);
   },
 
-  getUpcomingHomework: (callback) => {
-    const sql = "SELECT * FROM Homework WHERE Due_date >= CURDATE() AND Due_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)";
-    db.query(sql, callback);
+  getUpcomingHomeworkByClass: (classId, callback) => {
+    const sql = "SELECT * FROM Homework WHERE Class_ID = ? AND Due_date >= CURDATE() AND Due_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)";
+    db.query(sql, [classId], callback);
   },
 
-  getRecentHomework: (callback) => {
-    const sql = "SELECT * FROM Homework WHERE Due_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
-    db.query(sql, callback);
+  getRecentHomework: (classId, callback) => {
+    const sql = "SELECT * FROM Homework WHERE Class_ID = ? AND Due_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    db.query(sql, [classId], callback);
   }
 };
 

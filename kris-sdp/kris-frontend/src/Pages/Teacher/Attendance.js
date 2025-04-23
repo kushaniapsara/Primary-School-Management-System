@@ -27,26 +27,37 @@ function Attendance() {
     for (let i = 4; i >= 0; i--) {
       const date = new Date();
       date.setDate(today.getDate() - i);
-      const formattedDate = date.toISOString().split('T')[0];
+      const formattedDate = date.toLocaleDateString('en-CA'); // 'YYYY-MM-DD'
   
-      // If it's today, label it "Today"
-      lastFiveDays.push(i === 0 ? "Today" : formattedDate);
+      lastFiveDays.push({
+        label: i === 0 ? 'Today' : formattedDate,
+        value: formattedDate
+      });
     }
   
     setDates(lastFiveDays);
   };
   
+  
 
   // Fetch students from backend
   const fetchStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/students');
-      console.log('Fetched Students:', response.data);  // Log to check if the new student is included
+      const token = localStorage.getItem('token'); // Get token from localStorage (or wherever you store it)
+  
+      const response = await axios.get('http://localhost:5001/api/students/by-class', {
+        headers: {
+          Authorization: token,
+        },
+      });
+  
+      console.log('Fetched Students:', response.data);
       setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
     }
   };
+  
   
   
 
@@ -58,13 +69,15 @@ function Attendance() {
 
         const fetchedAttendance = {};
         response.data.forEach(record => {
+            const formattedDate = record.Date.split('T')[0]; // Convert to YYYY-MM-DD format
+
             if (!fetchedAttendance[record.Student_ID]) {
                 fetchedAttendance[record.Student_ID] = {
                     name: record.Full_name,
                     records: {}
                 };
             }
-            fetchedAttendance[record.Student_ID].records[record.Date] = record.Status || ''; // Ensure previous data is set
+            fetchedAttendance[record.Student_ID].records[formattedDate] = record.Status; 
         });
 
         setAttendanceData(fetchedAttendance);
@@ -72,6 +85,8 @@ function Attendance() {
         console.error('Error fetching attendance:', error);
     }
 };
+
+
 
 
 
@@ -138,8 +153,8 @@ function Attendance() {
             <thead>
                 <tr className="bg-blue-100">
                 <th className="border border-blue-400 p-2 rounded-md">Student Name</th>
-                {dates.map(date => (
-                <th key={date} className="border border-blue-400 p-2 rounded-md">{date}</th>
+                {dates.map(dateObj => (
+                <th key={dateObj} className="border border-blue-400 p-2 rounded-md">{dateObj.label}</th>
                 ))}
                 </tr>
             </thead>
@@ -148,19 +163,20 @@ function Attendance() {
     <tr key={student.Student_ID} className="hover:bg-gray-100 transition">
       <td className="border border-blue-300 p-2 rounded-md">{student.Full_name}</td>
 
-      {/* Display previous attendance records */}
-      {dates.slice(0, -1).map(date => (
-        <td
-          key={date}
-          className={`border border-blue-300 p-2 rounded-md ${
-            attendanceData[student.Student_ID]?.records[date] 
-              ? (attendanceData[student.Student_ID]?.records[date] === 'Present' ? 'bg-green-400' : 'bg-pink-400') 
-              : 'bg-white'
-          }`}
-        >
-          {attendanceData[student.Student_ID]?.records[date] || ''}
-        </td>
-      ))}
+      {/* Display last 4 days' attendance records */}
+      {dates.slice(0, -1).map(dateObj => (
+  <td
+    key={dateObj.value}
+    className={`border border-blue-300 p-2 rounded-md ${
+      attendanceData[student.Student_ID]?.records[dateObj.value] 
+        ? (attendanceData[student.Student_ID].records[dateObj.value] === 'Present' ? 'bg-green-400' : 'bg-pink-400') 
+        : 'bg-white'
+    }`}
+  >
+    {attendanceData[student.Student_ID]?.records[dateObj.value] || ''}
+  </td>
+))}
+
 
       {/* Today’s Attendance (Clickable) */}
       <td
@@ -177,12 +193,12 @@ function Attendance() {
 
 
 
+
             </table>
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between mt-4">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">Advance</button>
+          <div className="flex justify-between mt-4 mx-20">
             <span className="text-white">Total: {students.length}</span>
             <button onClick={handleSave} className="bg-green-500 text-white px-4 py-2 rounded">Save and Submit</button>
           </div>

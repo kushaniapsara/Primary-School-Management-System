@@ -3,6 +3,8 @@ const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const SALT_ROUNDS = 10; // Number of salt rounds for hashing
+const pool = require("../config/db");
+
 
 
 const storage = multer.diskStorage({
@@ -117,4 +119,47 @@ exports.addTeacher = (req, res) => {
     });
   });
 });
+};
+
+exports.promoteTeachers = (req, res) => {
+  const { teacherIds, newClassName, newYear } = req.body;
+
+  if (!teacherIds?.length || !newClassName || !newYear) {
+    return res.status(400).json({ message: "Missing data" });
+  }
+
+  const sqlClassID = `SELECT Class_ID FROM Class WHERE Class_name = ?`;
+
+  pool.query(sqlClassID, [newClassName], (err, classResult) => {
+    if (err) {
+      console.error("Error retrieving class ID:", err);
+      return res.status(500).json({ message: "Database error", error: err });
+    }
+
+    if (!classResult.length) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    const newClassId = classResult[0].Class_ID;
+
+    // Prepare insert values for bulk insert
+    const values = teacherIds.map(id => [id, newClassId, newYear]);
+    console.log("Values to insert:", values); // ✅ Add this
+
+
+    const sqlInsert = `
+      INSERT INTO TeacherClass (Teacher_ID, Class_ID, Academic_year)
+      VALUES ?
+    `;
+
+    pool.query(sqlInsert, [values], (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Failed to promote teachers", error: err });
+      }
+
+      console.log("Insert result:", result); // ✅ Add this
+      res.json({ message: "Teachers promoted successfully" });
+    });
+  });
 };

@@ -15,7 +15,6 @@ const Homework = () => {
   const [homeworkData, setHomeworkData] = useState({
     Homework_task: "",
     Due_date: "",
-    Class_ID: "",
   });
 
   // Fetch homework
@@ -51,26 +50,44 @@ const Homework = () => {
   // Add or update homework
   const handleSaveHomework = async () => {
     try {
+      const token = localStorage.getItem("token");
+  
+      const { Homework_task, Due_date } = homeworkData;
+  
       if (editingHomework) {
         // Update existing homework
-        await axios.put(`http://localhost:5001/api/homework/${editingHomework.Homework_ID}`, homeworkData);
+        await axios.put(
+          `http://localhost:5001/api/homework/${editingHomework.Homework_ID}`,
+          { Homework_task, Due_date },
+          { headers: { Authorization: token } }
+        );
+  
         setHomeworkList(
-          homeworkList.map((hw) => (hw.Homework_ID === editingHomework.Homework_ID ? { ...hw, ...homeworkData } : hw))
+          homeworkList.map((hw) =>
+            hw.Homework_ID === editingHomework.Homework_ID
+              ? { ...hw, Homework_task, Due_date }
+              : hw
+          )
         );
       } else {
         // Add new homework
-        const response = await axios.post("http://localhost:5001/api/homework", homeworkData);
+        const response = await axios.post(
+          "http://localhost:5001/api/homework",
+          { Homework_task, Due_date },
+          { headers: { Authorization: token } }
+        );
         setHomeworkList([...homeworkList, response.data]);
       }
-
+  
       setShowModal(false);
       setEditingHomework(null);
-      setHomeworkData({ Homework_task: "", Due_date: "", Class_ID: "" });
+      setHomeworkData({ Homework_task: "", Due_date: "" }); // Removed Class_ID
     } catch (error) {
       console.error("Error saving homework!", error);
       alert("Failed to save homework. Please try again.");
     }
   };
+  
 
   // Open modal for adding/editing
   const openModal = (homework = null) => {
@@ -79,11 +96,10 @@ const Homework = () => {
       setHomeworkData({
         Homework_task: homework.Homework_task,
         Due_date: homework.Due_date.split("T")[0], // Format date properly
-        Class_ID: homework.Class_ID,
       });
     } else {
       setEditingHomework(null);
-      setHomeworkData({ Homework_task: "", Due_date: "", Class_ID: "" });
+      setHomeworkData({ Homework_task: "", Due_date: "" });
     }
     setShowModal(true);
   };
@@ -98,9 +114,13 @@ const Homework = () => {
       await axios.delete(`http://localhost:5001/api/homework/${id}`);
       setHomeworkList(homeworkList.filter((hw) => hw.Homework_ID !== id)); // Update UI after delete
     } catch (error) {
-      console.error("Error deleting homework!", error);
-      alert("Failed to delete homework. Please try again.");
+      console.error("Error saving homework!", error);
+      if (error.response) {
+        console.log("Backend Error:", error.response.data);
+      }
+      alert("Failed to save homework. Please try again.");
     }
+    
   };
 
   return (
@@ -202,14 +222,7 @@ const Homework = () => {
                 value={homeworkData.Due_date}
                 onChange={handleInputChange}
               />
-              <input
-                type="text"
-                name="Class_ID"
-                placeholder="Class ID"
-                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                value={homeworkData.Class_ID}
-                onChange={handleInputChange}
-              />
+              
               <div className="flex justify-end space-x-4">
                 <button className="px-4 py-2 bg-gray-300 rounded-md" onClick={() => setShowModal(false)}>
                   Cancel

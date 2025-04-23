@@ -1,15 +1,17 @@
 const db = require("../config/db");
 
 // Fetch students from the database
-const getStudents = (callback) => {
-    db.query('SELECT Student_ID, Full_name FROM Student', (error, results) => {
-        if (error) {
-            console.error('Error fetching students:', error);
-            return callback(error, null);
-        }
-        callback(null, results);
-    });
-};
+// Get students by class ID
+const getStudentsByClass = (classID, callback) => {
+  const sql = `
+    SELECT s.*
+    FROM Student s
+    INNER JOIN StudentClass sc ON s.Student_ID = sc.Student_ID
+    WHERE sc.Class_ID = ?
+  `;
+  pool.query(sql, [classID], callback);
+}
+
 
 // Fetch attendance records for the last 5 days
 const getAttendance = (callback) => {
@@ -18,11 +20,13 @@ const getAttendance = (callback) => {
   const formattedDate = fiveDaysAgo.toISOString().split('T')[0];
 
   const query = `
-      SELECT s.Student_ID, s.Full_name, a.Date, a.Status
-      FROM Attendance a
-      JOIN Student s ON a.Student_ID = s.Student_ID
-      WHERE a.Date >= DATE_SUB(CURDATE(), INTERVAL 4 DAY)
-      ORDER BY a.Date ASC;
+     SELECT s.Student_ID, s.Full_name, DATE(a.Date) AS Date, 
+       CASE WHEN a.Status = 1 THEN 'Present' ELSE 'Absent' END AS Status
+FROM Attendance a
+JOIN Student s ON a.Student_ID = s.Student_ID
+WHERE a.Date >= CURDATE() - INTERVAL 4 DAY
+ORDER BY a.Date ASC;
+
   `;
 
   db.query(query, [formattedDate], (error, results) => {
@@ -60,7 +64,30 @@ const saveAttendance = (date, attendanceData, callback) => {
     });
 };
 
+//for dashboard
+const getAttendanceChartData = (callback) => {
+  const query = `
+    SELECT 
+      DATE_FORMAT(Date, '%Y-%m-%d') AS formattedDate,  -- Format Date
+      COUNT(*) AS total,
+      SUM(Status = 1) AS present,
+      ROUND(SUM(Status = 1) / COUNT(*) * 100, 2) AS percentage
+    FROM Attendance
+    WHERE Date >= DATE_SUB(CURDATE(), INTERVAL 4 DAY)
+    GROUP BY formattedDate
+    ORDER BY formattedDate ASC;
+  `;
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error fetching attendance:', error);
+      return callback(error, null);
+    }
+    callback(null, results);
+  });
+};
 
 
 
-module.exports = { getStudents, getAttendance, saveAttendance };
+
+module.exports = { getStudentsByClass, getAttendance, saveAttendance, getAttendanceChartData };

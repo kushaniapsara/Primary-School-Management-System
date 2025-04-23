@@ -2,36 +2,39 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/NavbarTeacher";
 
-const VideosPage = () => {
+const VideoPage = () => {
   const [file, setFile] = useState(null);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [classId, setClassId] = useState("");
+  const [materials, setMaterials] = useState([]); // State to store the materials
+
+
   const navigate = useNavigate();
 
-  // Handle file selection
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // Handle file upload
   const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a file first.");
-      return;
-    }
 
+    
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("title", title);  // Replace with actual value
+    formData.append("description", description); // Replace with actual value
+    formData.append("class_id", classId); // Replace with actual Class_ID
 
+  
     try {
-      const response = await fetch("/api/study-materials/videos/upload", {
+      const response = await fetch(`http://localhost:5001/api/study-materials/upload/video`, {
         method: "POST",
         body: formData,
       });
-
+  
       if (response.ok) {
         alert("File uploaded successfully!");
-        setFile(null); // Clear file input
-        fetchUploadedFiles(); // Refresh uploaded files list
+        navigate("/study-materials/videos");
       } else {
         alert("Upload failed!");
       }
@@ -40,63 +43,78 @@ const VideosPage = () => {
       alert("Error uploading file.");
     }
   };
-
-  // Fetch uploaded videos
-  const fetchUploadedFiles = async () => {
+  
+  // Function to fetch the materials from the backend
+  const fetchMaterials = async () => {
     try {
-      const response = await fetch("/api/study-materials/videos");
-      if (response.ok) {
-        const data = await response.json();
-        setUploadedFiles(data.materials);
+      const response = await fetch("http://localhost:5001/api/study-materials/video");
+      const data = await response.json();
+      console.log("Fetched Materials:", data); // Debugging log
+  
+      if (data.materials) {
+        setMaterials(data.materials); // Ensure you're setting the array, not the entire object
       } else {
-        console.error("Failed to fetch files");
+        setMaterials([]); // Fallback to empty array if `materials` key is missing
       }
     } catch (error) {
-      console.error("Error fetching files", error);
+      console.error("Error fetching materials", error);
     }
   };
+  
 
-  // Fetch uploaded files on component mount
+  // Fetch the materials when the component mounts
   useEffect(() => {
-    fetchUploadedFiles();
+    fetchMaterials();
   }, []);
 
   return (
     <div className="flex h-screen">
       <Navbar />
 
-      <div className="flex-1 bg-blue-900">
-        <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
-          <h1 className="text-2xl font-bold">Upload Video</h1>
-        </header>
+      <div className="flex-1 bg-blue-900 p-8 text-black">
+        <h1 className="text-2xl font-bold mb-6 text-white">Video Materials</h1>
 
-        <div className="px-8 py-4">
-          <input type="file" onChange={handleFileChange} className="mb-4" />
-          <button
-            onClick={handleUpload}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Upload
-          </button>
+        <div className="flex items-center space-x-4 bg-white p-4 rounded-lg">
+          <input type="file" onChange={handleFileChange} className="border p-2 rounded w-1/4" />
+          <input type="text" placeholder="Title" onChange={(e) => setTitle(e.target.value)} className="border p-2 rounded w-1/4" />
+          <input type="text" placeholder="Description" onChange={(e) => setDescription(e.target.value)} className="border p-2 rounded w-1/4" />
+          <input type="number" placeholder="Class ID" onChange={(e) => setClassId(e.target.value)} className="border p-2 rounded w-1/6" />
+          <button onClick={handleUpload} className="bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
         </div>
 
-        <div className="px-8 py-4">
-          <h2 className="text-xl font-semibold text-white">Uploaded Videos</h2>
-          <ul className="mt-2">
-            {uploadedFiles.length > 0 ? (
-              uploadedFiles.map((file, index) => (
-                <li key={index} className="text-white">
-                  {file}
-                </li>
-              ))
-            ) : (
-              <p className="text-white">No videos uploaded yet.</p>
-            )}
-          </ul>
+        <div className="mt-8 grid grid-cols-4 gap-6">
+        {materials.length > 0 ? (
+          materials.map((material) => (
+            <a
+              key={material.Material_ID}
+              href={`http://localhost:5001/${material.File_Path}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white rounded-lg p-4 flex flex-col items-center shadow-md hover:shadow-xl"
+            >
+              {material.File_Path.endsWith(".jpg") || material.File_Path.endsWith(".jpeg") || material.File_Path.endsWith(".png") ? (
+                <img src={`http://localhost:5001/${material.File_Path}`} alt={material.Title} className="w-32 h-32 object-cover rounded-lg mb-2" />
+              ) : material.File_Path.endsWith(".mp4") || material.File_Path.endsWith(".webm") || material.File_Path.endsWith(".mov") || material.File_Path.endsWith(".3pg") ? (
+                <video controls className="w-32 h-32 rounded-lg mb-2">
+                  <source src={`http://localhost:5001/${material.File_Path}`} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <div className="w-32 h-32 flex items-center justify-center bg-gray-300 text-gray-700 font-bold rounded-lg mb-2">
+                  PDF
+                </div>
+              )}
+      <p className="text-black font-semibold">{material.Title}</p>
+    </a>
+  ))
+) : (
+  <p className="text-center text-white col-span-4">No materials found.</p>
+)}
+
         </div>
       </div>
     </div>
   );
 };
 
-export default VideosPage;
+export default VideoPage;

@@ -6,11 +6,30 @@ const StudentProfiles = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/students")
-      .then((res) => res.json())
-      .then((data) => setStudents(data))
-      .catch((err) => console.error("Error fetching students:", err));
+    const fetchStudents = async () => {
+      try {
+        const token = localStorage.getItem("token"); // assuming you stored the JWT here after login
+  
+        const response = await fetch("http://localhost:5001/api/students/by-class", {
+          headers: {
+            Authorization: token, // 👈 send token in header
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch students");
+        }
+  
+        const data = await response.json();
+        setStudents(data);
+      } catch (err) {
+        console.error("Error fetching students:", err);
+      }
+    };
+  
+    fetchStudents();
   }, []);
+  
 
   return (
     <div className="p-6">

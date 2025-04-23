@@ -223,6 +223,8 @@ const AdminManagement = () => {
     <TextField fullWidth margin="dense" label="NIC" name="nic"  value={newAdmin.nic} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newAdmin.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
     <TextField fullWidth margin="dense" label="Role" name="role" value={newAdmin.role} onChange={handleChange} />
+    <TextField fullWidth margin="dense" label="Documents" name="documents" value={newAdmin.documents} onChange={handleChange} />
+    
 
     <input type="file" accept="image/*" onChange={handleFileChange} style={{ marginTop: "15px" }} /> {/* Profile Photo Input */}
   </DialogContent>
@@ -231,9 +233,28 @@ const AdminManagement = () => {
     <Button onClick={() => setOpen(false)} color="secondary">
       Cancel
     </Button>
-    <Button onClick={handleSubmit} color="primary">
-      Submit
-    </Button>
+   <Button 
+                             variant="contained" 
+                             color="primary" 
+                             onClick={handleSubmit} 
+                             disabled={
+                               ![
+                                 "fullName", "nameWithInitials", "age", "gender", "contactNumber", "email",
+                                 "address", "enrollmentDate", "documents", "password", "username",
+                                 "nic", "previousSchools", "status", "leavingDate",
+                                 "role"
+   
+                               ].every((field) => {
+                                 const value = newAdmin[field];
+                                 if (typeof value === "string") return value.trim() !== "";
+                                 if (typeof value === "boolean") return true;
+                                 if (value instanceof File || value instanceof Blob) return true;
+                                 return value !== null && value !== undefined && value !== "";
+                               })
+                             }
+                           >
+                             Submit
+                           </Button>
   </DialogActions>
 </Dialog>
 

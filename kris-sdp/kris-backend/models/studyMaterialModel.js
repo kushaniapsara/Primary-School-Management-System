@@ -1,19 +1,25 @@
 const pool = require('../config/db'); // Ensure the correct database connection is used
 
 // Insert new study material into the database
-const addStudyMaterial = (category, filePath, callback) => {
-  const query = 'INSERT INTO StudyMaterials (category, file_path) VALUES (?, ?)';
-  pool.query(query, [category, filePath], (err, results) => {
+const addStudyMaterial = (materialId, title, description, classId, fileType, filePath, callback) => {
+  const query = `
+    INSERT INTO StudyMaterial (Material_ID, Title, Description, Class_ID, File_Type, File_Path) 
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  pool.query(query, [materialId, title, description, classId, fileType, filePath], (err, result) => {
     if (err) {
+      console.error("Database insertion error:", err); // ✅ Log database errors
       return callback(err, null);
     }
-    callback(null, results);
+    callback(null, result);
   });
 };
 
+
 // Get study materials by category
 const getStudyMaterialsByCategory = (category, callback) => {
-  const query = 'SELECT * FROM StudyMaterials WHERE category = ?';
+  const query = 'SELECT * FROM StudyMaterial WHERE File_Type = ?';
   pool.query(query, [category], (err, results) => {
     if (err) {
       return callback(err, null);
@@ -22,7 +28,4 @@ const getStudyMaterialsByCategory = (category, callback) => {
   });
 };
 
-module.exports = {
-  addStudyMaterial,
-  getStudyMaterialsByCategory,
-};
+module.exports = {addStudyMaterial, getStudyMaterialsByCategory};

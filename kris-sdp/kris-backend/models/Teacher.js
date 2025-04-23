@@ -21,9 +21,19 @@ const pool = require("../config/db");
           Teacher.Gender, 
           Teacher.Address,
           Teacher.Grade,  
-          Class.Class_name
-        FROM Teacher
-        INNER JOIN TeacherClass ON Teacher.Teacher_ID = TeacherClass.Teacher_ID
+          Class.Class_name,
+          TeacherClass.Academic_year
+
+         FROM Teacher
+
+INNER JOIN (
+      SELECT Teacher_ID, MAX(Academic_year) AS LatestYear
+      FROM TeacherClass
+      GROUP BY Teacher_ID
+    ) latest ON Teacher.Teacher_ID = latest.Teacher_ID
+
+      INNER JOIN TeacherClass ON TeacherClass.Teacher_ID = latest.Teacher_ID AND TeacherClass.Academic_year = latest.LatestYear
+
         INNER JOIN Class ON TeacherClass.Class_ID = Class.Class_ID
         WHERE 1=1
       `;
@@ -50,6 +60,11 @@ const pool = require("../config/db");
         values.push(filters.gender);
       }
   
+      if (filters.academicYear) {
+        sql += ` AND TeacherClass.Academic_year = ?`;
+        values.push(filters.academicYear);
+      }
+
       // Now, pass the dynamically built SQL query and values
       pool.query(sql, values, callback);
     },

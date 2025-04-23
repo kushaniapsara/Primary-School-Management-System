@@ -20,6 +20,11 @@ const progressRoutes = require('./routes/progressRoutes');
 
 const enrollmentRoutes = require('./routes/enrollmentRoutes');
 
+const reportRoutes = require('./routes/reportRoutes');
+
+
+
+
 
 dotenv.config();
 
@@ -62,6 +67,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/progress', progressRoutes);
 
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+app.use('/uploads', express.static('uploads'));  // ✅ Serving uploaded files
+
+app.use('/api/report', reportRoutes);
 
 
 // Default route for '/'

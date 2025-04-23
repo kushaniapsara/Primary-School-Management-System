@@ -138,10 +138,8 @@ const Profile = () => {
 
         {/* Buttons */}
         <div className="mt-6 flex space-x-4">
+         
           <button className="bg-gray-400 text-black px-6 py-3 mx-4 rounded-md text-lg">
-            Student Profiles
-          </button>
-          <button className="bg-gray-400 text-black px-6 py-3 rounded-md text-lg">
             Class Schedule
           </button>
           <button

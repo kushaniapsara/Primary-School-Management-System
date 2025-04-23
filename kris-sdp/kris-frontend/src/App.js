@@ -42,6 +42,7 @@ import AdminDetails from './Pages/Admin/AdminDetails.js';
 
 
 import StudentProfiles from './Pages/Common/StudentProfiles.js';
+import Reports from './Pages/Common/Reports.js';
 
 
 // Utility function to check if the user is authenticated
@@ -122,6 +123,8 @@ function App() {
           <Route path="/StudentProfiles" element={isAuthenticated && userRole === 'Teacher' ? <StudentProfiles /> : <Navigate to="/" />} />
           <Route path="/extra-curricular/:studentId" element={isAuthenticated && userRole === 'Teacher' ? <ExtraCurricularPage /> : <Navigate to="/" />} />
           <Route path="/progress/:studentId" element={isAuthenticated && userRole === 'Teacher' ?<ProgressPage />: <Navigate to="/" />} />
+
+          <Route path="/Reports" element={isAuthenticated && userRole === 'Teacher' ? <Reports /> : <Navigate to="/" />} />
 
 
 

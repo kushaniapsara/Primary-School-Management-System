@@ -6,15 +6,15 @@ const verifyToken = require("../middleware/auth");
 const getTeacherClasses = require("../middleware/getTeacherClasses");
 
 // Routes for homework
-router.get("/", homeworkController.getAllHomework);
-router.post("/", homeworkController.addHomework);
-router.put("/:id", homeworkController.updateHomework);
+router.get("/", verifyToken, homeworkController.getAllHomeworkByClass);
+router.post("/", verifyToken, homeworkController.addHomework);
+router.put("/:id", verifyToken, homeworkController.updateHomework);
 router.delete("/:id", homeworkController.deleteHomework);
 router.get("/upcoming", homeworkController.getUpcomingHomework);
 router.get("/recent", homeworkController.getRecentHomework);
 
 
-// ✅ Correct Order: verifyToken → getTeacherClasses → Route Handler
+/*// ✅ Correct Order: verifyToken → getTeacherClasses → Route Handler
 router.get("/", verifyToken, getTeacherClasses, (req, res) => {
     const classID = req.classID;
   
@@ -28,7 +28,7 @@ router.get("/", verifyToken, getTeacherClasses, (req, res) => {
   
       res.json(results);
     });
-  });
+  });*/
 
 
 module.exports = router;

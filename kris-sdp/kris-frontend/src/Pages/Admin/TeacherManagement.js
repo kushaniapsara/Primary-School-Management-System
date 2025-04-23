@@ -25,10 +25,17 @@ const TeacherManagement = () => {
   
   const [className, setClassName] = useState(""); // Store selected class
 
+   const [selectedIds, setSelectedIds] = useState([]);//promoting
+    const [newClassId, setNewClassId] = useState("");
+  
+    const [newClassName, setNewClassName] = useState("");
+    const [newYear, setNewYear] = useState("");
+
   const [filters, setFilters] = useState({
     grade: "",
     className: "",
-    name: ""
+    name: "",
+    academicYear: "",
   });
 
   const [newTeacher, setNewTeacher] = useState({
@@ -165,11 +172,54 @@ const generateClassOptions = () => {
       return (
         (filters.grade === "" || teacher.Grade === filters.grade) &&
         (filters.className === "" || teacher.Class_name === filters.className) &&
-        (filters.name === "" || teacher.Full_name.toLowerCase().includes(filters.name.toLowerCase()))  // Add name filtering here
+        (filters.name === "" || teacher.Full_name.toLowerCase().includes(filters.name.toLowerCase())) && // Add name filtering here
+        (filters.academicYear === "" || String(teacher.Academic_year) === filters.academicYear) 
 
       );
     }));
   };
+
+          //checkboxes
+          const toggleSelectAll = (e) => {
+            if (e.target.checked) {
+              setSelectedIds(teachers.map((s) => s.Teacher_ID));
+            } else {
+              setSelectedIds([]);
+            }
+          };
+
+          const toggleSelect = (id) => {
+            setSelectedIds((prev) =>
+              prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+            );
+          };
+          //promoting
+          const handlePromote = async () => {
+          console.log("Clicked Promote");
+
+          try {
+            const response = await fetch("http://localhost:5001/api/teachers/promote", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                teacherIds: selectedIds,
+                newClassName: newClassName,
+                newYear: newYear
+              })
+            });
+
+            const data = await response.json(); // parse JSON from response
+            console.log("Backend response:", data);
+            alert("Teachers promoted successfully!");
+          } catch (error) {
+            console.error("Error promoting teachers:", error);
+          }
+          };
+
+
+
   
   return (
     <div className="flex h-screen overflow-hidden">
@@ -222,19 +272,85 @@ const generateClassOptions = () => {
                 fullWidth
               />
             </FormControl>
+
+             <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel>Academic_year</InputLabel>
+                        <Select name="academicYear" value={filters.academicYear} onChange={handleFilterChange}>
+                          <MenuItem value="">All</MenuItem>
+                          <MenuItem value="2025">2025</MenuItem>
+                          <MenuItem value="2026">2026</MenuItem>
+                          <MenuItem value="2027">2027</MenuItem>
+                          <MenuItem value="2028">2028</MenuItem>
+                          <MenuItem value="2029">2029</MenuItem>
+            
+                        </Select>
+                      </FormControl>
+            
           
           <Button variant="contained" color="primary" onClick={handleFilterApply}>Filter</Button>
         </div>
 
 
+          {/* Promote Teachers */}
+          <div className="flex gap-4 mb-4 items-center mx-4 my-4">
+              <select
+                value={newClassName}
+                onChange={(e) => setNewClassName(e.target.value)}
+                className="border p-2 rounded"
+              >
+                <option value="">Select New Class</option>
+                <option value="1A">Grade 1A</option>
+                <option value="1B">Grade 1B</option>
+                <option value="1C">Grade 1C</option> {/* fixed value */}
+
+                <option value="2A">Grade 2A</option>
+                <option value="2B">Grade 2B</option>
+                <option value="2C">Grade 2C</option>
+
+                <option value="3A">Grade 3A</option>
+                <option value="3B">Grade 3B</option>
+                <option value="3C">Grade 3C</option>
+              </select>
+
+              <input
+                type="text"
+                placeholder="New Academic Year"
+                value={newYear}
+                onChange={(e) => setNewYear(e.target.value)}
+                className="border p-2 rounded"
+              />
+
+                  <button
+                    onClick={() => {
+                      console.log("Clicked Promote Button");
+                      handlePromote();
+                    }}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    disabled={selectedIds.length === 0 || !newClassName || !newYear}
+                  >
+                    Promote Selected
+                  </button>
+
+            </div>
 
 
-        <div className="p-5">
+
+            <div className="p-5">
       <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-gray-100 border-b-2 border-black">
+      <thead>
+        <tr className="bg-gray-100">
+            <th className="border-2 border-black px-4 py-2 text-center">
+              <input
+                type="checkbox"
+                checked={teachers.length > 0 && selectedIds.length === teachers.length}
+                onChange={toggleSelectAll}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </th>            
             <th className="border-2 border-black px-4 py-2 text-center"><b>Full Name</b></th>
             <th className="border-2 border-black px-4 py-2 text-center"><b>Class</b></th>
+            <th className="border-2 border-black px-4 py-2 text-center"><b>Academic Year</b></th>
+
             <th className="border-2 border-black px-4 py-2 text-center"><b>Contact</b></th>
             <th className="border-2 border-black px-4 py-2 text-center"><b>Status</b></th>
           </tr>
@@ -246,8 +362,23 @@ const generateClassOptions = () => {
               className="border-b-2 border-black bg-gray-200 cursor-pointer hover:bg-gray-400"
               onClick={() => openModal(teacher)} // ✅ Correctly pass teacher data
             >
+
+          <td
+            className="border-2 border-black px-4 py-2 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <input
+              type="checkbox"
+              checked={selectedIds.includes(teacher.Teacher_ID)}
+              onChange={() => toggleSelect(teacher.Teacher_ID)}
+            />
+          </td>
+
+
               <td className="border-2 border-black px-4 py-2 text-center">{teacher.Full_name}</td>
               <td className="border-2 border-black px-4 py-2 text-center">{teacher.Class_name}</td>
+              <td className="border-2 border-black px-4 py-2 text-center">{teacher.Academic_year}</td>
+
               <td className="border-2 border-black px-4 py-2 text-center">{teacher.Contact_number}</td>
               
               <td className="border-2 border-black px-4 py-2 text-center">
@@ -328,6 +459,9 @@ const generateClassOptions = () => {
     <TextField fullWidth margin="dense" label="NIC" name="nic"  value={newTeacher.nic} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newTeacher.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
     <TextField fullWidth margin="dense" label="Role" name="role" value={newTeacher.role} onChange={handleChange} />
+    <TextField fullWidth margin="dense" label="Documents" name="documents" value={newTeacher.documents} onChange={handleChange} />
+
+
 
     <FormControl fullWidth margin="dense">
                 <InputLabel>Grade</InputLabel>
@@ -371,9 +505,29 @@ const generateClassOptions = () => {
     <Button onClick={() => setOpen(false)} color="secondary">
       Cancel
     </Button>
-    <Button onClick={handleSubmit} color="primary">
-      Submit
-    </Button>
+    <Button 
+                          variant="contained" 
+                          color="primary" 
+                          onClick={handleSubmit} 
+                          disabled={
+                            ![
+                              "fullName", "nameWithInitials", "age", "gender", "contactNumber", "email",
+                              "address", "enrollmentDate", "documents", "password", "username",
+                              "nic", "previousSchools", "status", "leavingDate",
+                              "role", "grade"
+                              
+                            ].every((field) => {
+                              const value = newTeacher[field];
+                              if (typeof value === "string") return value.trim() !== "";
+                              if (typeof value === "boolean") return true;
+                              if (value instanceof File || value instanceof Blob) return true;
+                              return value !== null && value !== undefined && value !== "";
+                            })
+                          }
+                        >
+                          Submit
+                        </Button>
+    
   </DialogActions>
 </Dialog>
 

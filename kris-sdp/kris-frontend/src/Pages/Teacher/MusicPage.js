@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/NavbarTeacher";
 
 const MusicPage = () => {
   const [file, setFile] = useState(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [classId, setClassId] = useState("");
+  const [materials, setMaterials] = useState([]); // State to store the materials
+
+
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
@@ -11,18 +17,24 @@ const MusicPage = () => {
   };
 
   const handleUpload = async () => {
+
+    
     const formData = new FormData();
     formData.append("file", file);
-    
+    formData.append("title", title);  // Replace with actual value
+    formData.append("description", description); // Replace with actual value
+    formData.append("class_id", classId); // Replace with actual Class_ID
+
+  
     try {
-      const response = await fetch("/api/study-materials/music/upload", {
+      const response = await fetch(`http://localhost:5001/api/study-materials/upload/music`, {
         method: "POST",
         body: formData,
       });
-
+  
       if (response.ok) {
         alert("File uploaded successfully!");
-        navigate("/study-materials");
+        navigate("/study-materials/music");
       } else {
         alert("Upload failed!");
       }
@@ -30,26 +42,69 @@ const MusicPage = () => {
       console.error("Error uploading file", error);
       alert("Error uploading file.");
     }
-    
   };
+  
+  // Function to fetch the materials from the backend
+  const fetchMaterials = async () => {
+    try {
+      const response = await fetch("http://localhost:5001/api/study-materials/music");
+      const data = await response.json();
+      console.log("Fetched Materials:", data); // Debugging log
+  
+      if (data.materials) {
+        setMaterials(data.materials); // Ensure you're setting the array, not the entire object
+      } else {
+        setMaterials([]); // Fallback to empty array if `materials` key is missing
+      }
+    } catch (error) {
+      console.error("Error fetching materials", error);
+    }
+  };
+  
+
+  // Fetch the materials when the component mounts
+  useEffect(() => {
+    fetchMaterials();
+  }, []);
 
   return (
     <div className="flex h-screen">
       <Navbar />
 
-      <div className="flex-1 bg-blue-900">
-        <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
-          <h1 className="text-2xl font-bold">Upload Music</h1>
-        </header>
+      <div className="flex-1 bg-blue-900 p-8 text-black">
+        <h1 className="text-2xl font-bold mb-6 text-white">Music Materials</h1>
 
-        <div className="px-8 py-4">
-          <input type="file" onChange={handleFileChange} className="mb-4" />
-          <button
-            onClick={handleUpload}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Upload
-          </button>
+        <div className="flex items-center space-x-4 bg-white p-4 rounded-lg">
+          <input type="file" onChange={handleFileChange} className="border p-2 rounded w-1/4" />
+          <input type="text" placeholder="Title" onChange={(e) => setTitle(e.target.value)} className="border p-2 rounded w-1/4" />
+          <input type="text" placeholder="Description" onChange={(e) => setDescription(e.target.value)} className="border p-2 rounded w-1/4" />
+          <input type="number" placeholder="Class ID" onChange={(e) => setClassId(e.target.value)} className="border p-2 rounded w-1/6" />
+          <button onClick={handleUpload} className="bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
+        </div>
+
+        <div className="mt-8 grid grid-cols-4 gap-6">
+          {materials.length > 0 ? (
+            materials.map((material) => (
+              <a
+                key={material.Material_ID}
+                href={`http://localhost:5001/${material.File_Path}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white rounded-lg p-4 flex flex-col items-center shadow-md hover:shadow-xl"
+              >
+                {material.File_Path.endsWith(".jpg") || material.File_Path.endsWith(".jpeg") || material.File_Path.endsWith(".png") ? (
+                  <img src={`http://localhost:5001/${material.File_Path}`} alt={material.Title} className="w-32 h-32 object-cover rounded-lg mb-2" />
+                ) : (
+                  <div className="w-32 h-32 flex items-center justify-center bg-gray-300 text-gray-700 font-bold rounded-lg mb-2">
+                    Music
+                  </div>
+                )}
+                <p className="text-black font-semibold">{material.Title}</p>
+              </a>
+            ))
+          ) : (
+            <p className="text-center text-white col-span-4">No materials found.</p>
+          )}
         </div>
       </div>
     </div>

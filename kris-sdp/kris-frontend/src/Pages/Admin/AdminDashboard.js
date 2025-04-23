@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/AdminNavbar";
+import axios from "axios";
+
 import SearchIcon from "@mui/icons-material/Search";
 import { Bar, Line } from "react-chartjs-2";
 import {
@@ -18,7 +20,7 @@ import Notice from "../Common/Notice"; // Adjust path if needed
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
-const TeacherDashboard = () => {
+const AdminDashboard = () => {
   // Performance Bar Chart Data
   const performanceData = {
     labels: ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
@@ -46,38 +48,49 @@ const TeacherDashboard = () => {
   };
 
   // Attendance Line Chart Data (With Scatter Points)
-  const attendanceData = {
-    labels: ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+  const [attendanceData, setAttendanceData] = useState([]);
+  
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/api/attendance-chart") // Adjust endpoint if needed
+      .then((res) => {
+        console.log("Chart Data:", res.data); // Debugging log
+  
+        const formattedData = res.data.map(item => ({
+          date: item.formattedDate, // Ensure formatted date is used
+          percentage: item.percentage || 0, // Avoid undefined values
+        }));
+  
+        setAttendanceData(formattedData);
+      })
+      .catch((err) => {
+        console.error("Error fetching attendance data:", err);
+      });
+  }, []);
+  
+
+  const attendanceChartData = {
+    labels: attendanceData.map((record) => record.date), // Use `date`
     datasets: [
       {
-        label: "Boys",
-        data: [48, 50, 92, 74, 88],
-        borderColor: "rgba(255, 99, 132, 1)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-        borderWidth: 2,
-        pointRadius: 6,
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        showLine: true, // Ensures the line is drawn
-      },
-      {
-        label: "Girls",
-        data: [50, 82, 95, 80, 89],
+        label: "Attendance %",
+        data: attendanceData.map((record) => record.percentage),
         borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
-        borderWidth: 2,
-        pointRadius: 6,
-        pointBackgroundColor: "rgba(75, 192, 192, 1)",
-        showLine: true, // Ensures the line is drawn
+        backgroundColor: "rgba(75, 192, 192, 0.4)",
+        tension: 0.3,
+        fill: true,
+        pointRadius: 5,
       },
     ],
   };
+  
 
-  const lineOptions = {
+  const attendanceChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: "Boys vs. Girls Attendance (%)" },
+      title: { display: true, text: "Overall Attendance Trend (Last 5 Days)" },
     },
     scales: {
       y: {
@@ -85,8 +98,12 @@ const TeacherDashboard = () => {
         max: 100,
         title: { display: true, text: "Attendance (%)" },
       },
+      x: {
+        title: { display: true, text: "Date" },
+      },
     },
   };
+
 
   return (
     <div className="flex min-h-screen">
@@ -123,7 +140,7 @@ const TeacherDashboard = () => {
           <div className="bg-gray-200 p-4 rounded shadow-md h-[400px]">
             <h2 className="text-lg font-bold text-center mb-4">Attendance</h2>
             <div className="h-[300px]">
-              <Line data={attendanceData} options={lineOptions} />
+              <Line data={attendanceChartData} options={attendanceChartOptions} />
             </div>
           </div>
         </section>
@@ -150,4 +167,4 @@ const TeacherDashboard = () => {
   );
 };
 
-export default TeacherDashboard;
+export default AdminDashboard;

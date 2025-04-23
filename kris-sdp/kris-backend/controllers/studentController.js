@@ -4,6 +4,8 @@ const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const SALT_ROUNDS = 10; // Number of salt rounds for hashing
+const pool = require("../config/db");
+
 
 const storage = multer.diskStorage({
   destination: "./uploads/profile_pics",
@@ -21,7 +23,9 @@ exports.getStudents = (req, res) => {
     className: req.query.className || null,
     grade: req.query.grade || null,
     gender: req.query.gender || null,
-    syllabus: req.query.syllabus || null
+    syllabus: req.query.syllabus || null,
+    academicYear: req.query.academicYear || null
+
   };
 
   // Check and add filters based on the request query parameters
@@ -30,6 +34,8 @@ exports.getStudents = (req, res) => {
   if (req.query.grade) filters.grade = req.query.grade;
   if (req.query.gender) filters.gender = req.query.gender;
   if (req.query.syllabus) filters.syllabus = req.query.syllabus;
+  if (req.query.academicYear) filters.academicYear = req.query.academicYear;
+
 
 
   Student.getAll(filters, (err, results) => {
@@ -136,6 +142,67 @@ exports.addStudent = (req, res) => {
           });
         });
       });
+    });
+  });
+};
+
+
+// New function for class-specific student list for teacher
+exports.getStudentsByClass = (req, res) => {
+  const classID = req.classID;
+
+  if (!classID) {
+    return res.status(403).json({ error: "Class ID missing in token" });
+  }
+
+  Student.getStudentsByClass(classID, (err, results) => {
+    if (err) {
+      console.error("Error fetching students by class:", err.message);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+    res.json(results);
+  });
+};
+
+exports.promoteStudents = (req, res) => {
+  const { studentIds, newClassName, newYear } = req.body;
+
+  if (!studentIds?.length || !newClassName || !newYear) {
+    return res.status(400).json({ message: "Missing data" });
+  }
+
+  const sqlClassID = `SELECT Class_ID FROM Class WHERE Class_name = ?`;
+
+  pool.query(sqlClassID, [newClassName], (err, classResult) => {
+    if (err) {
+      console.error("Error retrieving class ID:", err);
+      return res.status(500).json({ message: "Database error", error: err });
+    }
+
+    if (!classResult.length) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    const newClassId = classResult[0].Class_ID;
+
+    // Prepare insert values for bulk insert
+    const values = studentIds.map(id => [id, newClassId, newYear]);
+    console.log("Values to insert:", values); // ✅ Add this
+
+
+    const sqlInsert = `
+      INSERT INTO StudentClass (Student_ID, Class_ID, Academic_year)
+      VALUES ?
+    `;
+
+    pool.query(sqlInsert, [values], (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Failed to promote students", error: err });
+      }
+
+      console.log("Insert result:", result); // ✅ Add this
+      res.json({ message: "Students promoted successfully" });
     });
   });
 };

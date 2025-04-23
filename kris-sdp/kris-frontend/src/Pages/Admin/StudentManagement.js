@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import axios from 'axios';
+
 import {
   Button,
   Dialog,
@@ -26,11 +28,23 @@ const StuManagement = () => {
 
   const [className, setClassName] = useState(""); // Store selected class
 
+  const [selectedIds, setSelectedIds] = useState([]);//promoting
+  const [newClassId, setNewClassId] = useState("");
+
+  const [newClassName, setNewClassName] = useState("");
+  const [newYear, setNewYear] = useState("");
+
+
+ // const [selectedStudents, setSelectedStudents] = useState([]);  // Stores the selected students
+  //const [newClassName, setNewClassName] = useState('');  // Stores the new class name
+  //const [newAcademicYear, setNewAcademicYear] = useState('');  // Stores the new academic year
+
   const [filters, setFilters] = useState({
     grade: "",
     className: "",
     syllabus: "",
     name: "", 
+    academicYear: "",
   });
 
 
@@ -178,6 +192,54 @@ const generateClassOptions = () => {
   };
 
 
+
+  const printDetails = () => {
+    const modalContent = document.getElementById("student-details-modal");
+  
+    if (!modalContent) {
+      console.error("Error: Student details modal not found.");
+      return;
+    }
+  
+    const printWindow = window.open("", "_blank");
+    
+    if (!printWindow) {
+      console.error("Popup blocked! Allow popups and try again.");
+      return;
+    }
+  
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Student Details</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .print-container { max-width: 600px; margin: auto; }
+          </style>
+        </head>
+        <body>
+          <div class="print-container">
+            ${modalContent.innerHTML}
+          </div>
+          <script>
+            window.onload = function() {
+              window.print();
+              window.close();
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+  
+  
+
+
+
+
+
+
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -188,12 +250,52 @@ const generateClassOptions = () => {
         (filters.grade === "" || student.Grade === filters.grade) &&
         (filters.className === "" || student.Class_name === filters.className) &&
         (filters.syllabus === "" || student.Syllabus === filters.syllabus) &&
-        (filters.name === "" || student.Full_name.toLowerCase().includes(filters.name.toLowerCase()))  // Add name filtering here
+        (filters.name === "" || student.Full_name.toLowerCase().includes(filters.name.toLowerCase())) &&  // Add name filtering here
+        (filters.academicYear === "" || String(student.Academic_year) === filters.academicYear) 
 
       );
     }));
   };
   
+
+//checkboxes
+  const toggleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(students.map((s) => s.Student_ID));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+  
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+    );
+  };
+ //promoting
+ const handlePromote = async () => {
+  console.log("Clicked Promote");
+
+  try {
+    const response = await fetch("http://localhost:5001/api/students/promote", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        studentIds: selectedIds,
+        newClassName: newClassName,
+        newYear: newYear
+      })
+    });
+
+    const data = await response.json(); // parse JSON from response
+    console.log("Backend response:", data);
+    alert("Students promoted successfully!");
+  } catch (error) {
+    console.error("Error promoting students:", error);
+  }
+};
 
 
   
@@ -259,24 +361,92 @@ const generateClassOptions = () => {
                 fullWidth
               />
             </FormControl>
+
+
+            <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Academic_year</InputLabel>
+            <Select name="academicYear" value={filters.academicYear} onChange={handleFilterChange}>
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="2025">2025</MenuItem>
+              <MenuItem value="2026">2026</MenuItem>
+              <MenuItem value="2027">2027</MenuItem>
+              <MenuItem value="2028">2028</MenuItem>
+              <MenuItem value="2029">2029</MenuItem>
+
+            </Select>
+          </FormControl>
+
           
           <Button variant="contained" color="primary" onClick={handleFilterApply}>Filter</Button>
         </div>
+
+            {/* Promote Students */}
+            <div className="flex gap-4 mb-4 items-center mx-4 my-4">
+              <select
+                value={newClassName}
+                onChange={(e) => setNewClassName(e.target.value)}
+                className="border p-2 rounded"
+              >
+                <option value="">Select New Class</option>
+                <option value="1A">Grade 1A</option>
+                <option value="1B">Grade 1B</option>
+                <option value="1C">Grade 1C</option> {/* fixed value */}
+
+                <option value="2A">Grade 2A</option>
+                <option value="2B">Grade 2B</option>
+                <option value="2C">Grade 2C</option>
+
+                <option value="3A">Grade 3A</option>
+                <option value="3B">Grade 3B</option>
+                <option value="3C">Grade 3C</option>
+              </select>
+
+              <input
+                type="text"
+                placeholder="New Academic Year"
+                value={newYear}
+                onChange={(e) => setNewYear(e.target.value)}
+                className="border p-2 rounded"
+              />
+
+                  <button
+                    onClick={() => {
+                      console.log("Clicked Promote Button");
+                      handlePromote();
+                    }}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    disabled={selectedIds.length === 0 || !newClassName || !newYear}
+                  >
+                    Promote Selected
+                  </button>
+
+            </div>
+
 
 
 
         <div className="p-5">
       <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-gray-100 border-b-2 border-black">
-            <th className="border-2 border-black px-4 py-2 text-center"><b>Full Name</b></th>
-            <th className="border-2 border-black px-4 py-2 text-center"><b>Class</b></th>
-
-            <th className="border-2 border-black px-4 py-2 text-center"><b>Contact</b></th>
-            <th className="border-2 border-black px-4 py-2 text-center"><b>Syllabus</b></th>
-            <th className="border-2 border-black px-4 py-2 text-center"><b>Status</b></th>
+      <thead>
+          <tr className="bg-gray-100">
+            <th className="border-2 border-black px-4 py-2 text-center">
+              <input
+                type="checkbox"
+                checked={students.length > 0 && selectedIds.length === students.length}
+                onChange={toggleSelectAll}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </th>
+            {/*existing headers */}
+            <th className="border-2 border-black px-4 py-2 text-center">Student Name</th>
+            <th className="border-2 border-black px-4 py-2 text-center">Class</th>
+            <th className="border-2 border-black px-4 py-2 text-center">Academic Year</th>
+            <th className="border-2 border-black px-4 py-2 text-center">Contact</th>
+            <th className="border-2 border-black px-4 py-2 text-center">Syllabus</th>
+            <th className="border-2 border-black px-4 py-2 text-center">Status</th>
           </tr>
         </thead>
+
         <tbody>
           {students.map((student) => (
             <tr
@@ -284,8 +454,22 @@ const generateClassOptions = () => {
               className="border-b-2 border-black bg-gray-200 cursor-pointer hover:bg-gray-400"
               onClick={() => openModal(student)} // ✅ Correctly pass student data
             >
+
+
+            <td
+              className="border-2 border-black px-4 py-2 text-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <input
+                type="checkbox"
+                checked={selectedIds.includes(student.Student_ID)}
+                onChange={() => toggleSelect(student.Student_ID)}
+              />
+            </td>
+
               <td className="border-2 border-black px-4 py-2 text-center">{student.Full_name}</td>
               <td className="border-2 border-black px-4 py-2 text-center">{student.Class_name}</td>
+              <td className="border-2 border-black px-4 py-2 text-center">{student.Academic_year}</td>
 
               <td className="border-2 border-black px-4 py-2 text-center">{student.Contact_number}</td>
               <td className="border-2 border-black px-4 py-2 text-center">{student.Syllabus}</td>
@@ -340,6 +524,18 @@ const generateClassOptions = () => {
                 <div className="mt-4 flex justify-between">
                   <button className="bg-blue-500 text-white px-4 py-2 rounded">✏️ Edit</button>
                   <button className="bg-red-500 text-white px-4 py-2 rounded">🗑️ Deactivate</button>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={printDetails}
+                  >
+                    🖨️ Print Details
+                  </button>
+
+                  <DialogActions>
+        
+
+        </DialogActions>
+
                 </div>
               </div>
             </div>
@@ -379,6 +575,8 @@ const generateClassOptions = () => {
                 <TextField fullWidth margin="dense" label="Username" name="username" value={newStudent.username} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newStudent.password} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Admin_Id" name="adminID" value={newStudent.adminID} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Documents" name="documents" value={newStudent.documents} onChange={handleChange} />
+
 
                 <FormControl fullWidth margin="dense">
                 <InputLabel>Grade</InputLabel>
@@ -452,9 +650,32 @@ const generateClassOptions = () => {
                 <Button onClick={() => setStep(1)} color="secondary">
                   Back
                 </Button>
-                <Button onClick={handleSubmit} color="primary">
-                  Save & Submit
-                </Button>
+                <Button 
+                      variant="contained" 
+                      color="primary" 
+                      onClick={handleSubmit} 
+                      disabled={
+                        ![
+                          "fullName", "nameWithInitials", "dob", "gender", "grade", "religion",
+                          "vaccination", "onAnyDrugs", "allergies", "contactNumber", "email",
+                          "address", "enrollmentDate", "syllabus", "sistersBrothersInSameSchool",
+                          "documents", "password", "username", "adminID", 
+                          "fatherName", "fatherContact", "fatherNIC", "fatherAddress", "fatherOccupation",
+                          "motherName", "motherContact", "motherNIC", "motherAddress", "motherOccupation",
+                          "className"
+                        ].every((field) => {
+                          const value = newStudent[field];
+                          if (typeof value === "string") return value.trim() !== "";
+                          if (typeof value === "boolean") return true;
+                          if (value instanceof File || value instanceof Blob) return true;
+                          return value !== null && value !== undefined && value !== "";
+                        })
+                      }
+                    >
+                      Submit
+                    </Button>
+
+
               </>
             )}
           </DialogActions>
@@ -465,3 +686,5 @@ const generateClassOptions = () => {
 };
 
 export default StuManagement;
+
+//fetch parent details to the student model.

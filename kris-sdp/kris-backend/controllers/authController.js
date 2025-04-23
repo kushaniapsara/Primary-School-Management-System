@@ -54,9 +54,31 @@ exports.login = async (req, res) => { // Make sure the login function is async
         return res.status(401).json({ message: 'Invalid username or password' });
       }
 
+
+
+      let classQuery;
+      if (role === 'Student') {
+        classQuery = 'SELECT Class_ID FROM StudentClass WHERE Student_ID = ?';
+      } else if (role === 'Teacher') {
+        classQuery = 'SELECT Class_ID FROM TeacherClass WHERE Teacher_ID = ?';
+      }
+      
+      let classId = null;
+      
+      if (classQuery) {
+        const classResult = await queryAsync(classQuery, [user[idField]]);
+        if (classResult.length > 0) {
+          classId = classResult[0].Class_ID;
+        }
+      }
+      
+
+
+
+
       // Generate a JWT token
       const token = jwt.sign(
-        { userID: user[idField], role: role}, // Assign correct user ID field
+        { userID: user[idField], role: role, class_id: classId}, // Assign correct user ID field
         SECRET_KEY,
         { expiresIn: "1h" } // Token expires in 1 hour
       );

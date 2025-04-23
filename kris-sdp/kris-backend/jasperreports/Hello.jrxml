@@ -1,0 +1,156 @@
+<!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 7.0.2-31532122640f516c6d17238ae0e41a08113d5ac0  -->
+<jasperReport name="Hello" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql Data Adapter"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+<subDataset name="Empty Dataset1">
+    </subDataset>	
+	<parameter name="fromDate" class="java.util.Date"/>
+	<parameter name="toDate" class="java.util.Date"/>
+	<queryString language="SQL"><![CDATA[ SELECT Full_name, Grade, Contact_number FROM `Primary_school_management_system_database`.`Student` ]]></queryString>
+	<field name="Full_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Full_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="Full_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student"/>
+	</field>
+	<field name="Grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="Grade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student"/>
+	</field>
+	<field name="Contact_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Contact_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="Contact_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="student"/>
+	</field>
+	<group name="Full_name">
+	<groupExpression><![CDATA[$F{Full_name}]]></groupExpression>
+</group>
+<group name="Grade">
+	<groupExpression><![CDATA[$F{Grade}]]></groupExpression>
+</group>
+<group name="Contact_number">
+	<groupExpression><![CDATA[$F{Contact_number}]]></groupExpression>
+</group>
+
+	<background splitType="Stretch"/>
+	<title height="87" splitType="Stretch">
+		<element kind="image" uuid="0a87f798-0105-4eeb-8d57-05e0cdbca081" x="25" y="0" width="77" height="61">
+			<expression><![CDATA["download.jpeg"]]></expression>
+		</element>
+		<element kind="staticText" uuid="14ee9e99-aa3a-419d-a09f-da0552b72f32" x="105" y="2" width="345" height="57" backcolor="#F5F6FC" fontSize="13.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Kandy Royal International School, Kegalle
+459/B, Kandy Colombo RD, Ranwala, Kegalle
+Contact Number: 035 2051966
+]]></text>
+		</element>
+		<element kind="line" uuid="145af075-3543-440b-973f-6c4c10e2bbe7" x="-20" y="62" width="595" height="1"/>
+	</title>
+	<pageHeader height="42" splitType="Stretch">
+		<element kind="staticText" uuid="2f00125e-e165-40b0-bc85-7e79ef9239d2" x="144" y="0" width="260" height="30" forecolor="#000000" fontSize="18.0">
+			<text><![CDATA[Student Information Report]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+	</pageHeader>
+	<columnHeader height="31" splitType="Stretch">
+		<element kind="staticText" uuid="17c6c382-754f-46c7-840b-42d78560eff8" x="0" y="0" width="185" height="30" fontSize="12.0" vTextAlign="Middle">
+			<text><![CDATA[Full_name]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf768e37-40f9-4908-a2cd-a772f6989453"/>
+		</element>
+		<element kind="staticText" uuid="f631fc6c-7896-4bf8-93d4-183dab681bc1" x="185" y="0" width="185" height="30" fontSize="12.0" vTextAlign="Middle">
+			<text><![CDATA[Grade]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1e83c20b-e354-475e-b364-6da1dd553df4"/>
+		</element>
+		<element kind="staticText" uuid="5dc06e10-2174-4717-93d2-db39e31974d1" x="370" y="0" width="185" height="30" fontSize="12.0" vTextAlign="Middle">
+			<text><![CDATA[Contact_number]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4524378e-1c90-4aaa-bc6d-776e236fd81e"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="250" splitType="Stretch">
+			<element kind="textField" uuid="15d1114d-bbac-4db9-806e-8657326ac842" x="0" y="0" width="185" height="30">
+				<expression><![CDATA[$F{Full_name}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf768e37-40f9-4908-a2cd-a772f6989453"/>
+			</element>
+			<element kind="textField" uuid="7b4c9c4e-80f4-4852-8fab-d8c72c3f4f0b" x="185" y="0" width="185" height="30">
+				<expression><![CDATA[$F{Grade}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1e83c20b-e354-475e-b364-6da1dd553df4"/>
+			</element>
+			<element kind="textField" uuid="d7063da5-0f2e-4306-823b-81eaedbdc550" x="370" y="0" width="185" height="30">
+				<expression><![CDATA[$F{Contact_number}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4524378e-1c90-4aaa-bc6d-776e236fd81e"/>
+			</element>
+			<element kind="component" uuid="09f627f0-6b59-4f29-9d4c-386ee9de2118" x="34" y="50" width="456" height="200">
+				<detail>
+        <componentElement>
+            <reportElement x="0" y="0" width="555" height="200"/>
+            <component xmlns="http://jasperreports.sourceforge.net/jasperreports/components"
+                       xmlns:tbl="http://jasperreports.sourceforge.net/jasperreports/components/table"
+                       xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                <tbl:table>
+                    <datasetRun subDataset="Empty Dataset1">
+                        <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+                    </datasetRun>
+
+                    <column width="40">
+                        <tableHeader height="30"/>
+                        <columnHeader height="30"/>
+                        <detailCell height="30"/>
+                        <columnFooter height="30"/>
+                        <tableFooter height="30"/>
+                    </column>
+                </tbl:table>
+            </component>
+        </componentElement>
+    </detail>
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="96" splitType="Stretch">
+		<element kind="textField" uuid="6cc2e757-d0c5-4358-a579-745f20c41937" x="460" y="15" width="100" height="30">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+		</element>
+	</pageFooter>
+	<summary height="44" splitType="Stretch">
+		<element kind="textField" uuid="d03d3b07-94a9-407f-8a29-648daba7004e" x="468" y="-28" width="100" height="30" evaluationTime="Report">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="4c42b415-a5c8-4d9c-9abd-1f622993d365" x="130" y="7" width="100" height="30" pattern="HH:mm">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="textField" uuid="498a514a-c96e-4630-ab40-5e89295d3bb0" x="13" y="7" width="100" height="30" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</summary>
+</jasperReport>

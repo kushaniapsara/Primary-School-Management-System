@@ -23,13 +23,21 @@ const Student = {
         Student.Joined_date, 
         Student.Documents, 
         Student.Profile_photo, 
-        Class.Class_name
+        Class.Class_name,
+        StudentClass.Academic_year
       FROM Student
-      INNER JOIN StudentClass ON Student.Student_ID = StudentClass.Student_ID
+
+ INNER JOIN (
+      SELECT Student_ID, MAX(Academic_year) AS LatestYear
+      FROM StudentClass
+      GROUP BY Student_ID
+    ) latest ON Student.Student_ID = latest.Student_ID
+
+      INNER JOIN StudentClass ON StudentClass.Student_ID = latest.Student_ID AND StudentClass.Academic_year = latest.LatestYear
       INNER JOIN Class ON StudentClass.Class_ID = Class.Class_ID
       WHERE 1=1;
     `;
-
+    
 
     const values = [];
 
@@ -58,8 +66,12 @@ const Student = {
       sql += ` AND Student.Syllabus = ?`;
       values.push(filters.syllabus);
     }
-  
 
+    if (filters.academicYear) {
+      sql += ` AND StudentClass.Academic_year = ?`;
+      values.push(filters.academicYear);
+    }
+  
 
     pool.query(sql, callback);
   },
@@ -111,7 +123,22 @@ const Student = {
   addStudentToClass: (studentClassData, callback) => {
     const sql = `INSERT INTO StudentClass (Student_ID, Class_ID, Academic_year) VALUES (?, ?, ?)`;
     pool.query(sql, [studentClassData.Student_ID, studentClassData.Class_ID, studentClassData.Academic_year], callback);
+  },
+
+
+  // Get students by class ID
+  getStudentsByClass: (classID, callback) => {
+    const sql = `
+      SELECT s.*
+      FROM Student s
+      INNER JOIN StudentClass sc ON s.Student_ID = sc.Student_ID
+      WHERE sc.Class_ID = ?
+    `;
+    pool.query(sql, [classID], callback);
   }
 };
+
+
+
 
 module.exports = Student;
