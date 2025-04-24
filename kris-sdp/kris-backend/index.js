@@ -17,6 +17,8 @@ const AttendanceRoutes = require("./routes/AttendanceRoutes");
 const studyMaterialRoutes = require('./routes/studyMaterialRoutes');
 const AdminRoutes = require("./routes/AdminRoutes");
 const progressRoutes = require('./routes/progressRoutes');
+const TeacherProgressRoutes = require('./routes/TeacherProgressRoutes');
+
 
 const enrollmentRoutes = require('./routes/enrollmentRoutes');
 
@@ -66,6 +68,8 @@ app.use('/api/enroll', enrollmentRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/progress', progressRoutes);
+app.use('/api/progress', TeacherProgressRoutes);
+
 
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

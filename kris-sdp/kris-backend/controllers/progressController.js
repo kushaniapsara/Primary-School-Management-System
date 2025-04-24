@@ -27,7 +27,7 @@ exports.updateProgress = (req, res) => {
   });
 };
 
-// Inside progressController.js
+// get subjects
 exports.getAllSubjects = (req, res) => {
     Progress.getAllSubjects((err, results) => {
       if (err) {

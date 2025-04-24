@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-// Fetch students from the database
 // Get students by class ID
 const getStudentsByClass = (classID, callback) => {
   const sql = `
@@ -9,5 +8,26 @@ const getStudentsByClass = (classID, callback) => {
     INNER JOIN StudentClass sc ON s.Student_ID = sc.Student_ID
     WHERE sc.Class_ID = ?
   `;
-  pool.query(sql, [classID], callback);
-}
+  db.query(sql, [classID], callback);
+};
+
+// Get progress of a student with subject names
+const getProgressByStudent = (studentId, callback) => {
+  const sql = `
+    SELECT ss.Student_ID, ss.Subject_ID, ss.Marks, ss.Average, ss.Date, s.Subject_name
+    FROM StudentSubject ss
+    JOIN Subject s ON ss.Subject_ID = s.Subject_ID
+    WHERE ss.Student_ID = ?
+  `;
+  db.query(sql, [studentId], callback);
+};
+
+const getAllSubjects = (callback) => {
+  const sql = `SELECT * FROM Subject`; // ←✅ This is where it fetches from the Subject table
+  db.query(sql, callback);
+};
+
+module.exports = {
+  getStudentsByClass,
+  getProgressByStudent, getAllSubjects
+};
