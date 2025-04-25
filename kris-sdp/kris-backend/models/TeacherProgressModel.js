@@ -27,7 +27,21 @@ const getAllSubjects = (callback) => {
   db.query(sql, callback);
 };
 
+
+
+// Insert or update marks for a student and subject
+const saveMark = (studentId, subjectId, marks, callback) => {
+  const sql = `
+    INSERT INTO StudentSubject (Student_ID, Subject_ID, Marks)
+    VALUES (?, ?, ?)
+    ON DUPLICATE KEY UPDATE Marks = ?
+  `;
+
+  db.query(sql, [studentId, subjectId, marks, marks], callback);
+};
+
+
 module.exports = {
   getStudentsByClass,
-  getProgressByStudent, getAllSubjects
+  getProgressByStudent, getAllSubjects, saveMark
 };

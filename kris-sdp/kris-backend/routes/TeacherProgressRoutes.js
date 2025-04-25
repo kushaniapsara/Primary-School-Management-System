@@ -11,4 +11,7 @@ router.get('/subjects', TeacherProgressController.getAllSubjects);
 
 router.get('/:studentId', TeacherProgressController.getProgressByStudent);
 
+router.post('/save-mark', TeacherProgressController.saveMark);
+
+
 module.exports = router;

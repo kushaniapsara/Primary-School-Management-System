@@ -48,7 +48,7 @@ const Dashboard = () => {
   
   
      useEffect(() => {
-        fetch("http://localhost:5001/api/progress/subjects")
+        fetch("http://localhost:5001/api/teacher-progress/subjects")
           .then((res) => res.json())
           .then((data) => {
             console.log("Fetched subjects:", data); // Check if subjects are received
@@ -92,6 +92,50 @@ const Dashboard = () => {
 
   
 
+  const handleMarkChange = (studentId, subjectId, newMark) => {
+    setStudentProgressData(prev => {
+      const updated = { ...prev };
+  
+      if (!updated[studentId]) updated[studentId] = [];
+  
+      const subjectIndex = updated[studentId].findIndex(p => p.Subject_ID === subjectId);
+      
+      if (subjectIndex > -1) {
+        updated[studentId][subjectIndex].Marks = Number(newMark);
+      } else {
+        updated[studentId].push({
+          Student_ID: studentId,
+          Subject_ID: subjectId,
+          Marks: Number(newMark),
+        });
+      }
+  
+      return updated;
+    });
+  };
+  
+
+
+  const handleSaveMarks = async () => {
+    try {
+      for (const studentId in studentProgressData) {
+        for (const subjectData of studentProgressData[studentId]) {
+          await axios.post(`http://localhost:5001/api/progress/save-mark`, {
+            studentId: subjectData.Student_ID,
+            subjectId: subjectData.Subject_ID,
+            marks: subjectData.Marks,
+          });
+        }
+      }
+  
+      alert("Marks saved successfully!");
+    } catch (err) {
+      console.error("Error saving marks:", err.response?.data || err.message || err);
+      alert("Something went wrong while saving marks.");
+    }
+    
+  };
+  
   
   return (
     <div className="flex h-screen">
@@ -125,28 +169,39 @@ const Dashboard = () => {
               </thead>
 
               <tbody>
-                    {students.map((student, index) => {
-                      const studentProgress = studentProgressData[student.Student_ID] || [];
+              {students.map((student, index) => {
+            const studentProgress = studentProgressData[student.Student_ID] || [];
 
-                      const subjectMarks = subjects.map(subject => {
-                        const subjectData = studentProgress.find(p => p.Subject_ID == subject.Subject_ID);
-                        return subjectData ? subjectData.Marks : "N/A";
-                      });
+            return (
+              <tr key={index} className="border-b border-gray-200">
+                <td className="py-1">{student.Full_name}</td>
 
-                      const average = studentProgress.length
-                        ? (studentProgress.reduce((sum, p) => sum + p.Marks, 0) / studentProgress.length).toFixed(2)
-                        : "N/A";
+                {subjects.map((subject, i) => {
+                  const subjectData = studentProgress.find(p => p.Subject_ID === subject.Subject_ID);
+                  const value = subjectData ? subjectData.Marks : '';
 
-                      return (
-                        <tr key={index} className="border-b border-gray-200">
-                          <td className="py-1">{student.Full_name}</td>
-                          {subjectMarks.map((mark, i) => (
-                            <td key={i} className="py-1">{mark}</td>
-                          ))}
-                          <td className="py-1">{average}</td>
-                        </tr>
-                      );
-                    })}
+                  return (
+                    <td key={i} className="py-1">
+                      <input
+                        type="number"
+                        value={value}
+                        onChange={(e) => handleMarkChange(student.Student_ID, subject.Subject_ID, e.target.value)}
+                        className="w-16 p-1 rounded border"
+                      />
+                    </td>
+                  );
+                })}
+
+                {/* average cell if you want to keep it */}
+                <td className="py-1">
+                  {(studentProgress.length
+                    ? (studentProgress.reduce((sum, p) => sum + p.Marks, 0) / studentProgress.length).toFixed(2)
+                    : "N/A")}
+                </td>
+              </tr>
+            );
+          })}
+
                   </tbody>
 
 
@@ -157,7 +212,16 @@ const Dashboard = () => {
 
 
          <div className="grid grid-cols-3 gap-6">
-          
+         <div>
+         <button
+  onClick={handleSaveMarks}
+  className="mt-4 mx-4 bg-green-500 text-white p-2 rounded hover:bg-green-600"
+>
+  Save All Marks
+</button>
+</div>
+
+
           <div>
           <button
               onClick={handleViewStudents}

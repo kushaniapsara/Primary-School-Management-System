@@ -42,4 +42,23 @@ exports.getProgressByStudent = (req, res) => {
   });
 };
 
+
+// Save or update student marks
+exports.saveMark = (req, res) => {
+  const { studentId, subjectId, marks } = req.body;
+
+  if (!studentId || !subjectId || marks == null) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  TeacherProgressModel.saveMark(studentId, subjectId, marks, (err, result) => {
+    if (err) {
+      console.error("Error saving mark:", err.message);
+      return res.status(500).json({ message: "Database error", error: err });
+    }
+    res.json({ message: "Mark saved successfully" });
+  });
+};
+
+
   //module.exports = { getStudentsByClass};

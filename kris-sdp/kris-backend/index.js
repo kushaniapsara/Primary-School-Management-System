@@ -68,7 +68,7 @@ app.use('/api/enroll', enrollmentRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/progress', progressRoutes);
-app.use('/api/progress', TeacherProgressRoutes);
+app.use('/api/teacher-progress', TeacherProgressRoutes);
 
 
 // Serve static files from the 'uploads' directory
