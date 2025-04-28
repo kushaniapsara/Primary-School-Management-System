@@ -3,6 +3,8 @@ import Navbar from '../../components/NavbarTeacher';
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import { Bar } from 'react-chartjs-2';
+import Notice from "../Common/Notice"; // Adjust path if needed
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -106,20 +108,8 @@ const TeacherDashboard = () => {
           </div>
 
           {/* Special Notices */}
-          <div className="col-span-3 bg-gray-100 p-4 mb-3 mx-3 rounded shadow-md">
-            <h2 className="text-lg font-bold">Special Notices</h2>
-            <ul className="space-y-2">
-              <li className="bg-white px-4 py-2 rounded">
-                Annual English Day of KRIS Kegalle will be held on 20th December 2024
-              </li>
-              <li className="bg-white px-4 py-2 rounded">
-                Applications for new intake will be closed on 16th November 2024
-              </li>
-              <li className="bg-white px-4 py-2 rounded">
-                Chess class will be held on every Sunday from 3rd November 2024
-              </li>
-            </ul>
-          </div>
+          <Notice />       
+          
         </section>
     </div>
     </div>

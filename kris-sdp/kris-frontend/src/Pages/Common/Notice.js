@@ -5,6 +5,9 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { jwtDecode } from "jwt-decode";
+
+
 
 //import Navbar from "../../components/NavbarTeacher";
 
@@ -12,12 +15,34 @@ const Notice = () => {
   const [noticeList, setNoticeList] = useState([]); // State for notices
   const [showModal, setShowModal] = useState(false); // Modal visibility (for add/edit)
   const [editingNotice, setEditingNotice] = useState(null); // Track notice being edited
+
+  const [userRole, setUserRole] = useState(""); // NEW state to track user role
+  
+  
   const [noticeData, setNoticeData] = useState({
     Heading: "",
     Date: "",
     Description: "",
     Admin_ID: "",
   });
+
+
+ // to hide buttons
+ useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserRole(decoded.role);
+        console.log(decoded.role); // Add this line to check the value
+
+      } catch (error) {
+        console.error("Invalid token", error);
+        setUserRole(""); // assuming your token has a 'role' field
+      }
+    }
+  }, []);
+
 
   // Fetch notices
   const fetchNotice = async () => {
@@ -107,6 +132,8 @@ const Notice = () => {
           <div className="bg-gray-100 text-white p-4 rounded-md mb-6 h-72">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold text-black">Special Notices</h2>
+
+               {userRole === "Admin" && ( 
                 <button
                   className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                   onClick={() => openModal()}
@@ -114,6 +141,7 @@ const Notice = () => {
                   <AddIcon className="mr-2" />
                   Add Notice
                 </button>
+              )} 
               </div>
 
 
@@ -130,15 +158,20 @@ const Notice = () => {
                       <p>Date: {new Date(notice.Date).toLocaleDateString()}</p>
                     </div>
                     <div className="flex space-x-2">
+                    {userRole === "Admin" && ( 
+
                       <button className="text-blue-600 hover:text-blue-800" onClick={() => openModal(notice)}>
                         <EditIcon />
-                      </button>
+                      </button> )}
+                      
+                      {userRole === "Admin" && ( 
+
                       <button
                         className="text-red-600 hover:text-red-800"
                         onClick={() => handleDeleteNotice(notice.Notice_ID)}
                       >
                         <DeleteIcon />
-                      </button>
+                      </button> )}
                     </div>
                   </div>
                 ))
