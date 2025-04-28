@@ -120,7 +120,7 @@ const Dashboard = () => {
     try {
       for (const studentId in studentProgressData) {
         for (const subjectData of studentProgressData[studentId]) {
-          await axios.post(`http://localhost:5001/api/progress/save-mark`, {
+          await axios.post(`http://localhost:5001/api/teacher-progress/save-mark`, {
             studentId: subjectData.Student_ID,
             subjectId: subjectData.Subject_ID,
             marks: subjectData.Marks,

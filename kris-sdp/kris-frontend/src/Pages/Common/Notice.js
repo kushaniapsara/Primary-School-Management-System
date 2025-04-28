@@ -96,40 +96,33 @@ const Notice = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="flex-1 bg-gray-200">
+    <div className="flex h-screen h-20">
+      <div className="flex-1 bg-blue-900">
        
 
-        <div className="flex justify-between items-center px-8 py-4">
-          <div className="flex space-x-4">
-            <button className="flex items-center bg-white px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-              <SearchIcon className="mr-2" />
-              Search
-            </button>
-            <button className="flex items-center bg-white px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-              <FilterListIcon className="mr-2" />
-              Filter
-            </button>
-          </div>
-          <button
-            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            onClick={() => openModal()}
-          >
-            <AddIcon className="mr-2" />
-            Add Notice
-          </button>
-        </div>
+       
 
         <div className="px-8">
           {/* Notice Section */}
-          <div className="bg-blue-900 text-white p-4 rounded-md mb-6">
-            <h2 className="text-xl font-bold mb-4"> Special Notices</h2>
-            <div className="space-y-4">
+          <div className="bg-gray-100 text-white p-4 rounded-md mb-6 h-72">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-black">Special Notices</h2>
+                <button
+                  className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  onClick={() => openModal()}
+                >
+                  <AddIcon className="mr-2" />
+                  Add Notice
+                </button>
+              </div>
+
+
+            <div className="rounded-md h-5/6 overflow-auto p-2  space-y-4 ">
               {noticeList.length > 0 ? (
                 noticeList.map((notice) => (
                   <div
                     key={notice.Notice_ID}
-                    className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md"
+                    className="flex justify-between items-center bg-blue-200 text-black p-2 rounded-md"
                   >
                     <div>
                       <p className="font-bold">{notice.Heading}</p>

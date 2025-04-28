@@ -25,6 +25,7 @@ const enrollmentRoutes = require('./routes/enrollmentRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 
 
+const extraCurricularPageRoutes = require('./routes/extraCurricularPageRoutes');
 
 
 
@@ -78,6 +79,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/uploads', express.static('uploads'));  // ✅ Serving uploaded files
 
 app.use('/api/report', reportRoutes);
+
+// Use the extra curricular routes
+app.use('/api', extraCurricularPageRoutes);
 
 
 // Default route for '/'

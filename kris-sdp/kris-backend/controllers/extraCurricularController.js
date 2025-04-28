@@ -40,7 +40,7 @@ exports.addActivity = (req, res) => {
 
 exports.getActivityById = (req, res) => {
   const activityId = req.params.id;
-  db.query("SELECT Activity_name AS name, Activity_emoji AS img FROM ExtraCurricularActivity WHERE Activity_ID = ?", [activityId], (err, result) => {
+  db.query("SELECT Activity_name AS name, Activity_emoji AS img , Teacher_incharge, Location, Description FROM ExtraCurricularActivity WHERE Activity_ID = ?", [activityId], (err, result) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }

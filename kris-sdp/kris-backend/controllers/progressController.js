@@ -1,13 +1,13 @@
 const Progress = require('../models/Progress');
 
-exports.addProgress = (req, res) => {
+/*exports.addProgress = (req, res) => {
   const { studentId, subjectId, date, marks, average } = req.body;
 
   Progress.addProgress(studentId, subjectId, date, marks, average, (err, result) => {
     if (err) return res.status(500).json({ message: 'Database error', error: err });
     res.status(201).json({ message: 'Progress added successfully' });
   });
-};
+};*/
 
 exports.getProgressByStudent = (req, res) => {
   const studentId = req.params.studentId;
@@ -18,14 +18,14 @@ exports.getProgressByStudent = (req, res) => {
   });
 };
 
-exports.updateProgress = (req, res) => {
+/*exports.updateProgress = (req, res) => {
   const { studentId, subjectId, marks, average } = req.body;
 
   Progress.updateProgress(studentId, subjectId, marks, average, (err, result) => {
     if (err) return res.status(500).json({ message: 'Database error', error: err });
     res.json({ message: 'Progress updated successfully' });
   });
-};
+};*/
 
 // get subjects
 exports.getAllSubjects = (req, res) => {

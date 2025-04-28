@@ -499,7 +499,6 @@ const generateClassOptions = () => {
               <div className="w-1/3 text-center border-r-2 pr-4">
                 <img src={`http://localhost:5001/${selectedStudent.Profile_photo}`}  alt="Profile" className="w-32 h-32 mx-auto rounded-full border-2 border-black" />
                 <h3 className="font-semibold mt-2">{selectedStudent.Full_name}</h3>
-                <p>@{selectedStudent.username}</p>
                 <p className="text-sm">{selectedStudent.Gender} | {selectedStudent.Religion}</p>
               </div>
 
@@ -515,11 +514,7 @@ const generateClassOptions = () => {
                 <p><b>📅 Enrollment Date:</b> {selectedStudent.Joined_date}</p>
                 <p><b>📂 Documents:</b> <a href={selectedStudent.Documents} className="text-blue-500 underline">Download</a></p>
 
-                {/* Parent Info */}
-                <h3 className="font-semibold mt-4">👨‍👩‍👧 Parent Information</h3>
-                <p><b>🧔 Father:</b> {selectedStudent.Father_name} | {selectedStudent.Father_contact}</p>
-                <p><b>👩 Mother:</b> {selectedStudent.Mother_name} | {selectedStudent.Mother_contact}</p>
-
+               
                 {/* Actions */}
                 <div className="mt-4 flex justify-between">
                   <button className="bg-blue-500 text-white px-4 py-2 rounded">✏️ Edit</button>

@@ -29,7 +29,7 @@ const ProgressPage = () => {
       .catch((err) => console.error("Error fetching subjects:", err));
   }, [studentId]);
 
-  const handleChange = (e) => {
+  /*const handleChange = (e) => {
     setNewProgress({ ...newProgress, [e.target.name]: e.target.value });
   };
 
@@ -84,7 +84,7 @@ const ProgressPage = () => {
         setSubjects(data);
       })
       .catch((err) => console.error("Error fetching subjects:", err));
-  }, []);
+  }, []);*/
 
   //comment section
   useEffect(() => {
@@ -141,61 +141,7 @@ const ProgressPage = () => {
           )}
         </div>
 
-        {/* Add New Progress - Right Side */}
-        <div className="md:w-1/3 bg-white p-6 shadow-lg rounded-md border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Add New Progress</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="date"
-              name="date"
-              value={newProgress.date}
-              onChange={handleChange}
-              className="w-full border p-2 rounded-md focus:ring-2 focus:ring-blue-400"
-            />
-            <input
-              type="number"
-              name="marks"
-              placeholder="Marks"
-              value={newProgress.marks}
-              onChange={handleChange}
-              className="w-full border p-2 rounded-md focus:ring-2 focus:ring-blue-400"
-            />
-            <input
-              type="number"
-              name="average"
-              placeholder="Average"
-              value={newProgress.average}
-              onChange={handleChange}
-              className="w-full border p-2 rounded-md focus:ring-2 focus:ring-blue-400"
-            />
-
-            {/* Subject Dropdown */}
-            <select
-              name="subject"
-              value={newProgress.subjectId}
-              onChange={handleSubjectChange}
-              className="w-full border p-2 rounded-md focus:ring-2 focus:ring-blue-400"
-            >
-              <option value="">Select a subject</option>
-              {subjects.length > 0 ? (
-                subjects.map((subject) => (
-                  <option key={subject.Subject_ID} value={subject.Subject_name}>
-                    {subject.Subject_name}
-                  </option>
-                ))
-              ) : (
-                <option>No subjects available</option>
-              )}
-            </select>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-            >
-              Add Progress
-            </button>
-          </form>
-        </div>
+        
 
         {/*comment section*/}
         <div className="mt-10 bg-white p-6 shadow-md rounded-md border">

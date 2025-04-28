@@ -159,7 +159,7 @@ const Homework = () => {
           {/* Upcoming Homework Section */}
           <div className="bg-blue-900 text-white p-4 rounded-md mb-6">
             <h2 className="text-xl font-bold mb-4">Upcoming Homework</h2>
-            <div className="space-y-4">
+            <div className="rounded-md h-60 overflow-auto p-2 space-y-4">
               {homeworkList
                 .filter((hw) => new Date(hw.Due_date) > new Date())
                 .map((homework) => (
@@ -187,7 +187,7 @@ const Homework = () => {
           {/* Recent Activities Section */}
           <div className="bg-blue-900 text-white p-4 rounded-md">
             <h2 className="text-xl font-bold mb-4">Recent Activities</h2>
-            <div className="space-y-4">
+            <div className="rounded-md h-60 overflow-auto p-2 space-y-4">
               {homeworkList
                 .filter((homework) => new Date(homework.Due_date) <= new Date())
                 .map((homework) => (

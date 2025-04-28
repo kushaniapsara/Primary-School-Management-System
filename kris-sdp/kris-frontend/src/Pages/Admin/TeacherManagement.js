@@ -406,7 +406,6 @@ const generateClassOptions = () => {
               <div className="w-1/3 text-center border-r-2 pr-4">
                 <img src={`http://localhost:5001/${selectedTeacher.Profile_photo}`}  alt="Profile" className="w-32 h-32 mx-auto rounded-full border-2 border-black" />
                 <h3 className="font-semibold mt-2">{selectedTeacher.Full_name}</h3>
-                <p>@{selectedTeacher.username}</p>
                 <p className="text-sm">{selectedTeacher.Gender} </p>
               </div>
 

@@ -127,9 +127,9 @@ const AdminDashboard = () => {
         </header>
 
         {/* Performance Graph & Attendance Chart Section */}
-        <section className="grid grid-cols-2 gap-4 bg-blue-900 p-4">
+        <section className="grid grid-cols-2 gap-4 bg-blue-900 p-4 h-1/2">
           {/* Performance Graph */}
-          <div className="bg-gray-200 p-4 rounded shadow-md h-[400px]">
+          <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
             <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
             <div className="h-[300px]">
               <Bar data={performanceData} options={chartOptions} />
@@ -137,7 +137,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Attendance Line Chart (Previously Scatter Plot) */}
-          <div className="bg-gray-200 p-4 rounded shadow-md h-[400px]">
+          <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
             <h2 className="text-lg font-bold text-center mb-4">Attendance</h2>
             <div className="h-[300px]">
               <Line data={attendanceChartData} options={attendanceChartOptions} />

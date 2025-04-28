@@ -34,14 +34,16 @@ const saveImage = (req, res) => {
     }
     console.log("Received file:", req.file);
     console.log("Received activityId:", req.body.activityId);
+    console.log("Received caption:", req.body.caption); // <-- Add this line
+
     
-    const { activityId } = req.body; // Extract Activity_ID from form data
+    const { activityId, caption } = req.body; // Extract Activity_ID from form data
     const imagePath = `/uploads/${req.file.filename}`; // Relative path to save in DB
 
     // Save the image path to the database
-    const query = 'INSERT INTO ActivityImages (Activity_ID, Image_Path) VALUES (?, ?)';
+    const query = 'INSERT INTO ActivityImages (Activity_ID, Image_Path, Caption) VALUES (?, ?, ?)';
     
-    db.query(query, [activityId, imagePath], (error, results) => {
+    db.query(query, [activityId, imagePath, caption], (error, results) => {
         if (error) {
             console.error('Error saving image path to DB', error);
             return res.status(500).json({ message: 'Database error' });

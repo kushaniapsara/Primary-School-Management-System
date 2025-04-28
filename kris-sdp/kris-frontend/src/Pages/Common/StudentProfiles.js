@@ -43,7 +43,6 @@ const StudentProfiles = () => {
               className="w-24 h-24 object-cover rounded-full"
             />
             <h2 className="text-lg font-semibold text-center mt-2">{student.Full_name}</h2>
-            <p className="text-sm text-center">Grade: {student.Grade}</p>
             <p className="text-sm text-center">Syllabus: {student.Syllabus}</p>
             <p className="text-sm text-center">Contact: {student.Contact_number}</p>
             

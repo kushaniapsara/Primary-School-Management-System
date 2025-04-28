@@ -1,10 +1,10 @@
 const db = require('../config/db');
 
 const Progress = {
-  addProgress: (studentId, subjectId, date, marks, average, callback) => {
+  /*addProgress: (studentId, subjectId, date, marks, average, callback) => {
     const sql = `INSERT INTO StudentSubject (Student_ID, Subject_ID, Date, Marks, Average) VALUES (?, ?, ?, ?, ?)`;
     db.query(sql, [studentId, subjectId, date, marks, average], callback);
-  },
+  },*/
 
    // Get progress by student, joining with Subject table to fetch Subject_name
    getProgressByStudent: (studentId, callback) => {
@@ -18,7 +18,7 @@ const Progress = {
   },
 
   // Fetch all subjects for dropdown
-  getAllSubjects: (callback) => {
+ /* getAllSubjects: (callback) => {
     const sql = 'SELECT Subject_ID, Subject_name FROM Subject'; // Query to fetch all subjects
     db.query(sql, callback);
   },
@@ -26,7 +26,7 @@ const Progress = {
   updateProgress: (studentId, subjectId, marks, average, callback) => {
     const sql = `UPDATE StudentSubject SET Marks = ?, Average = ? WHERE Student_ID = ? AND Subject_ID = ?`;
     db.query(sql, [marks, average, studentId, subjectId], callback);
-  },
+  },*/
 
 
 

@@ -1,5 +1,5 @@
 <!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 7.0.2-31532122640f516c6d17238ae0e41a08113d5ac0  -->
-<jasperReport name="Hello" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport name="Hello" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e6b10ef0-6ce3-43f9-a751-ded6fc39918c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql Data Adapter"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -29,11 +29,10 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-<subDataset name="Empty Dataset1">
-    </subDataset>	
+	<dataset name="Empty Dataset1" uuid="9a5644da-e208-496b-95e9-8f5b4f3ee786"/>
 	<parameter name="fromDate" class="java.util.Date"/>
 	<parameter name="toDate" class="java.util.Date"/>
-	<queryString language="SQL"><![CDATA[ SELECT Full_name, Grade, Contact_number FROM `Primary_school_management_system_database`.`Student` ]]></queryString>
+	<query language="SQL"><![CDATA[ SELECT Full_name, Grade, Contact_number FROM `Primary_school_management_system_database`.`Student` ]]></query>
 	<field name="Full_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="Full_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="Full_name"/>
@@ -50,15 +49,14 @@
 		<property name="com.jaspersoft.studio.field.tree.path" value="student"/>
 	</field>
 	<group name="Full_name">
-	<groupExpression><![CDATA[$F{Full_name}]]></groupExpression>
-</group>
-<group name="Grade">
-	<groupExpression><![CDATA[$F{Grade}]]></groupExpression>
-</group>
-<group name="Contact_number">
-	<groupExpression><![CDATA[$F{Contact_number}]]></groupExpression>
-</group>
-
+		<expression><![CDATA[$F{Full_name}]]></expression>
+	</group>
+	<group name="Grade">
+		<expression><![CDATA[$F{Grade}]]></expression>
+	</group>
+	<group name="Contact_number">
+		<expression><![CDATA[$F{Contact_number}]]></expression>
+	</group>
 	<background splitType="Stretch"/>
 	<title height="87" splitType="Stretch">
 		<element kind="image" uuid="0a87f798-0105-4eeb-8d57-05e0cdbca081" x="25" y="0" width="77" height="61">
@@ -107,28 +105,18 @@ Contact Number: 035 2051966
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4524378e-1c90-4aaa-bc6d-776e236fd81e"/>
 			</element>
 			<element kind="component" uuid="09f627f0-6b59-4f29-9d4c-386ee9de2118" x="34" y="50" width="456" height="200">
-				<detail>
-        <componentElement>
-            <reportElement x="0" y="0" width="555" height="200"/>
-            <component xmlns="http://jasperreports.sourceforge.net/jasperreports/components"
-                       xmlns:tbl="http://jasperreports.sourceforge.net/jasperreports/components/table"
-                       xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-                <tbl:table>
-                    <datasetRun subDataset="Empty Dataset1">
-                        <connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-                    </datasetRun>
-
-                    <column width="40">
-                        <tableHeader height="30"/>
-                        <columnHeader height="30"/>
-                        <detailCell height="30"/>
-                        <columnFooter height="30"/>
-                        <tableFooter height="30"/>
-                    </column>
-                </tbl:table>
-            </component>
-        </componentElement>
-    </detail>
+				<component kind="table">
+					<datasetRun uuid="1f336e01-c6b1-4c76-8a16-52a3a3bf21d0" subDataset="Empty Dataset1">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<column kind="single" uuid="ea144ff8-b785-4bc5-afc4-da1c41f10da6" width="40">
+						<tableHeader height="30"/>
+						<tableFooter height="30"/>
+						<columnHeader height="30"/>
+						<columnFooter height="30"/>
+						<detailCell height="30"/>
+					</column>
+				</component>
 				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
