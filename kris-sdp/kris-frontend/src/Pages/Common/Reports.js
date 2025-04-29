@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../../components/NavbarTeacher';
-
+import Navbar from '../../components/NavbarTeacher'; // Import Navbar correctly
 
 const Reports = () => {
   const [fromDate, setFromDate] = useState('');
@@ -8,93 +7,145 @@ const Reports = () => {
   const [reportType, setReportType] = useState('');
   const [format, setFormat] = useState('PDF');
   const [reportGenerated, setReportGenerated] = useState(false);
-  const [reportUrl, setReportUrl] = useState(''); // 👈 Add this line
+  const [reportUrl, setReportUrl] = useState(''); // To store the generated report URL
 
-
-  const handleProcess = async () => {
+  // Function to handle report generation
+  /*const handleProcess = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/report/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fromDate, toDate, format, reportType })
+        body: JSON.stringify({ fromDate, toDate, format, reportType }) // Send filters to backend
       });
-  
+
       const data = await response.json();
       if (data.success) {
-        setReportUrl(`http://localhost:5001/api/report/download/${data.file}`);
-        setReportGenerated(true);
+        // If report is generated successfully, set the URL for download
+        //setReportUrl(`http://localhost:5001/api/report/download/${data.file}`);
+        setReportUrl(`http://localhost:5001${data.fileUrl}`);
+
+        setReportGenerated(true); // Enable download button
       }
     } catch (err) {
       console.error('Error:', err);
     }
-  };
-  
+  };*/
+
+  const handleProcess = async () => {
+  try {
+    const response = await fetch('http://localhost:5001/api/report/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fromDate, toDate, format, reportType })
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      // Fetch the generated file as blob (PDF/Excel)
+      const fileResponse = await fetch(`http://localhost:5001${data.fileUrl}`);
+      const blob = await fileResponse.blob();
+
+      // If it's a PDF, show preview
+      if (format === 'pdf') {
+        const blobUrl = URL.createObjectURL(blob);
+        setReportUrl(blobUrl); // this will be used in iframe
+        setReportGenerated(true);
+      } else {
+        // For Excel or other formats, just enable download
+        setReportUrl(`http://localhost:5001${data.fileUrl}`);
+        setReportGenerated(true);
+      }
+    }
+  } catch (err) {
+    console.error('Error:', err);
+  }
+};
+
+
+  // Function to handle the download of the report
   const handleDownload = () => {
-    window.open(reportUrl, '_blank');
+    if (reportUrl) {
+      window.open(reportUrl, '_blank');
+    }
   };
 
   return (
     <div className="flex h-screen overflow-hidden">
-          <Navbar />
+      <Navbar /> {/* The navigation bar */}
 
-      {/* Main Content */}
-      <div className="flex-1 bg-blue-900 flex flex-col">
-      <div className="flex justify-between items-center p-6 bg-white border-b">
-      <h1 className="text-2xl font-bold">Reports</h1>
-          <div>
-            <p className="text-sm text-right">Admin_002</p>
-            <p className="text-sm text-right">Champika</p>
+      <div className="flex flex-col flex-1">
+        {/* Top Bar */}
+        <div className="flex justify-between items-center p-6 bg-white border-b">
+          <h1 className="text-2xl font-bold">Reports</h1>
+          <div className="text-right">
+            <p className="text-sm">Admin_002</p>
+            <p className="text-sm">Champika</p>
           </div>
         </div>
 
-        <div className="flex gap-6 mx-4 my-4">
-          {/* Filters */}
-          <div className="w-1/3 bg-white rounded-xl p-4 shadow">
-            <h2 className="text-md font-semibold mb-4">Select Time Range:</h2>
-            <div className="mb-4">
-              <label className="block mb-1 text-sm">From</label>
-              <input type="date" className="w-full border p-2 rounded" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1 text-sm">To</label>
-              <input type="date" className="w-full border p-2 rounded" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-            </div>
+        {/* Filters and Buttons */}
+        <div className="flex flex-1 overflow-hidden bg-blue-900 p-4">
+          <div className="w-1/3 bg-white rounded-xl p-6 shadow-md flex flex-col">
+            <h2 className="text-lg font-semibold mb-6">🗓️ Select Time Range</h2>
 
-            
-            <div className="mb-4">
-                <label className="block mb-1 text-sm">Report Type</label>
-                <select
-                    className="w-full border p-2 rounded"
-                    value={reportType}
-                    onChange={(e) => setReportType(e.target.value)}
-                >
-                    <option value="">Select Report</option>
-                    <option value="student">Student Report</option>
-                    <option value="extra-curricular">Extra Curricular Activity Report</option>
-                    <option value="attendance">Attendance Report</option>
-                    <option value="payment">Payment Report</option>
-                </select>
-            </div>
+            {/* From Date */}
+            <label className="block mb-2 text-sm font-medium">From Date</label>
+            <input
+              type="date"
+              className="mb-4 border rounded p-2"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
 
+            {/* To Date */}
+            <label className="block mb-2 text-sm font-medium">To Date</label>
+            <input
+              type="date"
+              className="mb-4 border rounded p-2"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
 
+            {/* Report Type */}
+            <label className="block mb-2 text-sm font-medium">Report Type</label>
+            <select
+              className="mb-4 border rounded p-2"
+              value={reportType}
+              onChange={(e) => setReportType(e.target.value)}
+            >
+              <option value="">Select Report</option>
+              <option value="student">Student Report</option>
+              <option value="extra-curricular">Extra Curricular Activity Report</option>
+              <option value="attendance">Attendance Report</option>
+              <option value="payment">Payment Report</option>
+            </select>
 
-            <div className="mb-4">
-              <label className="block mb-1 text-sm">Format</label>
-              <select className="w-full border p-2 rounded" value={format} onChange={(e) => setFormat(e.target.value)}>
-                <option value="PDF">PDF</option>
-                <option value="Excel">Excel</option>
-              </select>
-            </div>
+            {/* Report Format */}
+            <label className="block mb-2 text-sm font-medium">Format</label>
+            <select
+              className="mb-6 border rounded p-2"
+              value={format}
+              onChange={(e) => setFormat(e.target.value)}
+            >
+              <option value="PDF">PDF</option>
+              <option value="Excel">Excel</option>
+            </select>
 
+            {/* Process and Download Buttons */}
             <button
               onClick={handleProcess}
-              className="bg-green-500 text-white w-full py-2 mb-2 rounded hover:bg-green-600"
+              className="bg-green-500 text-white py-2 mb-2 rounded hover:bg-green-600"
             >
               🖨️ Process Report
             </button>
             <button
               onClick={handleDownload}
-              className="bg-green-700 text-white w-full py-2 rounded hover:bg-green-800"
+              className={`py-2 rounded ${
+                reportGenerated
+                  ? 'bg-green-700 hover:bg-green-800'
+                  : 'bg-gray-400 cursor-not-allowed'
+              } text-white`}
+
               disabled={!reportGenerated}
             >
               ⬇️ Download as {format}
@@ -102,18 +153,30 @@ const Reports = () => {
           </div>
 
           {/* Report Preview */}
-          {reportGenerated ? (
-                    <iframe
-                        src={reportUrl}
-                        title="Report Preview"
-                        width="100%"
-                        height="600px"
-                    />
-                    ) : (
-                    <p className="text-gray-500 italic text-center mt-40">
-                        📄 Report preview will appear here after processing...
-                    </p>
-                    )}
+            {/* Report Preview */}
+<div className="flex-1 ml-6 bg-white rounded-xl shadow-md flex items-center justify-center p-4">
+  {format.toLowerCase() === 'pdf' && reportGenerated && (
+    <iframe
+      src={reportUrl}
+      title="PDF Preview"
+      width="100%"
+      height="500px"
+      style={{ border: '1px solid #ccc', borderRadius: '12px' }}
+    />
+  )}
+
+  {format.toLowerCase() === 'excel' && reportGenerated && (
+    <div className="text-center text-gray-500 italic">
+      📁 Excel reports cannot be previewed. Click "Download" to view the file.
+    </div>
+  )}
+
+  {!reportGenerated && (
+    <div className="text-center text-gray-500 italic">
+      📄 Report preview will appear here after processing...
+    </div>
+  )}
+</div>
 
         </div>
       </div>
