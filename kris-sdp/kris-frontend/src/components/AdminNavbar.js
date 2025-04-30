@@ -71,7 +71,7 @@ const Navbar = () => {
           
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AssessmentIcon className="mr-2" />
-              <Link to = "/Reports">Reports</Link>
+              <Link to = "/LeavingCertificateGenerator">Reports</Link>
 
             </li>
           </ul>

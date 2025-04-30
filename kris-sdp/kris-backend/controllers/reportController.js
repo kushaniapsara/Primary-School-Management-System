@@ -3,6 +3,8 @@ const fs = require('fs');
 const generatePdf = require('../utils/generatePdf');
 const generateExcel = require('../utils/generateExcel');
 const db = require('../config/db');
+const generateLeavingCertificate = require('../utils/generateLeavingCertificate');
+
 
 exports.generateReport = async (req, res) => {
   const { fromDate, toDate, format, reportType } = req.body;
@@ -22,11 +24,11 @@ exports.generateReport = async (req, res) => {
       break;
 
     case 'extra-curricular':
-      sql = 'SELECT Student_ID, Activity_Name, Participation_Date FROM ExtraCurricular WHERE Participation_Date BETWEEN ? AND ?';
+      sql = 'SELECT Activity_name, Teacher_incharge, Location FROM ExtraCurricularActivity';
       break;
 
     case 'payment':
-      sql = 'SELECT Student_ID, Amount, Paid_Date FROM Payments WHERE Paid_Date BETWEEN ? AND ?';
+      sql = 'SELECT Student_ID, Amount, Paid_Date FROM Payment WHERE Paid_Date BETWEEN ? AND ?';
       break;
 
     default:
@@ -71,4 +73,44 @@ exports.generateReport = async (req, res) => {
       res.status(500).send({ error: 'Failed to generate report' });
     }
   });
+};
+
+// 🆕 Leaving Certificate Generator
+exports.generateLeavingCertificate = async (req, res) => {
+  const {
+    studentName,
+    admissionNo,
+    dateOfAdmission,
+    dateOfLeaving,
+    conduct,
+    reason,
+    classCompleted
+  } = req.body;
+
+  const timestamp = Date.now();
+  const filename = `leaving_certificate_${timestamp}.pdf`;
+  const filePath = path.join(__dirname, '..', 'downloads', filename);
+
+  try {
+    const buffer = await generateLeavingCertificate({
+      Full_Name: studentName,
+  Start_Date: dateOfAdmission,
+  End_Date: dateOfLeaving,
+  Conduct: conduct,
+  Grade: classCompleted,
+  Issue_Date: new Date().toISOString().split('T')[0]
+});
+
+    fs.writeFileSync(filePath, buffer);
+
+    res.send({
+      success: true,
+      file: filename,
+      fileUrl: `/api/report/download/${filename}`
+    });
+
+  } catch (err) {
+    console.error('Leaving certificate error:', err);
+    res.status(500).send({ error: 'Failed to generate leaving certificate' });
+  }
 };

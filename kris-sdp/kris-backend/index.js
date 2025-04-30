@@ -80,6 +80,7 @@ app.use('/uploads', express.static('uploads'));  // ✅ Serving uploaded files
 
 app.use('/api/report', reportRoutes);
 
+
 // Use the extra curricular routes
 app.use('/api', extraCurricularPageRoutes);
 

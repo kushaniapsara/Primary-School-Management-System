@@ -39,6 +39,8 @@ import AdminDashboard from './Pages/Admin/AdminDashboard.js';
 import StudentManagement from './Pages/Admin/StudentManagement.js'; 
 import TeacherManagement from './Pages/Admin/TeacherManagement.js';
 import AdminDetails from './Pages/Admin/AdminDetails.js';
+import LeavingCertificateGenerator from './Pages/Common/LeavingCertificateGenerator.js';
+
 
 
 import StudentProfiles from './Pages/Common/StudentProfiles.js';
@@ -157,7 +159,9 @@ function App() {
           <Route path="/StudentManagement" element={isAuthenticated && userRole === 'Admin' ? <StudentManagement /> : <Navigate to="/AdminLogin" />} />
           <Route path="/TeacherManagement" element={isAuthenticated && userRole === 'Admin' ? <TeacherManagement /> : <Navigate to="/AdminLogin" />} />
           <Route path="/AdminDetails" element={isAuthenticated && userRole === 'Admin' ? <AdminDetails /> : <Navigate to="/AdminLogin" />} />
-          <Route path="/StudentProfiles" element={isAuthenticated && userRole === 'Teacher' ? <StudentProfiles /> : <Navigate to="/" />} />
+          <Route path="/StudentProfiles" element={isAuthenticated && userRole === 'Admin' ? <StudentProfiles /> : <Navigate to="/" />} />
+          
+          <Route path="/LeavingCertificateGenerator" element={isAuthenticated && userRole === 'Admin' ? <LeavingCertificateGenerator /> : <Navigate to="/" />} />
 
 
 

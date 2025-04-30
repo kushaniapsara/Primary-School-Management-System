@@ -2,9 +2,12 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
-const { generateReport } = require('../controllers/reportController');
+const { generateReport, generateLeavingCertificate} = require('../controllers/reportController');
 
 router.post('/generate', generateReport);
+
+// 🆕 Route to generate leaving certificate
+router.post('/generate-leaving-certificate', generateLeavingCertificate);
 
 // Download route
 router.get('/download/:filename', (req, res) => {

@@ -9,57 +9,38 @@ const Reports = () => {
   const [reportGenerated, setReportGenerated] = useState(false);
   const [reportUrl, setReportUrl] = useState(''); // To store the generated report URL
 
-  // Function to handle report generation
-  /*const handleProcess = async () => {
+
+  const handleProcess = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/report/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fromDate, toDate, format, reportType }) // Send filters to backend
+        body: JSON.stringify({ fromDate, toDate, format, reportType })
       });
-
+  
       const data = await response.json();
+  
       if (data.success) {
-        // If report is generated successfully, set the URL for download
-        //setReportUrl(`http://localhost:5001/api/report/download/${data.file}`);
-        setReportUrl(`http://localhost:5001${data.fileUrl}`);
-
-        setReportGenerated(true); // Enable download button
+        const fileUrl = `http://localhost:5001${data.fileUrl}`;
+  
+        if (format.toLowerCase() === 'pdf') {
+          // Fetch the file as blob and preview
+          const fileResponse = await fetch(fileUrl);
+          const blob = await fileResponse.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          setReportUrl(blobUrl);
+          setReportGenerated(true);
+        } else {
+          // For Excel, no need to fetch as blob, just link to download
+          setReportUrl(fileUrl);
+          setReportGenerated(true);
+        }
       }
     } catch (err) {
       console.error('Error:', err);
     }
-  };*/
-
-  const handleProcess = async () => {
-  try {
-    const response = await fetch('http://localhost:5001/api/report/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fromDate, toDate, format, reportType })
-    });
-
-    const data = await response.json();
-    if (data.success) {
-      // Fetch the generated file as blob (PDF/Excel)
-      const fileResponse = await fetch(`http://localhost:5001${data.fileUrl}`);
-      const blob = await fileResponse.blob();
-
-      // If it's a PDF, show preview
-      if (format === 'pdf') {
-        const blobUrl = URL.createObjectURL(blob);
-        setReportUrl(blobUrl); // this will be used in iframe
-        setReportGenerated(true);
-      } else {
-        // For Excel or other formats, just enable download
-        setReportUrl(`http://localhost:5001${data.fileUrl}`);
-        setReportGenerated(true);
-      }
-    }
-  } catch (err) {
-    console.error('Error:', err);
-  }
-};
+  };
+  
 
 
   // Function to handle the download of the report
