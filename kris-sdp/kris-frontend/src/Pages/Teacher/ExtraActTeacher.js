@@ -62,7 +62,6 @@ const ExtraActTeacher = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Navbar />
       <div className="flex-1 bg-blue-900 flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center p-6 bg-white border-b">

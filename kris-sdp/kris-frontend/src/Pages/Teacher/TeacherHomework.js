@@ -125,7 +125,6 @@ const Homework = () => {
 
   return (
     <div className="flex h-screen">
-      <Navbar />
       <div className="flex-1 bg-gray-200">
         <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
           <h1 className="text-2xl font-bold">Homework</h1>

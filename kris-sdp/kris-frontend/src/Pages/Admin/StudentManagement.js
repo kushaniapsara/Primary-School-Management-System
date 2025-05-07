@@ -10,7 +10,6 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
-import Navbar from "../../components/AdminNavbar";
 
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
@@ -303,7 +302,6 @@ const generateClassOptions = () => {
   
   return (
     <div className="flex h-screen overflow-hidden">
-      <Navbar />
       <div className="flex-1 bg-blue-900 flex flex-col">
         <div className="flex justify-between items-center p-6 bg-white border-b">
           <h2 className="text-2xl font-bold">Student Management</h2>

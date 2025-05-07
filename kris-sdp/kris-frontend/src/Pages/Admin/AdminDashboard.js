@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../../components/AdminNavbar";
+//import Navbar from "../../components/AdminNavbar";
 import axios from "axios";
 
 import SearchIcon from "@mui/icons-material/Search";
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-screen">
-      <Navbar />
+       {/* <Navbar />  */}
       {/* Main Content */}
       <div className="flex-1 bg-blue-900">
         {/* Header */}

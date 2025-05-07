@@ -141,7 +141,6 @@ function Attendance() {
 
   return (
     <div className="flex min-h-screen">
-      <Navbar />
       <div className="flex-1 bg-blue-900">
         <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
           <h1 className="text-2xl font-bold">Daily Attendance</h1>

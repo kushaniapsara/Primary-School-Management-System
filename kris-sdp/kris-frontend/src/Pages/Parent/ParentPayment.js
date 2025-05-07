@@ -5,7 +5,6 @@ import ParentNavbar from '../../components/ParentNavbar';
 const PaymentUI = () => {
   return (
     <div className="flex h-screen">
-      <ParentNavbar />
       
       {/* Main Content */}
       <div className="flex-1 bg-blue-900">

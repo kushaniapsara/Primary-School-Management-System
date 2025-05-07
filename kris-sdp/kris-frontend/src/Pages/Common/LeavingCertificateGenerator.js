@@ -103,7 +103,6 @@ const LeavingCertificateGenerator = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Navbar />
 
       <div className="flex flex-col flex-1">
         {/* Top Bar */}

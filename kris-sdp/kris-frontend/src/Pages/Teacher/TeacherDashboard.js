@@ -53,7 +53,6 @@ const TeacherDashboard = () => {
 
   return (
     <div className="flex min-h-screen">
-      <Navbar />
        {/* Main Content */}
        <div className="flex-1 bg-blue-900">
         {/* Header */}
@@ -108,8 +107,9 @@ const TeacherDashboard = () => {
           </div>
 
           {/* Special Notices */}
-          <Notice />       
-          
+          <div className="col-span-3 p-2 mx-3 rounded shadow-md">
+            <Notice />
+          </div>          
         </section>
     </div>
     </div>

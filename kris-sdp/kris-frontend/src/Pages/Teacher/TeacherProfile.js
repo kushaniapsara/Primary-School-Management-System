@@ -5,7 +5,6 @@ import Navbar from '../../components/NavbarTeacher';
 const Profile = () => {
   return (
     <div className="flex h-screen">
-      <Navbar/>
 
       {/* Main Content */}
       <div className="flex-1 bg-blue-900">

@@ -52,7 +52,6 @@ const Reports = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Navbar /> {/* The navigation bar */}
 
       <div className="flex flex-col flex-1">
         {/* Top Bar */}

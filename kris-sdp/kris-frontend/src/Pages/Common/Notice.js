@@ -121,8 +121,8 @@ const Notice = () => {
   };
 
   return (
-    <div className="flex h-screen h-20">
-      <div className="flex-1 bg-blue-900">
+<div className="flex w-full h-full">
+<div className="flex-1 bg-blue-900">
        
 
        

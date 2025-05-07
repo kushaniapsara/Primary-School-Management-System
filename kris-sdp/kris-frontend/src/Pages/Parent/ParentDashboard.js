@@ -50,7 +50,7 @@ const ParentDashboard = () => {
 
   return (
     <div className="flex min-h-screen">
-      <ParentNavbar />
+      {/* <ParentNavbar /> */}
        {/* Main Content */}
        <div className="flex-1 bg-blue-900">
         {/* Header */}

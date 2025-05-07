@@ -86,7 +86,6 @@ useEffect(() => {
   
   return (
     <div className="flex h-screen overflow-hidden">
-      <ParentNavbar />
       {/* Content */}
       <div className="flex-1 bg-blue-900">
         {/* Header */}

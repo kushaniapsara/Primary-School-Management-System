@@ -69,7 +69,6 @@ const VideoPage = () => {
 
   return (
     <div className="flex h-screen">
-      <Navbar />
 
       <div className="flex-1 bg-blue-900 p-8 text-black">
         <h1 className="text-2xl font-bold mb-6 text-white">Video Materials</h1>

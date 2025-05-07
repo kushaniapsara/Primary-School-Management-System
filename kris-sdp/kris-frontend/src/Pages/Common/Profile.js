@@ -69,7 +69,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex min-h-screen"> <Navbar />
+    <div className="flex min-h-screen"> 
 
       <div className="flex-1 bg-blue-900 p-8">
         <header className="flex justify-between items-center bg-white text-black rounded-xl px-6 py-4 shadow-md mb-6">

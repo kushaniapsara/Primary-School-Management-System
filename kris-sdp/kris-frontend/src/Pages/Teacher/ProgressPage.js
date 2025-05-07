@@ -131,8 +131,8 @@ const ProgressPage = () => {
                     <strong>Subject:</strong> {item.Subject_name}
                   </p>
                   <p className="text-gray-600"><strong>Marks:</strong> {item.Marks}</p>
-                  <p className="text-gray-600"><strong>Average:</strong> {item.Average}</p>
-                  <p className="text-gray-500"><strong>Date:</strong> {item.Date}</p>
+                  {/* <p className="text-gray-600"><strong>Average:</strong> {item.Average}</p> */}
+                  {/* <p className="text-gray-500"><strong>Date:</strong> {item.Date}</p> */}
                 </div>
               ))}
             </div>
