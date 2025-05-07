@@ -60,7 +60,7 @@ async function generateLeavingCertificate(student) {
                     `was a bonafide student of this school.\n\n` +
                     `He/She was enrolled in Grade ${Grade} and studied at this institution from ${Start_Date} to ${End_Date}.\n\n` +
                     `During this period, his/her conduct and behavior were found to be ${Conduct}.\n\n` +
-                    `This certificate is issued upon his/her request for future educational purposes.`,
+                    `This certificate is issued upon his/her request for future educational purposes.\n\nReason for leaving: ${Reason}`,
                 style: 'body'
             },
             {

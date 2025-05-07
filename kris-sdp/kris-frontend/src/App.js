@@ -143,7 +143,7 @@ function App() {
 
           <Route path="/ParentDashboard" element={isAuthenticated && userRole === 'Student' ? <ParentDashboard /> : <Navigate to="/" />} />
           <Route path="/ParentProgress" element={isAuthenticated && userRole === 'Student' ? <ParentProgress /> : <Navigate to="/" />} />
-          <Route path="/ParentHomework" element={isAuthenticated && userRole === 'Student' ? <ParentHomework /> : <Navigate to="/" />} />
+          <Route path="/TeacherHomework" element={isAuthenticated && userRole === 'Student' ? <TeacherHomework /> : <Navigate to="/" />} />
           <Route path="/ParentExtraAct" element={isAuthenticated && userRole === 'Student' ? <ParentExtraAct /> : <Navigate to="/" />} />
           <Route path="/ParentPayment" element={isAuthenticated && userRole === 'Student' ? <ParentPayment /> : <Navigate to="/" />} />
           <Route path="/ParentProfile" element={isAuthenticated && userRole === 'Student' ? <ParentProfile /> : <Navigate to="/" />} />

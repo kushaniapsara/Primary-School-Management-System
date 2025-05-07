@@ -2,12 +2,15 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
-const { generateReport, generateLeavingCertificate} = require('../controllers/reportController');
+const { generateReport, generateLeavingCertificate, getStudents, getStudentDetails} = require('../controllers/reportController');
 
 router.post('/generate', generateReport);
 
 // 🆕 Route to generate leaving certificate
 router.post('/generate-leaving-certificate', generateLeavingCertificate);
+
+router.get('/students', getStudents);
+router.get('/student/:studentId', getStudentDetails);
 
 // Download route
 router.get('/download/:filename', (req, res) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/NavbarTeacher'; // Reusing the Navbar
 
@@ -16,6 +16,42 @@ const LeavingCertificateGenerator = () => {
   const [blobUrl, setBlobUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [generated, setGenerated] = useState(false);
+
+  const [students, setStudents] = useState([]);
+  const [selectedId, setSelectedId] = useState('');
+
+
+  useEffect(() => {
+    // Fetch list of students for dropdown
+    axios.get('http://localhost:5001/api/report/students')
+      .then(res => {
+        if (res.data.success) setStudents(res.data.students);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    // Fetch selected student details
+    if (selectedId) {
+      axios.get(`http://localhost:5001/api/report/student/${selectedId}`)
+        .then(res => {
+          if (res.data.success) {
+            const s = res.data.student;
+            setFormData(prev => ({
+              ...prev,
+              studentName: s.student_name,
+              admissionNo: s.student_id,
+              dateOfAdmission: s.admission_date,
+              dateOfLeaving: s.date_of_leaving || '',
+              conduct: s.conduct || '',
+              classCompleted: s.class_completed || ''
+            }));
+          }
+        })
+        .catch(err => console.error(err));
+    }
+  }, [selectedId]);
+
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -55,6 +91,16 @@ const LeavingCertificateGenerator = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://localhost:5001/api/report/generate-leaving-certificate', formData);
+      if (res.data.success) window.open(`http://localhost:5001${res.data.fileUrl}`, '_blank');
+    } catch (err) {
+      alert('Error generating certificate');
+    }
+  };
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Navbar />
@@ -75,15 +121,30 @@ const LeavingCertificateGenerator = () => {
           <div className="w-1/3 bg-white rounded-xl p-6 shadow-md flex flex-col overflow-y-auto">
             <h2 className="text-lg font-semibold mb-4">📝 Fill Student Details</h2>
 
-            <input name="studentName" placeholder="Student Name" value={formData.studentName} onChange={handleChange} className="mb-3 border rounded p-2" required />
-            <label className="block mb-1 text-sm font-medium">Date of Admission</label>
-            <input type="date" name="dateOfAdmission" value={formData.dateOfAdmission} onChange={handleChange} className="mb-3 border rounded p-2" required />
-            <label className="block mb-1 text-sm font-medium">Date of Leaving</label>
-            <input type="date" name="dateOfLeaving" value={formData.dateOfLeaving} onChange={handleChange} className="mb-3 border rounded p-2" required />
-            <input name="classCompleted" placeholder="Class Completed" value={formData.classCompleted} onChange={handleChange} className="mb-3 border rounded p-2" required />
-            <input name="conduct" placeholder="Conduct" value={formData.conduct} onChange={handleChange} className="mb-3 border rounded p-2" required />
-            <textarea name="reason" placeholder="Reason for Leaving" value={formData.reason} onChange={handleChange} className="mb-4 border rounded p-2" required />
+            <label className="block mb-2 text-sm font-medium">Select Student</label>
+      <select
+        className="mb-4 border rounded p-2 w-full"
+        value={selectedId}
+        onChange={(e) => setSelectedId(e.target.value)}
+      >
+        <option value="">-- Select Student --</option>
+        {students.map(student => (
+          <option key={student.student_id} value={student.student_id}>
+            {student.student_name} ({student.student_id})
+          </option>
+        ))}
+      </select>
 
+
+      <form onSubmit={handleSubmit} className="grid gap-4">
+      <input type="text" name="studentName" placeholder="Student Name" value={formData.studentName} readOnly className="border p-2 rounded" />
+<input type="text" name="admissionNo" placeholder="Admission No" value={formData.admissionNo} readOnly className="border p-2 rounded" />
+<input type="date" name="dateOfAdmission" value={formData.dateOfAdmission} readOnly className="border p-2 rounded" />
+<input type="text" name="classCompleted" value={formData.classCompleted} readOnly className="border p-2 rounded" />
+<input type="text" name="conduct" value={formData.conduct} readOnly className="border p-2 rounded" />
+
+<input type="date" name="dateOfLeaving" value={formData.dateOfLeaving} onChange={handleChange} className="border p-2 rounded" />
+<textarea name="reason" placeholder="Reason for Leaving" value={formData.reason} onChange={handleChange} className="border p-2 rounded" />
             <button
               onClick={handleGenerate}
               className="bg-green-500 text-white py-2 mb-2 rounded hover:bg-green-600"
@@ -101,6 +162,8 @@ const LeavingCertificateGenerator = () => {
             >
               ⬇️ Download Certificate
             </button>
+            </form>
+
           </div>
 
           {/* Right Panel - Certificate Preview */}

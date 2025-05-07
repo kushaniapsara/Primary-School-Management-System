@@ -65,7 +65,7 @@ function formatDataByType(data, reportType) {
         case 'attendance':
             return data.map(row => [row.Student_ID || '', row.Date || '', row.Status || '']);
         case 'student':
-            return data.map(row => [row.Student_ID || '', row.Full_Name || '', row.Grade || '']);
+            return data.map(row => [row.Student_ID || '', row.Full_name || '', row.Grade || '']);
         case 'extra-curricular':
             return data.map(row => [row.Activity_name || '', row.Teacher_incharge || '', row.Location || '']);
         case 'payment':

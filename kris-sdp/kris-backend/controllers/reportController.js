@@ -16,6 +16,7 @@ exports.generateReport = async (req, res) => {
   switch (reportType) {
     case 'attendance':
       sql = 'SELECT Student_ID, Date, Status FROM Attendance WHERE Date BETWEEN ? AND ?';
+      params = [];
       break;
 
     case 'student':
@@ -25,10 +26,12 @@ exports.generateReport = async (req, res) => {
 
     case 'extra-curricular':
       sql = 'SELECT Activity_name, Teacher_incharge, Location FROM ExtraCurricularActivity';
+      params = [];
       break;
 
     case 'payment':
       sql = 'SELECT Student_ID, Amount, Paid_Date FROM Payment WHERE Paid_Date BETWEEN ? AND ?';
+      params = [];
       break;
 
     default:
@@ -113,4 +116,24 @@ exports.generateLeavingCertificate = async (req, res) => {
     console.error('Leaving certificate error:', err);
     res.status(500).send({ error: 'Failed to generate leaving certificate' });
   }
+  
+};
+
+exports.getStudents = (req, res) => {
+  const query = 'SELECT Student_ID AS student_id, Student_name AS student_name FROM Student';
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ success: false, message: 'DB error' });
+    res.json({ success: true, students: results });
+  });
+};
+
+exports.getStudentDetails = (req, res) => {
+  const { studentId } = req.params;
+  const query = `
+SELECT Student_name AS student_name, Student_ID AS student_id, Joined_date AS admission_date, Grade AS class_completed FROM Student WHERE Student_ID = ?
+  `;
+  db.query(query, [studentId], (err, results) => {
+    if (err || results.length === 0) return res.status(500).json({ success: false, message: 'Student not found' });
+    res.json({ success: true, student: results[0] });
+  });
 };
