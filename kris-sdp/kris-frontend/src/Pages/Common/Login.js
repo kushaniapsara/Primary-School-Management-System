@@ -78,11 +78,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 mb-4 border border-gray-300 rounded-md"
           />
-          <div className="text-right mb-4">
-            <a href="#" className="text-blue-500 text-sm">
-              Forgot password?
-            </a>
-          </div>
+         
           <button
             onClick={handleLogin}
             className="w-full bg-green-500 text-white p-3 rounded-md cursor-pointer hover:bg-green-600"

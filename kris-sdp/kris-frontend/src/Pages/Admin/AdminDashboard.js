@@ -15,7 +15,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import Notice from "../Common/Notice"; // Adjust path if needed
+import Notice from "../Common/Notice"; 
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
@@ -127,8 +127,8 @@ const AdminDashboard = () => {
         </header>
 
         {/* Performance Graph & Attendance Chart Section */}
-        <section className="grid grid-cols-2 gap-4 bg-blue-900 p-4 h-1/2">
-          {/* Performance Graph */}
+        <section className="grid grid-cols-2 gap-4 bg-blue-900 p-4">
+        {/* Performance Graph */}
           <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
             <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
             <div className="h-[300px]">

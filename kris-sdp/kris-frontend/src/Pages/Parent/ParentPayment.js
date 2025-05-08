@@ -1,77 +1,139 @@
-import React from "react";
-import Button from "@mui/material/Button";
-import ParentNavbar from '../../components/ParentNavbar';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-const PaymentUI = () => {
+const ProgressPage = () => {
+  const { studentId: paramStudentId } = useParams();
+  const [studentId, setStudentId] = useState(paramStudentId || "");
+  const [progress, setProgress] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState([]);
+
+  const [authFailed, setAuthFailed] = useState(false);
+
+
+  // 1. If no paramStudentId, get studentId from token
+  useEffect(() => {
+    if (!paramStudentId && !authFailed) {
+      axios
+        .get("http://localhost:5001/api/progress/me", {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          const id = res.data.studentId;
+          setStudentId(id);
+  
+          // Fetch progress after studentId is known
+          fetch(`http://localhost:5001/api/progress/${id}`)
+            .then((res) => res.json())
+            .then((data) => setProgress(Array.isArray(data) ? data : []))
+            .catch((err) => console.error("Error fetching progress:", err));
+  
+          // Fetch comments after studentId is known
+          fetch(`http://localhost:5001/api/progress/comment/${id}`)
+            .then((res) => res.json())
+            .then((data) => setComments(Array.isArray(data) ? data : []))
+            .catch((err) => console.error("Error fetching comments:", err));
+        })
+        .catch((err) => {
+          console.error("Auth error:", err);
+          if (!authFailed) {
+            alert("Authentication failed. Please log in again.");
+            setAuthFailed(true); // Prevents future alerts
+          }
+        });
+    }
+  }, [paramStudentId]);
+  
+  
+
+  // 2. Load progress data
+  useEffect(() => {
+    if (!paramStudentId || !studentId) return;
+    fetch(`http://localhost:5001/api/progress/${studentId}`)
+      .then((res) => res.json())
+      .then((data) => setProgress(Array.isArray(data) ? data : []))
+      .catch((err) => console.error("Error fetching progress:", err));
+  }, [studentId, paramStudentId]);
+  
+
+  // 3. Load comments
+  useEffect(() => {
+    if (!paramStudentId || !studentId) return;
+    fetch(`http://localhost:5001/api/progress/comment/${studentId}`)
+      .then((res) => res.json())
+      .then((data) => setComments(Array.isArray(data) ? data : []))
+      .catch((err) => console.error("Error fetching comments:", err));
+  }, [studentId, paramStudentId]);
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+
+    fetch("http://localhost:5001/api/progress/comment/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ studentId, comment: newComment }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        fetch(`http://localhost:5001/api/progress/comment/${studentId}`)
+          .then((res) => res.json())
+          .then((data) => setComments(Array.isArray(data) ? data : []));
+        setNewComment("");
+      })
+      .catch((err) => console.error("Error adding comment:", err));
+  };
+
   return (
-    <div className="flex h-screen">
-      
-      {/* Main Content */}
-      <div className="flex-1 bg-blue-900">
-        {/* Header */}
-        <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
-          <h1 className="text-2xl font-bold">Payments</h1>
-          <div className="text-right">
-            <p className="font-medium">Student_001</p>
-            <p className="text-gray-500">Kushani Apsara</p>
-          </div>
-        </header>
+    <div className="p-6 max-w-5xl mx-auto">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Student Progress</h1>
 
-        <div className="flex">
-          {/* Payment Details  */}
-          <div className="bg-gray-200 p-4 rounded-lg w-96 h-[500px] mr-6 mt-4 mx-4 flex flex-col justify-between">
-            <div>
-              <div className="mb-4 mt-6">
-                <p className="text-lg font-semibold">Month</p>
-                <div className="bg-blue-400 text-black text-lg font-bold rounded-lg px-4 py-6">
-                  December
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Progress Section */}
+        <div className="md:w-2/3">
+          {progress.length > 0 ? (
+            <div className="space-y-4">
+              {progress.map((item, index) => (
+                <div key={index} className="bg-white p-4 shadow-md rounded-md border">
+                  <p className="text-lg font-medium text-gray-700">
+                    <strong>Subject:</strong> {item.Subject_name}
+                  </p>
+                  <p className="text-gray-600"><strong>Marks:</strong> {item.Marks}</p>
                 </div>
-              </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">No progress data available.</p>
+          )}
+        </div>
 
-              <div className="mb-4 mt-18">
-                <p className="text-lg font-semibold">Amount</p>
-                <div className="bg-blue-400 text-black text-lg font-bold rounded-lg px-4 py-6">
-                  6500.00 LKR
+        {/* Comments Section */}
+        <div className="mt-10 bg-white p-6 shadow-md rounded-md border">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
+
+          <div className="space-y-2 mb-4 max-h-64 overflow-y-auto">
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <div key={index} className="border p-2 rounded-md bg-gray-50">
+                  <p className="text-gray-700">{comment.Comment}</p>
+                  <p className="text-sm text-gray-500">
+                    on {new Date(comment.Created_At).toLocaleDateString()}
+                  </p>
                 </div>
-              </div>
-            </div>
-
-            {/* Move the button to the bottom of the container */}
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: "#4caf50", 
-                color: "#fff", 
-                width: "100%", 
-                fontSize: "1.25rem", 
-                padding: "16px",
-              }}
-              className="font-bold mt-auto"
-            >
-              Pay Now
-            </Button>
+              ))
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
           </div>
 
-          {/* Payment History Table  */}
-          <div className="bg-gray-200 p-4 rounded-lg flex-1 mt-4 mx-4 h-[700px]">
-            <h2 className="text-xl font-bold mb-4">Payment History</h2>
-            <div className="grid grid-cols-5 gap-5 text-center text-sm">
-              <p className="font-bold">Month</p>
-              <p className="font-bold">Amount</p>
-              <p className="font-bold">Date</p>
-              <p className="font-bold">Status</p>
-              <p className="font-bold">Transaction ID</p>
-              {Array(55)
-                .fill("")
-                .map((_, index) => (
-                  <div key={index} className="border border-gray-300 p-4 bg-blue-300 rounded"></div>
-                ))}
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
   );
 };
 
-export default PaymentUI;
+export default ProgressPage;

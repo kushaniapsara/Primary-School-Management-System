@@ -28,7 +28,7 @@ import GeneralKnowledgePage from './Pages/Teacher/GeneralKnowledgePage.js';
 
 // Parent Pages (role: Student)
 import ParentDashboard from './Pages/Parent/ParentDashboard.js';
-import ParentProgress from './Pages/Parent/ParentProgress.js';
+//import ParentProgress from './Pages/Parent/ParentProgress.js';
 import ParentHomework from './Pages/Parent/ParentHomework.js';
 import ParentExtraAct from './Pages/Parent/ParentExtraAct.js';
 import ParentPayment from './Pages/Parent/ParentPayment.js';
@@ -40,6 +40,7 @@ import AdminDashboard from './Pages/Admin/AdminDashboard.js';
 import StudentManagement from './Pages/Admin/StudentManagement.js';
 import TeacherManagement from './Pages/Admin/TeacherManagement.js';
 import AdminDetails from './Pages/Admin/AdminDetails.js';
+import AdminPayment from './Pages/Admin/AdminPayment.js';
 
 // Navbars
 import AdminNavbar from './components/AdminNavbar.js';
@@ -141,17 +142,20 @@ function App() {
   
                     {/* Parent Routes */}
                     <Route path="/ParentDashboard" element={<ParentDashboard />} />
-                    <Route path="/ParentProgress" element={<ParentProgress />} />
+                    {/*<Route path="/ParentProgress" element={<ParentProgress />} />*/}
                     <Route path="/ParentHomework" element={<ParentHomework />} />
                     <Route path="/ParentExtraAct" element={<ParentExtraAct />} />
                     <Route path="/ParentPayment" element={<ParentPayment />} />
                     <Route path="/ParentProfile" element={<ParentProfile />} />
+                    <Route path="/progress" element={<ProgressPage />} />
+
   
                     {/* Admin Routes */}
                     <Route path="/AdminDashboard" element={<AdminDashboard />} />
                     <Route path="/StudentManagement" element={<StudentManagement />} />
                     <Route path="/TeacherManagement" element={<TeacherManagement />} />
                     <Route path="/AdminDetails" element={<AdminDetails />} />
+                    <Route path="/AdminPayment" element={<AdminPayment />} />
   
                     {/* Shared Pages */}
                     <Route path="/Profile" element={<Profile />} />

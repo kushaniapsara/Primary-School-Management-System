@@ -63,3 +63,15 @@ exports.getCommentsByStudent = (req, res) => {
     res.json(results);
   });
 };
+
+//for own progress of student
+exports.getMyProgress = (req, res) => {
+  const studentId = req.userID; // From verifyToken middleware
+
+  const sql = 'SELECT * FROM StudentSubject WHERE Student_ID = ?'; 
+
+  db.query(sql, [studentId], (err, result) => {
+    if (err) return res.status(500).json({ message: "Database error", error: err });
+    return res.status(200).json(result);
+  });
+};

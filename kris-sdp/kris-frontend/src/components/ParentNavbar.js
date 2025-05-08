@@ -20,10 +20,10 @@ const ParentNavbar = () => {
               <DashboardIcon className="mr-2" />
               <Link to = "/ParentDashboard">Dashboard</Link>
             </li>
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+            {/* <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <BarChartIcon className="mr-2" />
-                <Link to = "/ParentProgress">Progress</Link>
-            </li>
+                <Link to = "/ProgressPage">Progress</Link>
+            </li> */}
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AssignmentIcon className="mr-2" />
               <Link to = "/TeacherHomework">Homework</Link>
@@ -34,7 +34,7 @@ const ParentNavbar = () => {
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AttachMoneyIcon className="mr-2" />
-              <Link to = "/ParentPayment">Payments</Link>
+              <Link to = "/ParentPayment">Progress</Link>
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AccountCircleIcon className="mr-2" />

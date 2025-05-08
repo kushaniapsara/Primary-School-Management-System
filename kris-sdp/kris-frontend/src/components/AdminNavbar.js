@@ -53,7 +53,7 @@ const Navbar = () => {
 
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AttachMoneyIcon className="mr-2" />
-              <Link to = "/ParentPayment">Payments</Link>
+              <Link to = "/AdminPayment">Payments</Link>
             </li>
 
 
@@ -83,4 +83,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
