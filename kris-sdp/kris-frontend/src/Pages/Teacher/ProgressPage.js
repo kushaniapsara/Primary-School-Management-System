@@ -9,6 +9,13 @@ const ProgressPage = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState([]);
 
+  const calculateAverage = () => {
+    if (progress.length === 0) return 0;
+    const total = progress.reduce((sum, item) => sum + Number(item.Marks), 0);
+    return (total / progress.length).toFixed(2);
+  };
+  
+
   // 1. If no paramStudentId, get studentId from token
   useEffect(() => {
     if (!paramStudentId) {
@@ -91,6 +98,9 @@ const ProgressPage = () => {
         <div className="md:w-2/3">
           {progress.length > 0 ? (
             <div className="space-y-4">
+            <div className="bg-blue-100 text-blue-800 p-3 rounded-md mb-4">
+        <strong>Average Marks:</strong> {calculateAverage()}
+      </div>
               {progress.map((item, index) => (
                 <div key={index} className="bg-white p-4 shadow-md rounded-md border">
                   <p className="text-lg font-medium text-gray-700">

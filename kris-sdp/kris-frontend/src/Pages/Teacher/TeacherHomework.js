@@ -5,6 +5,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { jwtDecode } from "jwt-decode";
+
 
 import Navbar from "../../components/NavbarTeacher";
 
@@ -16,6 +18,26 @@ const Homework = () => {
     Homework_task: "",
     Due_date: "",
   });
+
+const [userRole, setUserRole] = useState(""); // NEW state to track user role
+  
+
+// to hide buttons
+ useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserRole(decoded.role);
+        console.log(decoded.role); // Add this line to check the value
+
+      } catch (error) {
+        console.error("Invalid token", error);
+        setUserRole(""); // assuming your token has a 'role' field
+      }
+    }
+  }, []);
+
 
   // Fetch homework
   const fetchHomework = async () => {
@@ -145,6 +167,8 @@ const Homework = () => {
               Filter
             </button>
           </div>
+          {userRole === "Teacher" && ( 
+
           <button
             className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             onClick={() => openModal()}
@@ -152,6 +176,7 @@ const Homework = () => {
             <AddIcon className="mr-2" />
             Add Activity
           </button>
+        )} 
         </div>
 
         <div className="px-8">
