@@ -34,8 +34,14 @@ const ParentNavbar = () => {
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AttachMoneyIcon className="mr-2" />
-              <Link to = "/ParentPayment">Progress</Link>
+              <Link to = "/StudentOwnProgress">Progress</Link>
             </li>
+
+            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+              <AttachMoneyIcon className="mr-2" />
+              <Link to = "/ParentPayment">Payment</Link>
+            </li>
+
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AccountCircleIcon className="mr-2" />
                   <Link to = "/Profile">Profile</Link>

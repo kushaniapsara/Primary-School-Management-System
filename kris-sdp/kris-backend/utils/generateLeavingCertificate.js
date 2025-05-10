@@ -22,10 +22,47 @@ async function generateLeavingCertificate(student) {
         Start_Date,
         End_Date,
         Conduct,
-        Issue_Date
+        Issue_Date,
+        Reason,
+        //Gender
+        activities = [] // Array of { Activity_name, Awards }
+
     } = student;
 
+
+    // Set gender-specific pronouns
+//   const genderLower = (typeof Gender === 'string' ? Gender.toLowerCase().trim() : '');
+//   const isMale = genderLower === 'male';
+//   const pronoun = isMale ? 'he' : 'she';
+//   const pronounCapitalized = isMale ? 'He' : 'She';
+//   const possessivePronoun = isMale ? 'his' : 'her';
+
+// console.log('Raw Gender value:', Gender);
+// console.log('Lowercased + trimmed:', (Gender || '').toLowerCase().trim());
+
+
+// console.log('Pronouns used:', pronounCapitalized, pronoun, possessivePronoun);
+
+
+
+
     const logoBase64 = fs.readFileSync('uploads/school_logo.png', { encoding: 'base64' });
+
+     // Format extracurricular activities
+    const formattedActivities = activities.map((a, idx) => {
+        const awardText = a.Awards ? ` (Awarded: ${a.Awards})` : '';
+        return `${idx + 1}. ${a.Activity_name}${awardText}`;
+    });
+
+// Construct conduct + activities paragraph
+let conductParagraph = `During this period, the student's conduct and behavior were found to be ${Conduct}.`;
+
+if (formattedActivities.length > 0) {
+    console.log('Activities received in PDF generation:', activities);
+
+    conductParagraph += `\n\nThe student actively participated in the following extracurricular activities:\n` +
+        formattedActivities.map(item => `• ${item}`).join('\n');
+}
 
     const docDefinition = {
         content: [
@@ -56,12 +93,12 @@ async function generateLeavingCertificate(student) {
             { text: 'LEAVING CERTIFICATE', style: 'title' },
             {
                 text:
-                    `This is to certify that ${Full_Name}, ` +
-                    `was a bonafide student of this school.\n\n` +
-                    `He/She was enrolled in Grade ${Grade} and studied at this institution from ${Start_Date} to ${End_Date}.\n\n` +
-                    `During this period, his/her conduct and behavior were found to be ${Conduct}.\n\n` +
-                    `This certificate is issued upon his/her request for future educational purposes.\n\nReason for leaving: ${Reason}`,
+                    `This is to certify that ${Full_Name}, was a bonafide student of this school.\n\n` +
+                    `The student was enrolled in Grade ${Grade} and studied at this institution from ${Start_Date} to ${End_Date}.\n\n` +
+                    conductParagraph + `\n\n` +
+                    `This certificate is issued upon the request for future educational purposes.\n\nReason for leaving: ${Reason || 'Not specified'}`,
                 style: 'body'
+
             },
             {
                 text: `\nDate of Issue: ${Issue_Date}`,

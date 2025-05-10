@@ -1,148 +1,157 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
-const ProgressPage = () => {
-  const { studentId: paramStudentId } = useParams();
-  const [studentId, setStudentId] = useState(paramStudentId || "");
-  const [progress, setProgress] = useState([]);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState([]);
+const ParentPayment = () => {
+  const [studentData, setStudentData] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [description, setDescription] = useState('');
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState(''); // success or error
+  const [paymentHistory, setPaymentHistory] = useState([]);
 
-  const [authFailed, setAuthFailed] = useState(false);
-
-  const calculateAverage = () => {
-    if (progress.length === 0) return 0;
-    const total = progress.reduce((sum, item) => sum + Number(item.Marks), 0);
-    return (total / progress.length).toFixed(2);
-  };
-
-
-  // 1. If no paramStudentId, get studentId from token
   useEffect(() => {
-    if (!paramStudentId && !authFailed) {
-      axios
-        .get("http://localhost:5001/api/progress/me", {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          const id = res.data.studentId;
-          setStudentId(id);
-  
-          // Fetch progress after studentId is known
-          fetch(`http://localhost:5001/api/progress/${id}`)
-            .then((res) => res.json())
-            .then((data) => setProgress(Array.isArray(data) ? data : []))
-            .catch((err) => console.error("Error fetching progress:", err));
-  
-          // Fetch comments after studentId is known
-          fetch(`http://localhost:5001/api/progress/comment/${id}`)
-            .then((res) => res.json())
-            .then((data) => setComments(Array.isArray(data) ? data : []))
-            .catch((err) => console.error("Error fetching comments:", err));
-        })
-        .catch((err) => {
-          console.error("Auth error:", err);
-          if (!authFailed) {
-            alert("Authentication failed. Please log in again.");
-            setAuthFailed(true); // Prevents future alerts
-          }
-        });
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const userID = decoded.userID;
+
+        axios.get(`http://localhost:5001/api/students/payment/${userID}`)
+          .then(res => setStudentData(res.data))
+          .catch(err => console.error('Error fetching student data:', err));
+
+        axios.get(`http://localhost:5001/api/students/payment/amount/${userID}`)
+          .then(res => setTotalAmount(res.data.totalAmount))
+          .catch(err => console.error('Error fetching total amount:', err));
+
+        axios.get(`http://localhost:5001/api/students/payment/history/${userID}`)
+          .then(res => setPaymentHistory(res.data))
+          .catch(err => console.error('Error fetching payment history:', err));
+
+      } catch (err) {
+        console.error('Token decode error:', err);
+      }
     }
-  }, [paramStudentId]);
-  
-  
+  }, []);
 
-  // 2. Load progress data
-  useEffect(() => {
-    if (!paramStudentId || !studentId) return;
-    fetch(`http://localhost:5001/api/progress/${studentId}`)
-      .then((res) => res.json())
-      .then((data) => setProgress(Array.isArray(data) ? data : []))
-      .catch((err) => console.error("Error fetching progress:", err));
-  }, [studentId, paramStudentId]);
-  
+  const handlePayment = async () => {
+    if (!paymentAmount) {
+      setMessageType('error');
+      setMessage('Please enter a payment amount.');
+      return;
+    }
 
-  // 3. Load comments
-  useEffect(() => {
-    if (!paramStudentId || !studentId) return;
-    fetch(`http://localhost:5001/api/progress/comment/${studentId}`)
-      .then((res) => res.json())
-      .then((data) => setComments(Array.isArray(data) ? data : []))
-      .catch((err) => console.error("Error fetching comments:", err));
-  }, [studentId, paramStudentId]);
+    try {
+      const token = localStorage.getItem('token');
+      const decoded = jwtDecode(token);
+      const userID = decoded.userID;
 
-  const handleCommentSubmit = (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+      await axios.post('http://localhost:5001/api/students/payment/add', {
+        student_id: userID,
+        amount: paymentAmount,
+        description: description || 'Online payment'
+      });
 
-    fetch("http://localhost:5001/api/progress/comment/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ studentId, comment: newComment }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        fetch(`http://localhost:5001/api/progress/comment/${studentId}`)
-          .then((res) => res.json())
-          .then((data) => setComments(Array.isArray(data) ? data : []));
-        setNewComment("");
-      })
-      .catch((err) => console.error("Error adding comment:", err));
+      setMessageType('success');
+      setMessage('Payment submitted successfully.');
+      setPaymentAmount('');
+      setDescription('');
+
+      const res = await axios.get(`http://localhost:5001/api/students/payment/amount/${userID}`);
+      setTotalAmount(res.data.totalAmount);
+
+      const historyRes = await axios.get(`http://localhost:5001/api/students/payment/history/${userID}`);
+      setPaymentHistory(historyRes.data);
+
+    } catch (err) {
+      console.error('Payment error:', err);
+      setMessageType('error');
+      setMessage('Failed to submit payment.');
+    }
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Student Progress</h1>
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl mt-8">
+      <h2 className="text-2xl font-bold mb-4 text-blue-600">💳 Payment Information</h2>
 
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Progress Section */}
-        <div className="md:w-2/3">
-          {progress.length > 0 ? (
-            <div className="space-y-4">
-            <div className="bg-blue-100 text-blue-800 p-3 rounded-md mb-4">
-        <strong>Average Marks:</strong> {calculateAverage()}
-      </div>
-              {progress.map((item, index) => (
-                <div key={index} className="bg-white p-4 shadow-md rounded-md border">
-                  <p className="text-lg font-medium text-gray-700">
-                    <strong>Subject:</strong> {item.Subject_name}
-                  </p>
-                  <p className="text-gray-600"><strong>Marks:</strong> {item.Marks}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500">No progress data available.</p>
-          )}
-        </div>
-
-        {/* Comments Section */}
-        <div className="mt-10 bg-white p-6 shadow-md rounded-md border">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
-
-          <div className="space-y-2 mb-4 max-h-64 overflow-y-auto">
-            {comments.length > 0 ? (
-              comments.map((comment, index) => (
-                <div key={index} className="border p-2 rounded-md bg-gray-50">
-                  <p className="text-gray-700">{comment.Comment}</p>
-                  <p className="text-sm text-gray-500">
-                    on {new Date(comment.Created_At).toLocaleDateString()}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No comments yet.</p>
-            )}
+      {studentData ? (
+        <div>
+          <div className="mb-6">
+            <p><strong>Student ID:</strong> {studentData.Student_ID}</p>
+            <p><strong>Name:</strong> {studentData.Name_with_initials}</p>
+            <p><strong>Monthly Fee:</strong> Rs. {parseFloat(studentData.monthly_amount).toFixed(2)}</p>
+            <p><strong>Total Payable Amount:</strong> Rs. {parseFloat(totalAmount).toFixed(2)}</p>
           </div>
 
-          
+          <hr className="my-6" />
+
+          <h3 className="text-xl font-semibold mb-2">Make a Payment</h3>
+          <div className="flex flex-col md:flex-row gap-4 mb-4">
+            <input
+              type="number"
+              placeholder="Enter payment amount"
+              value={paymentAmount}
+              onChange={(e) => setPaymentAmount(e.target.value)}
+              className="border p-2 rounded-md w-full md:w-1/3"
+            />
+            <input
+              type="text"
+              placeholder="Description (optional)"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="border p-2 rounded-md w-full md:w-1/2"
+            />
+            <button
+              onClick={handlePayment}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+            >
+              Submit Payment
+            </button>
+          </div>
+
+          {message && (
+            <div className={`p-3 rounded-md mb-4 ${messageType === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+              {message}
+            </div>
+          )}
+
+          <hr className="my-6" />
+
+          <h3 className="text-xl font-semibold mb-4">Payment History</h3>
+          {paymentHistory.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="min-w-full table-auto border">
+                <thead>
+                  <tr className="bg-gray-100 text-left">
+                    <th className="px-4 py-2 border">Date</th>
+                    <th className="px-4 py-2 border">Amount</th>
+                    <th className="px-4 py-2 border">Description</th>
+                    <th className="px-4 py-2 border">Month/Year</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paymentHistory.map((payment, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-4 py-2 border">{new Date(payment.date).toLocaleDateString()}</td>
+                      <td className="px-4 py-2 border">Rs. {parseFloat(payment.amount).toFixed(2)}</td>
+                      <td className="px-4 py-2 border">{payment.description || 'No Description'}</td>
+                      <td className="px-4 py-2 border">{payment.month_year}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>No payment history available.</p>
+          )}
         </div>
-      </div>
+      ) : (
+        <p>Loading student details...</p>
+      )}
     </div>
   );
 };
 
-export default ProgressPage;
+export default ParentPayment;

@@ -87,7 +87,7 @@ exports.generateLeavingCertificate = async (req, res) => {
     dateOfLeaving,
     conduct,
     reason,
-    classCompleted
+    classCompleted,
   } = req.body;
 
   const timestamp = Date.now();
@@ -97,11 +97,14 @@ exports.generateLeavingCertificate = async (req, res) => {
   try {
     const buffer = await generateLeavingCertificate({
       Full_Name: studentName,
+
   Start_Date: dateOfAdmission,
   End_Date: dateOfLeaving,
   Conduct: conduct,
   Grade: classCompleted,
-  Issue_Date: new Date().toISOString().split('T')[0]
+  Issue_Date: new Date().toISOString().split('T')[0],
+  Reason: reason,
+
 });
 
     fs.writeFileSync(filePath, buffer);
@@ -120,20 +123,61 @@ exports.generateLeavingCertificate = async (req, res) => {
 };
 
 exports.getStudents = (req, res) => {
-  const query = 'SELECT Student_ID AS student_id, Student_name AS student_name FROM Student';
+  const query = 'SELECT Student_ID AS student_id, Full_name AS student_name FROM Student';
   db.query(query, (err, results) => {
-    if (err) return res.status(500).json({ success: false, message: 'DB error' });
-    res.json({ success: true, students: results });
-  });
+    if (err) {
+      console.error('SQL Error:', err); 
+    return res.status(500).json({ success: false, message: 'DB error' });
+  }
+  res.json({ success: true, students: results });
+});
 };
 
 exports.getStudentDetails = (req, res) => {
   const { studentId } = req.params;
-  const query = `
-SELECT Student_name AS student_name, Student_ID AS student_id, Joined_date AS admission_date, Grade AS class_completed FROM Student WHERE Student_ID = ?
+
+  const studentQuery = `
+    SELECT 
+      Full_name AS student_name, 
+      Student_ID AS student_id, 
+      Joined_date AS admission_date
+    FROM Student 
+    WHERE Student_ID = ?
   `;
-  db.query(query, [studentId], (err, results) => {
-    if (err || results.length === 0) return res.status(500).json({ success: false, message: 'Student not found' });
-    res.json({ success: true, student: results[0] });
+
+  const activityQuery = `
+    SELECT 
+      eca.Activity_name, 
+      seca.Awards 
+    FROM StudentExtraCurricularActivity seca
+    JOIN ExtraCurricularActivity eca ON seca.Activity_ID = eca.Activity_ID
+    WHERE seca.Student_ID = ?
+  `;
+
+  db.query(studentQuery, [studentId], (err, studentResults) => {
+    if (err) {
+      console.error('DB Error:', err);
+      return res.status(500).json({ success: false, message: 'Database error' });
+    }
+
+    if (studentResults.length === 0) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
+    }
+
+    const student = studentResults[0];
+
+    db.query(activityQuery, [studentId], (err, activityResults) => {
+      if (err) {
+        console.error('Activity Query Error:', err);
+        return res.status(500).json({ success: false, message: 'Database error' });
+      }
+
+      student.activities = activityResults; // Attach extracurricular data
+
+      return res.json({
+        success: true,
+        student
+      });
+    });
   });
 };

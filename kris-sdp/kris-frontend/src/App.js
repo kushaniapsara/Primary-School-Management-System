@@ -31,8 +31,10 @@ import ParentDashboard from './Pages/Parent/ParentDashboard.js';
 //import ParentProgress from './Pages/Parent/ParentProgress.js';
 import ParentHomework from './Pages/Parent/ParentHomework.js';
 import ParentExtraAct from './Pages/Parent/ParentExtraAct.js';
-import ParentPayment from './Pages/Parent/ParentPayment.js';
+import StudentOwnProgress from './Pages/Parent/StudentOwnProgress.js';
 import ParentProfile from './Pages/Parent/ParentProfile.js';
+import ParentPayment from './Pages/Parent/ParentPayment.js';
+
 
 // Admin Pages
 import AdminLogin from './Pages/Admin/AdminLogin.js';
@@ -145,9 +147,11 @@ function App() {
                     {/*<Route path="/ParentProgress" element={<ParentProgress />} />*/}
                     <Route path="/ParentHomework" element={<ParentHomework />} />
                     <Route path="/ParentExtraAct" element={<ParentExtraAct />} />
-                    <Route path="/ParentPayment" element={<ParentPayment />} />
+                    <Route path="/StudentOwnProgress" element={<StudentOwnProgress />} />
                     <Route path="/ParentProfile" element={<ParentProfile />} />
                     <Route path="/progress" element={<ProgressPage />} />
+                    <Route path="/ParentPayment" element={<ParentPayment />} />
+
 
   
                     {/* Admin Routes */}
