@@ -34,7 +34,7 @@ const StuManagement = () => {
   const [newYear, setNewYear] = useState("");
 
 
- // const [selectedStudents, setSelectedStudents] = useState([]);  // Stores the selected students
+  // const [selectedStudents, setSelectedStudents] = useState([]);  // Stores the selected students
   //const [newClassName, setNewClassName] = useState('');  // Stores the new class name
   //const [newAcademicYear, setNewAcademicYear] = useState('');  // Stores the new academic year
 
@@ -42,7 +42,7 @@ const StuManagement = () => {
     grade: "",
     className: "",
     syllabus: "",
-    name: "", 
+    name: "",
     academicYear: "",
   });
 
@@ -94,25 +94,25 @@ const StuManagement = () => {
   const handleGradeChange = (event) => {
     const selectedGrade = event.target.value;
     setNewStudent({
-        ...newStudent,
-        grade: selectedGrade,
-        className: `${selectedGrade}A`  // Set default class as "1A" for example
+      ...newStudent,
+      grade: selectedGrade,
+      className: `${selectedGrade}A`  // Set default class as "1A" for example
     });
-};
+  };
 
-// Generate class options based on grade
-const generateClassOptions = () => {
+  // Generate class options based on grade
+  const generateClassOptions = () => {
     const classes = [];
     const grade = newStudent.grade;
 
     if (grade) {
-        for (let i = 1; i <= 3; i++) {  // assuming you have 3 classes per grade
-            classes.push(`${grade}${String.fromCharCode(64 + i)}`); // 65 -> A, 66 -> B, etc.
-        }
+      for (let i = 1; i <= 3; i++) {  // assuming you have 3 classes per grade
+        classes.push(`${grade}${String.fromCharCode(64 + i)}`); // 65 -> A, 66 -> B, etc.
+      }
     }
 
     return classes;
-};
+  };
 
 
   const handleChange = (e) => {
@@ -153,7 +153,7 @@ const generateClassOptions = () => {
           address: "",
           enrollmentDate: "",
           syllabus: "",
-          sistersBrothersInSameSchool: "", 
+          sistersBrothersInSameSchool: "",
           documents: "",
           password: "",
           username: "",
@@ -179,10 +179,10 @@ const generateClassOptions = () => {
   const handleFileChange = (e) => {
     setProfilePhoto(e.target.files[0]); // Store the selected file in state
   };
-  
 
-   // Modal Handling Functions
-   const openModal = (student) => {
+
+  // Modal Handling Functions
+  const openModal = (student) => {
     setSelectedStudent(student);
   };
 
@@ -194,19 +194,19 @@ const generateClassOptions = () => {
 
   const printDetails = () => {
     const modalContent = document.getElementById("student-details-modal");
-  
+
     if (!modalContent) {
       console.error("Error: Student details modal not found.");
       return;
     }
-  
+
     const printWindow = window.open("", "_blank");
-    
+
     if (!printWindow) {
       console.error("Popup blocked! Allow popups and try again.");
       return;
     }
-  
+
     printWindow.document.write(`
       <html>
         <head>
@@ -231,8 +231,8 @@ const generateClassOptions = () => {
     `);
     printWindow.document.close();
   };
-  
-  
+
+
 
 
 
@@ -250,14 +250,14 @@ const generateClassOptions = () => {
         (filters.className === "" || student.Class_name === filters.className) &&
         (filters.syllabus === "" || student.Syllabus === filters.syllabus) &&
         (filters.name === "" || student.Full_name.toLowerCase().includes(filters.name.toLowerCase())) &&  // Add name filtering here
-        (filters.academicYear === "" || String(student.Academic_year) === filters.academicYear) 
+        (filters.academicYear === "" || String(student.Academic_year) === filters.academicYear)
 
       );
     }));
   };
-  
 
-//checkboxes
+
+  //checkboxes
   const toggleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedIds(students.map((s) => s.Student_ID));
@@ -265,41 +265,67 @@ const generateClassOptions = () => {
       setSelectedIds([]);
     }
   };
-  
+
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
     );
   };
- //promoting
- const handlePromote = async () => {
-  console.log("Clicked Promote");
+  //promoting
+  const handlePromote = async () => {
+    console.log("Clicked Promote");
 
-  try {
-    const response = await fetch("http://localhost:5001/api/students/promote", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        studentIds: selectedIds,
-        newClassName: newClassName,
-        newYear: newYear
-      })
-    });
+    try {
+      const response = await fetch("http://localhost:5001/api/students/promote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          studentIds: selectedIds,
+          newClassName: newClassName,
+          newYear: newYear
+        })
+      });
 
-    const data = await response.json(); // parse JSON from response
-    console.log("Backend response:", data);
-    alert("Students promoted successfully!");
-  } catch (error) {
-    console.error("Error promoting students:", error);
-  }
-};
+      const data = await response.json(); // parse JSON from response
+      console.log("Backend response:", data);
+      alert("Students promoted successfully!");
+    } catch (error) {
+      console.error("Error promoting students:", error);
+    }
+  };
+
+  const toggleStatus = async (studentId, currentStatus) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+
+    try {
+      const res = await fetch(`http://localhost:5001/api/students/${studentId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (res.ok) {
+        // Update status locally after successful update
+        setStudents((prev) =>
+          prev.map((s) =>
+            s.Student_ID === studentId ? { ...s, Status: newStatus } : s
+          )
+        );
+      } else {
+        console.error('Failed to update status');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
 
-  
 
-  
+
   return (
     <div className="flex h-screen overflow-hidden">
       <div className="flex-1 bg-blue-900 flex flex-col">
@@ -351,17 +377,17 @@ const generateClassOptions = () => {
           </FormControl>
 
           <FormControl sx={{ minWidth: 200 }}>
-              <TextField
-                label="Name"
-                name="name"
-                value={filters.name}
-                onChange={handleFilterChange}
-                fullWidth
-              />
-            </FormControl>
+            <TextField
+              label="Name"
+              name="name"
+              value={filters.name}
+              onChange={handleFilterChange}
+              fullWidth
+            />
+          </FormControl>
 
 
-            <FormControl sx={{ minWidth: 200 }}>
+          <FormControl sx={{ minWidth: 200 }}>
             <InputLabel>Academic_year</InputLabel>
             <Select name="academicYear" value={filters.academicYear} onChange={handleFilterChange}>
               <MenuItem value="">All</MenuItem>
@@ -374,170 +400,182 @@ const generateClassOptions = () => {
             </Select>
           </FormControl>
 
-          
+
           <Button variant="contained" color="primary" onClick={handleFilterApply}>Filter</Button>
         </div>
 
-            {/* Promote Students */}
-            <div className="flex gap-4 mb-4 items-center mx-4 my-4">
-              <select
-                value={newClassName}
-                onChange={(e) => setNewClassName(e.target.value)}
-                className="border p-2 rounded"
-              >
-                <option value="">Select New Class</option>
-                <option value="1A">Grade 1A</option>
-                <option value="1B">Grade 1B</option>
-                <option value="1C">Grade 1C</option> {/* fixed value */}
+        {/* Promote Students */}
+        <div className="flex gap-4 mb-4 items-center mx-4 my-4">
+          <select
+            value={newClassName}
+            onChange={(e) => setNewClassName(e.target.value)}
+            className="border p-2 rounded"
+          >
+            <option value="">Select New Class</option>
+            <option value="1A">Grade 1A</option>
+            <option value="1B">Grade 1B</option>
+            <option value="1C">Grade 1C</option> {/* fixed value */}
 
-                <option value="2A">Grade 2A</option>
-                <option value="2B">Grade 2B</option>
-                <option value="2C">Grade 2C</option>
+            <option value="2A">Grade 2A</option>
+            <option value="2B">Grade 2B</option>
+            <option value="2C">Grade 2C</option>
 
-                <option value="3A">Grade 3A</option>
-                <option value="3B">Grade 3B</option>
-                <option value="3C">Grade 3C</option>
-              </select>
+            <option value="3A">Grade 3A</option>
+            <option value="3B">Grade 3B</option>
+            <option value="3C">Grade 3C</option>
+          </select>
 
-              <input
-                type="text"
-                placeholder="New Academic Year"
-                value={newYear}
-                onChange={(e) => setNewYear(e.target.value)}
-                className="border p-2 rounded"
-              />
+          <input
+            type="text"
+            placeholder="New Academic Year"
+            value={newYear}
+            onChange={(e) => setNewYear(e.target.value)}
+            className="border p-2 rounded"
+          />
 
-                  <button
-                    onClick={() => {
-                      console.log("Clicked Promote Button");
-                      handlePromote();
-                    }}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    disabled={selectedIds.length === 0 || !newClassName || !newYear}
-                  >
-                    Promote Selected
-                  </button>
+          <button
+            onClick={() => {
+              console.log("Clicked Promote Button");
+              handlePromote();
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            disabled={selectedIds.length === 0 || !newClassName || !newYear}
+          >
+            Promote Selected
+          </button>
 
-            </div>
+        </div>
 
 
 
 
         <div className="p-5">
-      <table className="w-full border-collapse">
-      <thead>
-          <tr className="bg-gray-100">
-            <th className="border-2 border-black px-4 py-2 text-center">
-              <input
-                type="checkbox"
-                checked={students.length > 0 && selectedIds.length === students.length}
-                onChange={toggleSelectAll}
-                onClick={(e) => e.stopPropagation()}
-              />
-            </th>
-            {/*existing headers */}
-            <th className="border-2 border-black px-4 py-2 text-center">Student Name</th>
-            <th className="border-2 border-black px-4 py-2 text-center">Class</th>
-            <th className="border-2 border-black px-4 py-2 text-center">Academic Year</th>
-            <th className="border-2 border-black px-4 py-2 text-center">Contact</th>
-            <th className="border-2 border-black px-4 py-2 text-center">Syllabus</th>
-            <th className="border-2 border-black px-4 py-2 text-center">Status</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          {students.map((student) => (
-            <tr
-              key={student.Student_ID}
-              className="border-b-2 border-black bg-gray-200 cursor-pointer hover:bg-gray-400"
-              onClick={() => openModal(student)} // ✅ Correctly pass student data
-            >
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border-2 border-black px-4 py-2 text-center">
+                  <input
+                    type="checkbox"
+                    checked={students.length > 0 && selectedIds.length === students.length}
+                    onChange={toggleSelectAll}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </th>
+                {/*existing headers */}
+                <th className="border-2 border-black px-4 py-2 text-center">Student Name</th>
+                <th className="border-2 border-black px-4 py-2 text-center">Class</th>
+                <th className="border-2 border-black px-4 py-2 text-center">Academic Year</th>
+                <th className="border-2 border-black px-4 py-2 text-center">Contact</th>
+                <th className="border-2 border-black px-4 py-2 text-center">Syllabus</th>
+                <th className="border-2 border-black px-4 py-2 text-center">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {students.map((student) => (
+                <tr
+                  key={student.Student_ID}
+                  className="border-b-2 border-black bg-gray-200 cursor-pointer hover:bg-gray-400"
+                  onClick={() => openModal(student)} // ✅ Correctly pass student data
+                >
 
 
-            <td
-              className="border-2 border-black px-4 py-2 text-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <input
-                type="checkbox"
-                checked={selectedIds.includes(student.Student_ID)}
-                onChange={() => toggleSelect(student.Student_ID)}
-              />
-            </td>
-
-              <td className="border-2 border-black px-4 py-2 text-center">{student.Full_name}</td>
-              <td className="border-2 border-black px-4 py-2 text-center">{student.Class_name}</td>
-              <td className="border-2 border-black px-4 py-2 text-center">{student.Academic_year}</td>
-
-              <td className="border-2 border-black px-4 py-2 text-center">{student.Contact_number}</td>
-              <td className="border-2 border-black px-4 py-2 text-center">{student.Syllabus}</td>
-              
-              <td className="border-2 border-black px-4 py-2 text-center">
-            <button className="text-red-500 hover:text-red-700">
-              {student.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
-            </button>
-          </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* 🔹 Student Profile Modal */}
-      {selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg w-3/4 max-w-4xl">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Student Details</h2>
-              <button className="text-red-500 text-xl" onClick={closeModal}>✖</button>
-            </div>
-
-            {/* 🔹 Profile Layout */}
-            <div className="flex">
-              {/* Left Panel - Profile & Basic Info */}
-              <div className="w-1/3 text-center border-r-2 pr-4">
-                <img src={`http://localhost:5001/${selectedStudent.Profile_photo}`}  alt="Profile" className="w-32 h-32 mx-auto rounded-full border-2 border-black" />
-                <h3 className="font-semibold mt-2">{selectedStudent.Full_name}</h3>
-                <p className="text-sm">{selectedStudent.Gender} | {selectedStudent.Religion}</p>
-              </div>
-
-              {/* Right Panel - Full Details */}
-              <div className="w-2/3 pl-4">
-                <h3 className="font-semibold">📌 Student Information</h3>
-                <p><b>🎂 DOB:</b> {selectedStudent.Date_of_birth}</p>
-                <p><b>🏠 Address:</b> {selectedStudent.Address}</p>
-                <p><b>📞 Contact:</b> {selectedStudent.Contact_number} | {selectedStudent.Email}</p>
-                <p><b>📚 Syllabus & Grade:</b> {selectedStudent.Syllabus} | {selectedStudent.Grade}</p>
-                <p><b>💉 Vaccination:</b> {selectedStudent.Immunization}</p>
-                <p><b>🏫 Siblings in School?</b> {selectedStudent.Sisters_brothers_in_same_school ? "Yes" : "No"}</p>
-                <p><b>📅 Enrollment Date:</b> {selectedStudent.Joined_date}</p>
-                <p><b>📂 Documents:</b> <a href={selectedStudent.Documents} className="text-blue-500 underline">Download</a></p>
-
-               
-                {/* Actions */}
-                <div className="mt-4 flex justify-between">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded">✏️ Edit</button>
-                  <button className="bg-red-500 text-white px-4 py-2 rounded">🗑️ Deactivate</button>
-                  <button
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                    onClick={printDetails}
+                  <td
+                    className="border-2 border-black px-4 py-2 text-center"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    🖨️ Print Details
-                  </button>
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(student.Student_ID)}
+                      onChange={() => toggleSelect(student.Student_ID)}
+                    />
+                  </td>
 
-                  <DialogActions>
-        
+                  <td className="border-2 border-black px-4 py-2 text-center">{student.Full_name}</td>
+                  <td className="border-2 border-black px-4 py-2 text-center">{student.Class_name}</td>
+                  <td className="border-2 border-black px-4 py-2 text-center">{student.Academic_year}</td>
 
-        </DialogActions>
+                  <td className="border-2 border-black px-4 py-2 text-center">{student.Contact_number}</td>
+                  <td className="border-2 border-black px-4 py-2 text-center">{student.Syllabus}</td>
 
+                  <td
+                    className="border-2 border-black px-4 py-2 text-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      className={`text-white px-2 py-1 rounded ${student.Status === 'active' ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'
+                        }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleStatus(student.Student_ID, student.Status);
+                      }}
+                    >
+                      {student.Status === 'active' ? <ToggleOnIcon /> : <ToggleOffIcon />}
+                    </button>
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* 🔹 Student Profile Modal */}
+          {selectedStudent && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white p-6 rounded-lg w-3/4 max-w-4xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold">Student Details</h2>
+                  <button className="text-red-500 text-xl" onClick={closeModal}>✖</button>
+                </div>
+
+                {/* 🔹 Profile Layout */}
+                <div className="flex">
+                  {/* Left Panel - Profile & Basic Info */}
+                  <div className="w-1/3 text-center border-r-2 pr-4">
+                    <img src={`http://localhost:5001/${selectedStudent.Profile_photo}`} alt="Profile" className="w-32 h-32 mx-auto rounded-full border-2 border-black" />
+                    <h3 className="font-semibold mt-2">{selectedStudent.Full_name}</h3>
+                    <p className="text-sm">{selectedStudent.Gender} | {selectedStudent.Religion}</p>
+                  </div>
+
+                  {/* Right Panel - Full Details */}
+                  <div className="w-2/3 pl-4">
+                    <h3 className="font-semibold">📌 Student Information</h3>
+                    <p><b>🎂 DOB:</b> {selectedStudent.Date_of_birth}</p>
+                    <p><b>🏠 Address:</b> {selectedStudent.Address}</p>
+                    <p><b>📞 Contact:</b> {selectedStudent.Contact_number} | {selectedStudent.Email}</p>
+                    <p><b>📚 Syllabus & Grade:</b> {selectedStudent.Syllabus} | {selectedStudent.Grade}</p>
+                    <p><b>💉 Vaccination:</b> {selectedStudent.Immunization}</p>
+                    <p><b>🏫 Siblings in School?</b> {selectedStudent.Sisters_brothers_in_same_school ? "Yes" : "No"}</p>
+                    <p><b>📅 Enrollment Date:</b> {selectedStudent.Joined_date}</p>
+                    <p><b>📂 Documents:</b> <a href={selectedStudent.Documents} className="text-blue-500 underline">Download</a></p>
+
+
+                    {/* Actions */}
+                    <div className="mt-4 flex justify-between">
+                      <button className="bg-blue-500 text-white px-4 py-2 rounded">✏️ Edit</button>
+                      <button className="bg-red-500 text-white px-4 py-2 rounded">🗑️ Deactivate</button>
+                      <button
+                        className="bg-green-500 text-white px-4 py-2 rounded"
+                        onClick={printDetails}
+                      >
+                        🖨️ Print Details
+                      </button>
+
+                      <DialogActions>
+
+
+                      </DialogActions>
+
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-    </div>
+          )}
+        
 
-
+</div>
         {/* add student form */}
 
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
@@ -572,40 +610,40 @@ const generateClassOptions = () => {
 
 
                 <FormControl fullWidth margin="dense">
-                <InputLabel>Grade</InputLabel>
-                <Select
+                  <InputLabel>Grade</InputLabel>
+                  <Select
                     name="grade"
                     value={newStudent.grade}
                     onChange={handleGradeChange}
-                >
+                  >
                     <MenuItem value="">Select Grade</MenuItem>
                     <MenuItem value="1">1</MenuItem>
                     <MenuItem value="2">2</MenuItem>
                     <MenuItem value="3">3</MenuItem>
                     {/* Add more grades as needed */}
-                </Select>
+                  </Select>
                 </FormControl>
 
-            {newStudent.grade && (
-                <FormControl fullWidth margin="dense">
+                {newStudent.grade && (
+                  <FormControl fullWidth margin="dense">
                     <InputLabel>Class</InputLabel>
                     <Select
-                        name="className"
-                        value={newStudent.className}
-                        onChange={handleChange}
+                      name="className"
+                      value={newStudent.className}
+                      onChange={handleChange}
                     >
-                        {generateClassOptions().map((classOption) => (
-                            <MenuItem key={classOption} value={classOption}>
-                                {classOption}
-                            </MenuItem>
-                        ))}
+                      {generateClassOptions().map((classOption) => (
+                        <MenuItem key={classOption} value={classOption}>
+                          {classOption}
+                        </MenuItem>
+                      ))}
                     </Select>
-                </FormControl>
-            )}
+                  </FormControl>
+                )}
 
                 <input type="file" accept="image/*" onChange={handleFileChange} style={{ marginTop: "15px" }} /> {/* Added file input */}
 
-               
+
 
               </>
             ) : (
@@ -643,30 +681,30 @@ const generateClassOptions = () => {
                 <Button onClick={() => setStep(1)} color="secondary">
                   Back
                 </Button>
-                <Button 
-                      variant="contained" 
-                      color="primary" 
-                      onClick={handleSubmit} 
-                      disabled={
-                        ![
-                          "fullName", "nameWithInitials", "dob", "gender", "grade", "religion",
-                          "vaccination", "onAnyDrugs", "allergies", "contactNumber", "email",
-                          "address", "enrollmentDate", "syllabus", "sistersBrothersInSameSchool",
-                          "documents", "password", "username", "adminID", 
-                          "fatherName", "fatherContact", "fatherNIC", "fatherAddress", "fatherOccupation",
-                          "motherName", "motherContact", "motherNIC", "motherAddress", "motherOccupation",
-                          "className"
-                        ].every((field) => {
-                          const value = newStudent[field];
-                          if (typeof value === "string") return value.trim() !== "";
-                          if (typeof value === "boolean") return true;
-                          if (value instanceof File || value instanceof Blob) return true;
-                          return value !== null && value !== undefined && value !== "";
-                        })
-                      }
-                    >
-                      Submit
-                    </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  disabled={
+                    ![
+                      "fullName", "nameWithInitials", "dob", "gender", "grade", "religion",
+                      "vaccination", "onAnyDrugs", "allergies", "contactNumber", "email",
+                      "address", "enrollmentDate", "syllabus", "sistersBrothersInSameSchool",
+                      "documents", "password", "username", "adminID",
+                      "fatherName", "fatherContact", "fatherNIC", "fatherAddress", "fatherOccupation",
+                      "motherName", "motherContact", "motherNIC", "motherAddress", "motherOccupation",
+                      "className"
+                    ].every((field) => {
+                      const value = newStudent[field];
+                      if (typeof value === "string") return value.trim() !== "";
+                      if (typeof value === "boolean") return true;
+                      if (value instanceof File || value instanceof Blob) return true;
+                      return value !== null && value !== undefined && value !== "";
+                    })
+                  }
+                >
+                  Submit
+                </Button>
 
 
               </>

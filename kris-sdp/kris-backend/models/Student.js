@@ -23,6 +23,7 @@ const Student = {
         Student.Joined_date, 
         Student.Documents, 
         Student.Profile_photo, 
+        Student.Status,
         Class.Class_name,
         StudentClass.Academic_year
       FROM Student
@@ -135,10 +136,15 @@ const Student = {
       WHERE sc.Class_ID = ?
     `;
     pool.query(sql, [classID], callback);
-  }
+  },
+  
+
+
+// ✅ Update student status
+updateStatus: (studentId, status, callback) => {
+  const query = 'UPDATE Student SET Status = ? WHERE Student_ID = ?';
+  pool.query(query, [status, studentId], callback);
+},
 };
-
-
-
 
 module.exports = Student;

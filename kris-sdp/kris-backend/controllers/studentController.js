@@ -206,3 +206,22 @@ exports.promoteStudents = (req, res) => {
     });
   });
 };
+
+
+exports.updateStudentStatus = (req, res) => {
+  const studentId = req.params.id;
+  const { status } = req.body;
+
+  if (!['active', 'inactive'].includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value' });
+  }
+
+  Student.updateStatus(studentId, status, (err, result) => {
+    if (err) {
+      console.error('Controller Error:', err);
+      return res.status(500).json({ message: 'Failed to update status' });
+    }
+
+    res.status(200).json({ message: 'Status updated successfully' });
+  });
+};
