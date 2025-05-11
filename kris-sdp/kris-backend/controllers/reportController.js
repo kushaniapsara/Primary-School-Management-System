@@ -1,10 +1,9 @@
 const path = require('path');
 const fs = require('fs');
+const db = require('../config/db');
 const generatePdf = require('../utils/generatePdf');
 const generateExcel = require('../utils/generateExcel');
-const db = require('../config/db');
 const generateLeavingCertificate = require('../utils/generateLeavingCertificate');
-
 
 exports.generateReport = async (req, res) => {
   const { fromDate, toDate, format, reportType } = req.body;
@@ -12,7 +11,6 @@ exports.generateReport = async (req, res) => {
   let sql = '';
   let params = [fromDate, toDate];
 
-  // Pick the correct SQL based on report type
   switch (reportType) {
     case 'attendance':
       sql = 'SELECT Student_ID, Date, Status FROM Attendance WHERE Date BETWEEN ? AND ?';
@@ -20,8 +18,8 @@ exports.generateReport = async (req, res) => {
       break;
 
     case 'student':
-      sql = 'SELECT Student_ID, Full_name, Grade FROM Student'; // No date filter here
-      params = []; // No params needed
+      sql = 'SELECT Student_ID, Full_name, Grade FROM Student';
+      params = [];
       break;
 
     case 'extra-curricular':
@@ -46,8 +44,6 @@ exports.generateReport = async (req, res) => {
 
     const timestamp = Date.now();
     const filename = `report_${reportType}_${timestamp}.${format.toLowerCase() === 'pdf' ? 'pdf' : 'xlsx'}`;
-
-
     const filePath = path.join(__dirname, '..', 'downloads', filename);
 
     try {
@@ -61,15 +57,12 @@ exports.generateReport = async (req, res) => {
       }
 
       fs.writeFileSync(filePath, buffer);
-      //res.send({ success: true, file: filename });s
 
-      // Send the file path for previewing, not downloading immediately
       res.send({
         success: true,
-        file: filename,  // For preview
-        fileUrl: `/api/report/download/${filename}` // URL for preview
+        file: filename,
+        fileUrl: `/api/report/download/${filename}`
       });
-
 
     } catch (err) {
       console.error('Report generation error:', err);
@@ -78,7 +71,7 @@ exports.generateReport = async (req, res) => {
   });
 };
 
-// 🆕 Leaving Certificate Generator
+// ✅ UPDATED: Leaving Certificate Generator with Activity Data
 exports.generateLeavingCertificate = async (req, res) => {
   const {
     studentName,
@@ -95,17 +88,40 @@ exports.generateLeavingCertificate = async (req, res) => {
   const filePath = path.join(__dirname, '..', 'downloads', filename);
 
   try {
-    const buffer = await generateLeavingCertificate({
-      Full_Name: studentName,
+    // 1. Get student basic info by name (or you can switch to Student_ID if preferred)
+    const [studentResults] = await db.promise().query(
+      `SELECT Student_ID, Full_name AS Full_Name 
+       FROM Student WHERE Full_name = ? LIMIT 1`,
+      [studentName]
+    );
 
-  Start_Date: dateOfAdmission,
-  End_Date: dateOfLeaving,
-  Conduct: conduct,
-  Grade: classCompleted,
-  Issue_Date: new Date().toISOString().split('T')[0],
-  Reason: reason,
+    if (studentResults.length === 0) {
+      return res.status(404).send({ error: 'Student not found' });
+    }
 
-});
+    const student = studentResults[0];
+
+    // 2. Get activities for that student
+    const [activities] = await db.promise().query(
+      `SELECT eca.Activity_name, seca.Awards
+       FROM StudentExtraCurricularActivity seca
+       JOIN ExtraCurricularActivity eca ON seca.Activity_ID = eca.Activity_ID
+       WHERE seca.Student_ID = ?`,
+      [student.Student_ID]
+    );
+
+    // 3. Attach other form data + activities
+    student.Grade = classCompleted;
+    student.Student_ID = admissionNo, // <-- Add this
+    student.Start_Date = dateOfAdmission;
+    student.End_Date = dateOfLeaving;
+    student.Conduct = conduct;
+    student.Issue_Date = new Date().toISOString().split('T')[0];
+    student.Reason = reason;
+    student.activities = activities;
+
+    // 4. Generate PDF
+    const buffer = await generateLeavingCertificate(student);
 
     fs.writeFileSync(filePath, buffer);
 
@@ -119,18 +135,17 @@ exports.generateLeavingCertificate = async (req, res) => {
     console.error('Leaving certificate error:', err);
     res.status(500).send({ error: 'Failed to generate leaving certificate' });
   }
-  
 };
 
 exports.getStudents = (req, res) => {
   const query = 'SELECT Student_ID AS student_id, Full_name AS student_name FROM Student';
   db.query(query, (err, results) => {
     if (err) {
-      console.error('SQL Error:', err); 
-    return res.status(500).json({ success: false, message: 'DB error' });
-  }
-  res.json({ success: true, students: results });
-});
+      console.error('SQL Error:', err);
+      return res.status(500).json({ success: false, message: 'DB error' });
+    }
+    res.json({ success: true, students: results });
+  });
 };
 
 exports.getStudentDetails = (req, res) => {
@@ -172,7 +187,7 @@ exports.getStudentDetails = (req, res) => {
         return res.status(500).json({ success: false, message: 'Database error' });
       }
 
-      student.activities = activityResults; // Attach extracurricular data
+      student.activities = activityResults;
 
       return res.json({
         success: true,

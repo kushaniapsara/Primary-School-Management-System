@@ -93,7 +93,7 @@ if (formattedActivities.length > 0) {
             { text: 'LEAVING CERTIFICATE', style: 'title' },
             {
                 text:
-                    `This is to certify that ${Full_Name}, was a bonafide student of this school.\n\n` +
+                    `This is to certify that ${Full_Name} (Student ID: ${Student_ID}) was a bonafide student of this school.\n\n` +
                     `The student was enrolled in Grade ${Grade} and studied at this institution from ${Start_Date} to ${End_Date}.\n\n` +
                     conductParagraph + `\n\n` +
                     `This certificate is issued upon the request for future educational purposes.\n\nReason for leaving: ${Reason || 'Not specified'}`,
