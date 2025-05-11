@@ -30,6 +30,10 @@ const AdminLogin = () => {
 
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token); // Store token
+
+        localStorage.setItem('username', username);
+
+
         setUserType('Admin'); // Set userType to Admin
         setMessage(response.data.message);
         console.log("frontend:", response); // debug

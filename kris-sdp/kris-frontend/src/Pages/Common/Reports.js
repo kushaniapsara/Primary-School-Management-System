@@ -57,10 +57,7 @@ const Reports = () => {
         {/* Top Bar */}
         <div className="flex justify-between items-center p-6 bg-white border-b">
           <h1 className="text-2xl font-bold">Reports</h1>
-          <div className="text-right">
-            <p className="text-sm">Admin_002</p>
-            <p className="text-sm">Champika</p>
-          </div>
+          
         </div>
 
         {/* Filters and Buttons */}

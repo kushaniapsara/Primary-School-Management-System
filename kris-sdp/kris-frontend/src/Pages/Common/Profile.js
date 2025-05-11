@@ -22,7 +22,9 @@ const Profile = () => {
         const response = await axios.get("http://localhost:5001/api/auth/profile", {
           headers: { Authorization: token },
         });
-        setProfile(response.data);
+        setProfile(response.data);      
+       // localStorage.setItem("username", response.data.username); // 👈 ADD THIS LINE
+
       } catch (error) {
         setMessage(error.response?.data?.message || "Error fetching profile");
       }
@@ -76,8 +78,8 @@ const Profile = () => {
           <h1 className="text-3xl font-bold">Profile</h1>
           {profile && (
             <div className="text-right">
-              <p className="text-lg font-semibold">{profile.username}</p>
-              <p className="text-gray-600">{profile.full_name}</p>
+              {/* <p className="text-lg font-semibold">{profile.username}</p>
+              <p className="text-gray-600">{profile.Full_name}</p> */}
             </div>
           )}
         </header>

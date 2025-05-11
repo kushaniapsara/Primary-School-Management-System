@@ -23,6 +23,9 @@ const Login = () => {
         // Store token in localStorage
         localStorage.setItem('token', token);
 
+        localStorage.setItem('username', username);
+
+
         // Redirect based on role
         if (userType === 'Teacher') {
           navigate('/TeacherDashboard');

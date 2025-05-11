@@ -66,10 +66,7 @@ const ExtraActTeacher = () => {
         {/* Header */}
         <div className="flex justify-between items-center p-6 bg-white border-b">
           <h2 className="text-2xl font-bold">Extra Curricular Activities</h2>
-          <div className="text-right">
-            <p className="text-sm">Teacher_002</p>
-            <p className="font-semibold">Hansi Perera</p>
-          </div>
+          
         </div>
 
         {/* Add Activity Button */}

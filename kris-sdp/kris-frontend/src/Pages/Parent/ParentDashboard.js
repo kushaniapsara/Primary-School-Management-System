@@ -66,10 +66,7 @@ const ParentDashboard = () => {
           </div>
           
         </div>
-          <div className="text-right">
-            <p className="font-medium">Student_001</p>
-            <p className="text-gray-500">Kushani Apsara</p>
-          </div>
+          
         </header>
       
        

@@ -1,5 +1,5 @@
 const express = require("express");
-const { getTeachers, addTeacher, promoteTeachers  } = require("../controllers/teacherController");
+const { getTeachers, addTeacher, promoteTeachers, updateTeacherStatus  } = require("../controllers/teacherController");
 
 const router = express.Router();
 
@@ -11,6 +11,8 @@ router.post("/", addTeacher);
  
 // routes/studentRoutes.js
 router.post('/promote', promoteTeachers);
+
+router.put('/:id/status', updateTeacherStatus);
 
 
 module.exports = router; 

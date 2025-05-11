@@ -208,8 +208,8 @@ const AdminManagement = () => {
       <MenuItem value="Female">Female</MenuItem>
     </TextField>
     <TextField fullWidth margin="dense" select label="Status" name="status" value={newAdmin.status} onChange={handleChange}>
-    <MenuItem value="Active">Active</MenuItem>
-    <MenuItem value="Deactive">Deactive</MenuItem>
+    <MenuItem value="active">Active</MenuItem>
+    <MenuItem value="inactive">Deactive</MenuItem>
     </TextField>
     <TextField fullWidth margin="dense" label="Contact Number" name="contactNumber" value={newAdmin.contactNumber} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="Email" name="email" value={newAdmin.email} onChange={handleChange} />

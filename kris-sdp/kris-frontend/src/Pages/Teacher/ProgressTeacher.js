@@ -145,10 +145,7 @@ const Dashboard = () => {
         {/* Header */}
         <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
           <h1 className="text-2xl font-bold">Progress</h1>
-          <div className="text-right">
-            <p className="font-medium">Teacher_002</p>
-            <p className="text-gray-500">Hansi Perera</p>
-          </div>
+         
         </header>
 
 

@@ -718,4 +718,3 @@ const StuManagement = () => {
 
 export default StuManagement;
 
-//fetch parent details to the student model.

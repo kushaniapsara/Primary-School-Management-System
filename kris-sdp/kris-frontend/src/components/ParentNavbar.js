@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AttachMoneyIcon from "@mui/icons-material/CalendarToday";
@@ -9,8 +9,20 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 
 const ParentNavbar = () => {
+  const [username, setUsername] = useState('');
+  
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
   return(
 <div className="bg-white-100 w-64 flex flex-col py-4">
+{/* Username at top-right */}
+<div className="absolute top-12 right-12 text-xl font-semibold text-gray-700">
+        {username ? `👋 ${username}` : ""}
+      </div>
         <div className="flex flex-col items-center mb-6">
         <img src="/assets/b.png" alt="KRIS Logo" className="w-34 h-24 mx-auto mb-2"/>
         </div>

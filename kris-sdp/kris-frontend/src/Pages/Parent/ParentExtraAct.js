@@ -108,10 +108,7 @@ const ExtraActParent = () => {
         {/* Header */}
         <div className="flex justify-between items-center p-6 bg-white border-b">
           <h2 className="text-2xl font-bold">Extra Curricular Activities</h2>
-          <div className="text-right">
-            <p className="text-sm">Student_001</p>
-            <p className="font-semibold">Kushani Apsara</p>
-          </div>
+          
         </div>
 
         {/* Activity Cards */}

@@ -217,7 +217,32 @@ const generateClassOptions = () => {
           }
           };
 
-
+          const toggleStatus = async (teacherId, currentStatus) => {
+            const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        
+            try {
+              const res = await fetch(`http://localhost:5001/api/teachers/${teacherId}/status`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus }),
+              });
+        
+              if (res.ok) {
+                // Update status locally after successful update
+                setTeachers((prev) =>
+                  prev.map((s) =>
+                    s.Teacher_ID === teacherId ? { ...s, Status: newStatus } : s
+                  )
+                );
+              } else {
+                console.error('Failed to update status');
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          };
 
   
   return (
@@ -379,11 +404,21 @@ const generateClassOptions = () => {
 
               <td className="border-2 border-black px-4 py-2 text-center">{teacher.Contact_number}</td>
               
-              <td className="border-2 border-black px-4 py-2 text-center">
-            <button className="text-red-500 hover:text-red-700">
-              {teacher.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
-            </button>
-          </td>
+              <td
+                    className="border-2 border-black px-4 py-2 text-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      className={`text-white px-2 py-1 rounded ${teacher.Status === 'active' ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'
+                        }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleStatus(teacher.Teacher_ID, teacher.Status);
+                      }}
+                    >
+                      {teacher.Status === 'active' ? <ToggleOnIcon /> : <ToggleOffIcon />}
+                    </button>
+                  </td>
             </tr>
           ))}
         </tbody>
@@ -443,8 +478,8 @@ const generateClassOptions = () => {
       <MenuItem value="Female">Female</MenuItem>
     </TextField>
     <TextField fullWidth margin="dense" select label="Status" name="status" value={newTeacher.status} onChange={handleChange}>
-    <MenuItem value="Active">Active</MenuItem>
-    <MenuItem value="Deactive">Deactive</MenuItem>
+    <MenuItem value="active">Active</MenuItem>
+    <MenuItem value="inactive">Deactive</MenuItem>
     </TextField>
     <TextField fullWidth margin="dense" label="Contact Number" name="contactNumber" value={newTeacher.contactNumber} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="Email" name="email" value={newTeacher.email} onChange={handleChange} />

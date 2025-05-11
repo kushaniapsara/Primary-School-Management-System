@@ -20,7 +20,8 @@ const pool = require("../config/db");
           Teacher.Profile_photo, 
           Teacher.Gender, 
           Teacher.Address,
-          Teacher.Grade,  
+          Teacher.Grade, 
+          Teacher.Status, 
           Class.Class_name,
           TeacherClass.Academic_year
 
@@ -121,8 +122,15 @@ INNER JOIN (
   addTeacherToClass: (teacherClassData, callback) => {
     const sql = `INSERT INTO TeacherClass (Teacher_ID, Class_ID, Academic_year) VALUES (?, ?, ?)`;
     pool.query(sql, [teacherClassData.Teacher_ID, teacherClassData.Class_ID, teacherClassData.Academic_year], callback);
-  }
+  },
+
+  // ✅ Update teacher status
+updateStatus: (teacherId, status, callback) => {
+  const query = 'UPDATE Teacher SET Status = ? WHERE Teacher_ID = ?';
+  pool.query(query, [status, teacherId], callback);
+},
 };
+
 
 module.exports = Teacher;
        
