@@ -30,6 +30,10 @@ router.get("/me", verifyToken, (req, res) => {
 
 router.get('/:studentId', progressController.getProgressByStudent);
 
+//for studentwise avg
+router.get('/subject-averages', progressController.getSubjectWiseAverage);
+
+
 
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/NavbarTeacher';
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,13 +18,45 @@ import {
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const TeacherDashboard = () => {
-  // Data for the chart
+
+  const [subjectAverages, setSubjectAverages] = useState([]);
+
+  // ✅ Fetch all student progress data (for subjects and marks)
+  useEffect(() => {
+    fetch("http://localhost:5001/api/teacher-progress/subjects")
+    .then((res) => res.json())
+      .then((data) => {
+        // Calculate average per subject
+        const subjectMap = {};
+
+        data.forEach((entry) => {
+          const { Subject_name, Marks } = entry;
+
+          if (!subjectMap[Subject_name]) {
+            subjectMap[Subject_name] = { total: 0, count: 0 };
+          }
+
+          subjectMap[Subject_name].total += Marks;
+          subjectMap[Subject_name].count += 1;
+        });
+
+        const result = Object.entries(subjectMap).map(([subject, stats]) => ({
+          subject,
+          average: (stats.total / stats.count).toFixed(2),
+        }));
+
+        setSubjectAverages(result);
+      })
+      .catch((err) => console.error("Error fetching progress data:", err));
+  }, []);
+
+  // ✅ Chart configuration using fetched data
   const performanceData = {
-    labels: ['Subject A', 'Subject B', 'Subject C', 'Subject D', 'Subject E'],
+    labels: subjectAverages.map((item) => item.subject),
     datasets: [
       {
         label: 'Average Marks (%)',
-        data: [85, 78, 92, 74, 88],
+        data: subjectAverages.map((item) => item.average),
         backgroundColor: 'rgba(54, 162, 235, 0.6)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
@@ -97,10 +129,10 @@ const TeacherDashboard = () => {
             <p className="text-xl font-extrabold">2 Activities</p>
           </div>
 
-          {/* Graph: Class Performance */}
+          {/* ✅ Graph: Class Performance */}
           <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
             <h2 className="text-lg font-bold text-center mb-4">Class Performance</h2>
-            <Bar data={performanceData} options={chartOptions} height={70}/>
+            <Bar data={performanceData} options={chartOptions} height={70} />
           </div>
 
           {/* Special Notices */}

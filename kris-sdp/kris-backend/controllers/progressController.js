@@ -75,3 +75,13 @@ exports.getMyProgress = (req, res) => {
     return res.status(200).json(result);
   });
 };
+
+//for subjectwise avg
+exports.getSubjectWiseAverage = (req, res) => {
+  Progress.getSubjectWiseAverage((err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Database error', error: err });
+    }
+    res.json(results);
+  });
+};

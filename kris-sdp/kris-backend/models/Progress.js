@@ -46,6 +46,18 @@ getCommentsByStudent: (studentId, callback) => {
   `;
   db.query(sql, [studentId], callback);
 },
+
+//subjectwise avg
+getSubjectWiseAverage: (callback) => {
+  const sql = `
+    SELECT s.Subject_name, ROUND(AVG(ss.Marks), 2) AS AverageMarks
+    FROM StudentSubject ss
+    JOIN Subject s ON ss.Subject_ID = s.Subject_ID
+    GROUP BY ss.Subject_ID
+  `;
+  db.query(sql, callback);
+}
+
 };
 
 module.exports = Progress;
