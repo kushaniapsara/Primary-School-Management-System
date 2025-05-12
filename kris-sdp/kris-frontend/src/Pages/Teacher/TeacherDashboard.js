@@ -23,33 +23,18 @@ const TeacherDashboard = () => {
 
   // ✅ Fetch all student progress data (for subjects and marks)
   useEffect(() => {
-    fetch("http://localhost:5001/api/teacher-progress/subjects")
-    .then((res) => res.json())
+    fetch("http://localhost:5001/api/teacher-progress/subject-averages")
+      .then((res) => res.json())
       .then((data) => {
-        // Calculate average per subject
-        const subjectMap = {};
-
-        data.forEach((entry) => {
-          const { Subject_name, Marks } = entry;
-
-          if (!subjectMap[Subject_name]) {
-            subjectMap[Subject_name] = { total: 0, count: 0 };
-          }
-
-          subjectMap[Subject_name].total += Marks;
-          subjectMap[Subject_name].count += 1;
-        });
-
-        const result = Object.entries(subjectMap).map(([subject, stats]) => ({
-          subject,
-          average: (stats.total / stats.count).toFixed(2),
+        const result = data.map((entry) => ({
+          subject: entry.Subject_name,
+          average: parseFloat(entry.AverageMarks), 
         }));
-
         setSubjectAverages(result);
       })
       .catch((err) => console.error("Error fetching progress data:", err));
   }, []);
-
+  
   // ✅ Chart configuration using fetched data
   const performanceData = {
     labels: subjectAverages.map((item) => item.subject),

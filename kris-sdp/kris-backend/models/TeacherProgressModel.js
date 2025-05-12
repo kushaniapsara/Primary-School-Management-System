@@ -40,8 +40,24 @@ const saveMark = (studentId, subjectId, marks, callback) => {
   db.query(sql, [studentId, subjectId, marks, marks], callback);
 };
 
+//subjectwise avg
+const getSubjectWiseAverage = (callback) => {
+  const sql = `
+    SELECT s.Subject_name, ROUND(AVG(ss.Marks), 2) AS AverageMarks
+    FROM StudentSubject ss
+    JOIN Subject s ON ss.Subject_ID = s.Subject_ID
+    GROUP BY ss.Subject_ID
+  `;
+  db.query(sql, callback);
+}
+
+const addSubject = (subjectName, callback) => {
+  const sql = `INSERT INTO Subject (Subject_name) VALUES (?)`;
+  db.query(sql, [subjectName], callback);
+};
+
 
 module.exports = {
   getStudentsByClass,
-  getProgressByStudent, getAllSubjects, saveMark
+  getProgressByStudent, getAllSubjects, saveMark, getSubjectWiseAverage, addSubject
 };

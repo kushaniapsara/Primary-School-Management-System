@@ -20,6 +20,9 @@ const Dashboard = () => {
     const [progress, setProgress] = useState([]);
     const [subjects, setSubjects] = useState([]);
 
+    const [newSubject, setNewSubject] = useState("");
+
+
 
  useEffect(() => {
     fetchStudents();
@@ -136,6 +139,28 @@ const Dashboard = () => {
     
   };
   
+  const handleAddSubject = async () => {
+    if (!newSubject.trim()) {
+      alert("Subject name cannot be empty.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post("http://localhost:5001/api/teacher-progress/add-subject", {
+        subjectName: newSubject,
+      });
+  
+      if (response.status === 200) {
+        alert("Subject added successfully!");
+        setNewSubject(""); // Clear input
+        setSubjects(prev => [...prev, response.data]); // Append new subject to the list
+      }
+    } catch (error) {
+      console.error("Error adding subject:", error);
+      alert("Failed to add subject.");
+    }
+  };
+
   
   return (
     <div className="flex h-screen">
@@ -226,6 +251,27 @@ const Dashboard = () => {
           </button>
           </div>
           
+          <div className="mt-4 mx-4 bg-white p-4 rounded shadow">
+  <h3 className="font-semibold mb-2">Add New Subject</h3>
+  <div className="flex gap-2 items-center">
+    <input
+      type="text"
+      placeholder="Subject Name"
+      className="border rounded p-2 w-60"
+      value={newSubject}
+      onChange={(e) => setNewSubject(e.target.value)}
+    />
+    <button
+      onClick={handleAddSubject}
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+    >
+      Add Subject
+    </button>
+  </div>
+</div>
+
+
+
         </div>
       </div>
     </div>

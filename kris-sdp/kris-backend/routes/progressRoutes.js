@@ -11,6 +11,7 @@ const verifyToken = require('../middleware/auth'); // Ensure token validation
 // New route for fetching all subjects
 router.get('/subjects', progressController.getAllSubjects);
 
+
 // Comment-related routes
 router.post('/comment/add', progressController.addComment);
 router.get('/comment/:studentId', progressController.getCommentsByStudent);
@@ -29,11 +30,6 @@ router.get("/me", verifyToken, (req, res) => {
 });
 
 router.get('/:studentId', progressController.getProgressByStudent);
-
-//for studentwise avg
-router.get('/subject-averages', progressController.getSubjectWiseAverage);
-
-
 
 
 module.exports = router;

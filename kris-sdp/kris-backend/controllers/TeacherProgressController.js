@@ -60,5 +60,42 @@ exports.saveMark = (req, res) => {
   });
 };
 
+//for subjectwise avg
+exports.getSubjectWiseAverage = (req, res) => {
+  console.log("✅ Controller hit: getSubjectWiseAverage");
+
+  TeacherProgressModel.getSubjectWiseAverage((err, results) => {
+    if (err) {
+      console.error("❌ SQL error:", err);
+
+      return res.status(500).json({ message: 'Database error', error: err });
+    }
+    console.log("✅ SQL Results:", results);
+
+    res.json(results);
+  });
+};
+
+exports.addSubject = (req, res) => {
+  const { subjectName } = req.body;
+
+  if (!subjectName || subjectName.trim() === "") {
+    return res.status(400).json({ message: "Subject name is required" });
+  }
+
+  TeacherProgressModel.addSubject(subjectName.trim(), (err, result) => {
+    if (err) {
+      console.error("Error adding subject:", err.message);
+      return res.status(500).json({ message: "Database error", error: err });
+    }
+
+    const newSubject = {
+      Subject_ID: result.insertId,
+      Subject_name: subjectName
+    };
+
+    res.status(200).json(newSubject);
+  });
+};
 
   //module.exports = { getStudentsByClass};
