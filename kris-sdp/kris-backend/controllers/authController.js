@@ -69,6 +69,8 @@ exports.login = async (req, res) => { // Make sure the login function is async
         const classResult = await queryAsync(classQuery, [user[idField]]);
         if (classResult.length > 0) {
           classId = classResult[0].Class_ID;
+          className = classResult[0].Class_name;
+
         }
       }
       
@@ -102,31 +104,66 @@ exports.getProfile = async (req, res) => {
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     const decoded = jwt.verify(token, SECRET_KEY);
-    const { userID, role } = decoded; // Get userID and role from token
+    const { userID, role } = decoded;
 
-    console.log(decoded);
+    let userQuery, userDetails, classJoinQuery, classDetails;
 
-    // Determine the table and ID field based on the role
-    let table, idField;
     if (role === 'Teacher') {
-      table = 'Teacher';
-      idField = 'Teacher_ID';
-    } else if (role === 'Student') {
-      table = 'Student';
-      idField = 'Student_ID';
-    } else if (role === 'Admin') {
-      table = 'Admin';
-      idField = 'Admin_ID';
-    } else {
+      // Fetch teacher details
+      userQuery = 'SELECT * FROM Teacher WHERE Teacher_ID = ?';
+      userDetails = await queryAsync(userQuery, [userID]);
+
+      // Join with TeacherClass and Class to get class name
+      classJoinQuery = `
+  SELECT c.Class_ID, c.Class_name
+FROM TeacherClass tc
+INNER JOIN (
+  SELECT Teacher_ID, MAX(Academic_year) AS LatestYear
+  FROM TeacherClass
+  GROUP BY Teacher_ID
+) latest ON tc.Teacher_ID = latest.Teacher_ID AND tc.Academic_year = latest.LatestYear
+JOIN Class c ON tc.Class_ID = c.Class_ID
+WHERE tc.Teacher_ID = ?
+
+      `;
+      classDetails = await queryAsync(classJoinQuery, [userID]);
+    } 
+    else if (role === 'Student') {
+      // Fetch student details
+      userQuery = 'SELECT * FROM Student WHERE Student_ID = ?';
+      userDetails = await queryAsync(userQuery, [userID]);
+
+      // Join with StudentClass and Class to get class name
+      classJoinQuery = `
+  SELECT c.Class_ID, c.Class_name
+FROM StudentClass sc
+INNER JOIN (
+  SELECT Student_ID, MAX(Academic_year) AS LatestYear
+  FROM StudentClass
+  GROUP BY Student_ID
+) latest ON sc.Student_ID = latest.Student_ID AND sc.Academic_year = latest.LatestYear
+JOIN Class c ON sc.Class_ID = c.Class_ID
+WHERE sc.Student_ID = ?
+
+      `;
+      classDetails = await queryAsync(classJoinQuery, [userID]);
+    } 
+    else if (role === 'Admin') {
+      // Admin doesn't have a class
+      userQuery = 'SELECT * FROM Admin WHERE Admin_ID = ?';
+      userDetails = await queryAsync(userQuery, [userID]);
+      classDetails = [];
+    } 
+    else {
       return res.status(400).json({ message: 'Invalid role' });
     }
 
-    // Fetch user details from the correct table
-    const query = `SELECT * FROM ?? WHERE ?? = ?`;
-    const results = await queryAsync(query, [table, idField, userID]);
+    if (userDetails.length > 0) {
+      const userProfile = userDetails[0];
+      userProfile.class = classDetails.length > 0 ? classDetails[0].Class_name : null;
+      userProfile.role = role; 
 
-    if (results.length > 0) {
-      return res.status(200).json(results[0]);
+      return res.status(200).json(userProfile);
     } else {
       return res.status(404).json({ message: "User not found" });
     }
@@ -135,3 +172,6 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+
+//for the profile

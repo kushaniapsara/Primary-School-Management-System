@@ -22,7 +22,13 @@ const Admin = {
     ];
 
     pool.query(sql, values, callback);
-  }
+  },
+  // ✅ Update admin status
+updateStatus: (adminId, status, callback) => {
+  const query = 'UPDATE Admin SET Status = ? WHERE Admin_ID = ?';
+  pool.query(query, [status, adminId], callback);
+},
+
 };
 
 module.exports = Admin;

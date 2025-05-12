@@ -39,3 +39,6 @@ router.get('/profile', verifyToken, (req, res) => {
 });
 
 module.exports = router;
+
+
+//for the profile

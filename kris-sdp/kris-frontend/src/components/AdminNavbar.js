@@ -50,16 +50,16 @@ useEffect(() => {
             </li>
 
 
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+            {/* <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <CalendarTodayIcon className="mr-2" />
               <Link to = "/Attendance">Attendance</Link>
             </li>
-           
+            */}
             
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+            {/* <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <BarChartIcon className="mr-2" />
                 <Link to = "/ProgressTeacher">Progress</Link>
-            </li>
+            </li> */}
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <GroupIcon className="mr-2" />
                   <Link to = "/ExtraActTeacher">Extra Curricular</Link>

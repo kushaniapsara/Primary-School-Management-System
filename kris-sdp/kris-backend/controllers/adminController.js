@@ -69,5 +69,25 @@ exports.addAdmin = (req, res) => {
         });
       });
     });
+
+   
+  });
+};
+
+exports.updateAdminStatus = (req, res) => {
+  const adminId = req.params.id;
+  const { status } = req.body;
+
+  if (!['active', 'inactive'].includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value' });
+  }
+
+  Admin.updateStatus(adminId, status, (err, result) => {
+    if (err) {
+      console.error('Controller Error:', err);
+      return res.status(500).json({ message: 'Failed to update status' });
+    }
+
+    res.status(200).json({ message: 'Status updated successfully' });
   });
 };

@@ -22,8 +22,9 @@ const Profile = () => {
         const response = await axios.get("http://localhost:5001/api/auth/profile", {
           headers: { Authorization: token },
         });
+        console.log("Profile data:", response.data);
         setProfile(response.data);      
-       // localStorage.setItem("username", response.data.username); // 👈 ADD THIS LINE
+       // localStorage.setItem("username", response.data.username); 
 
       } catch (error) {
         setMessage(error.response?.data?.message || "Error fetching profile");

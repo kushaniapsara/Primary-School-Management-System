@@ -192,45 +192,45 @@ const StuManagement = () => {
 
 
 
-  const printDetails = () => {
-    const modalContent = document.getElementById("student-details-modal");
+  // const printDetails = () => {
+  //   const modalContent = document.getElementById("student-details-modal");
 
-    if (!modalContent) {
-      console.error("Error: Student details modal not found.");
-      return;
-    }
+  //   if (!modalContent) {
+  //     console.error("Error: Student details modal not found.");
+  //     return;
+  //   }
 
-    const printWindow = window.open("", "_blank");
+  //   const printWindow = window.open("", "_blank");
 
-    if (!printWindow) {
-      console.error("Popup blocked! Allow popups and try again.");
-      return;
-    }
+  //   if (!printWindow) {
+  //     console.error("Popup blocked! Allow popups and try again.");
+  //     return;
+  //   }
 
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print Student Details</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            .print-container { max-width: 600px; margin: auto; }
-          </style>
-        </head>
-        <body>
-          <div class="print-container">
-            ${modalContent.innerHTML}
-          </div>
-          <script>
-            window.onload = function() {
-              window.print();
-              window.close();
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-  };
+  //   printWindow.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>Print Student Details</title>
+  //         <style>
+  //           body { font-family: Arial, sans-serif; padding: 20px; }
+  //           .print-container { max-width: 600px; margin: auto; }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <div class="print-container">
+  //           ${modalContent.innerHTML}
+  //         </div>
+  //         <script>
+  //           window.onload = function() {
+  //             window.print();
+  //             window.close();
+  //           };
+  //         </script>
+  //       </body>
+  //     </html>
+  //   `);
+  //   printWindow.document.close();
+  // };
 
 
 
@@ -554,13 +554,7 @@ const StuManagement = () => {
                     {/* Actions */}
                     <div className="mt-4 flex justify-between">
                       <button className="bg-blue-500 text-white px-4 py-2 rounded">✏️ Edit</button>
-                      <button className="bg-red-500 text-white px-4 py-2 rounded">🗑️ Deactivate</button>
-                      <button
-                        className="bg-green-500 text-white px-4 py-2 rounded"
-                        onClick={printDetails}
-                      >
-                        🖨️ Print Details
-                      </button>
+                      
 
                       <DialogActions>
 
