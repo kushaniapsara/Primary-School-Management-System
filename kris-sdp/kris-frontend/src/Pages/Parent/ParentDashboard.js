@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ParentNavbar from '../../components/ParentNavbar';
 import SearchIcon from "@mui/icons-material/Search";
 import Notice from "../Common/Notice"; 
 import MealChart from '../Common/MealChart'; 
-
-
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -15,17 +13,41 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const ParentDashboard = () => {
-  // Data for the chart
+  const [progress, setProgress] = useState([]);
+
+  // Fetch student progress data
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/api/progress/me", {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        const studentId = res.data.studentId;
+        fetch(`http://localhost:5001/api/progress/${studentId}`)
+          .then((res) => res.json())
+          .then((data) => setProgress(Array.isArray(data) ? data : []))
+          .catch((err) => console.error("Error fetching progress:", err));
+      })
+      .catch((err) => {
+        console.error("Auth error:", err);
+        alert("Authentication failed. Please log in again.");
+      });
+  }, []);
+
+  // Format chart data based on fetched progress
   const performanceData = {
-    labels: ['Subject A', 'Subject B', 'Subject C', 'Subject D', 'Subject E'],
+    labels: progress.map(item => item.Subject_name),
     datasets: [
       {
-        label: 'Average Marks (%)',
-        data: [85, 78, 92, 74, 88],
+        label: 'Marks (%)',
+        data: progress.map(item => item.Marks),
         backgroundColor: 'rgba(54, 162, 235, 0.6)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
@@ -41,7 +63,7 @@ const ParentDashboard = () => {
       },
       title: {
         display: true,
-        text: 'Performance',
+        text: 'Student Performance',
       },
     },
     scales: {
@@ -55,23 +77,18 @@ const ParentDashboard = () => {
   return (
     <div className="flex min-h-screen">
       {/* <ParentNavbar /> */}
-       {/* Main Content */}
-       <div className="flex-1 bg-blue-900">
+      <div className="flex-1 bg-blue-900">
         {/* Header */}
         <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
-        <div className="flex justify-between items-center px-8 py-4">
-          <div className="flex space-x-4">
-            <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-              <SearchIcon className="mr-2" />
-              Search
-            </button>
+          <div className="flex justify-between items-center px-8 py-4">
+            <div className="flex space-x-4">
+              <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
+                <SearchIcon className="mr-2" />
+                Search
+              </button>
+            </div>
           </div>
-          
-        </div>
-          
         </header>
-      
-       
 
         <section className="grid grid-cols-3 gap-4 bg-blue-900">
           {/* Attendance */}
@@ -83,15 +100,13 @@ const ParentDashboard = () => {
           {/* Meal Chart */}
           <div className="bg-gray-100 p-4 mt-3 rounded shadow-md">
             <MealChart />
-
           </div>
 
           {/* Homework */}
           <div className="bg-gray-100 p-4 mt-3 mx-3 rounded shadow-md">
             <div className="flex justify-between">
               <h2 className="text-lg font-bold">Upcoming Homework</h2>
-              
-              </div>
+            </div>
             <p className="text-xl font-extrabold">2 Activities</p>
           </div>
 
@@ -106,7 +121,7 @@ const ParentDashboard = () => {
             <Notice />
           </div>  
         </section>
-    </div>
+      </div>
     </div>
   );
 };

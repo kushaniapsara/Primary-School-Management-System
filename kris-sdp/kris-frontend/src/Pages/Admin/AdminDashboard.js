@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 //import Navbar from "../../components/AdminNavbar";
 import axios from "axios";
-import MealChart from '../Common/MealChart'; 
+import MealChart from '../Common/MealChart';
 
 
 import SearchIcon from "@mui/icons-material/Search";
@@ -17,21 +17,38 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import Notice from "../Common/Notice"; 
+import Notice from "../Common/Notice";
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
 const AdminDashboard = () => {
   // Performance Bar Chart Data
+  const [subjectAverages, setSubjectAverages] = useState([]);
+
+  // ✅ Fetch all student progress data (for subjects and marks)
+  useEffect(() => {
+    fetch("http://localhost:5001/api/teacher-progress/subject-averages")
+      .then((res) => res.json())
+      .then((data) => {
+        const result = data.map((entry) => ({
+          subject: entry.Subject_name,
+          average: parseFloat(entry.AverageMarks), 
+        }));
+        setSubjectAverages(result);
+      })
+      .catch((err) => console.error("Error fetching progress data:", err));
+  }, []);
+  
+  // ✅ Chart configuration using fetched data
   const performanceData = {
-    labels: ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+    labels: subjectAverages.map((item) => item.subject),
     datasets: [
       {
-        label: "Average Marks (%)",
-        data: [85, 78, 92, 74, 88],
-        backgroundColor: "rgba(54, 162, 235, 0.6)",
-        borderColor: "rgba(54, 162, 235, 1)",
+        label: 'Average Marks (%)',
+        data: subjectAverages.map((item) => item.average),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
       },
     ],
@@ -39,37 +56,44 @@ const AdminDashboard = () => {
 
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
-      legend: { position: "top" },
-      title: { display: true, text: "Performance" },
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Class Performance',
+      },
     },
     scales: {
-      y: { beginAtZero: true, max: 100 },
+      y: {
+        beginAtZero: true,
+        max: 100,
+      },
     },
   };
 
   // Attendance Line Chart Data (With Scatter Points)
   const [attendanceData, setAttendanceData] = useState([]);
-  
+
   useEffect(() => {
     axios
       .get("http://localhost:5001/api/attendance-chart") // Adjust endpoint if needed
       .then((res) => {
         console.log("Chart Data:", res.data); // Debugging log
-  
+
         const formattedData = res.data.map(item => ({
           date: item.formattedDate, // Ensure formatted date is used
           percentage: item.percentage || 0, // Avoid undefined values
         }));
-  
+
         setAttendanceData(formattedData);
       })
       .catch((err) => {
         console.error("Error fetching attendance data:", err);
       });
   }, []);
-  
+
 
   const attendanceChartData = {
     labels: attendanceData.map((record) => record.date), // Use `date`
@@ -85,7 +109,7 @@ const AdminDashboard = () => {
       },
     ],
   };
-  
+
 
   const attendanceChartOptions = {
     responsive: true,
@@ -109,7 +133,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-screen">
-       {/* <Navbar />  */}
+      {/* <Navbar />  */}
       {/* Main Content */}
       <div className="flex-1 bg-blue-900">
         {/* Header */}
@@ -122,17 +146,18 @@ const AdminDashboard = () => {
               </button>
             </div>
           </div>
-         
+
         </header>
 
         {/* Performance Graph & Attendance Chart Section */}
         <section className="grid grid-cols-2 gap-4 bg-blue-900 p-4">
-        {/* Performance Graph */}
+          {/* Performance Graph */}
           <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
             <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
-            <div className="h-[300px]">
-              <Bar data={performanceData} options={chartOptions} />
-            </div>
+             {/* ✅ Graph: Class Performance */}
+          <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
+            <Bar data={performanceData} options={chartOptions} height={160} />
+          </div>
           </div>
 
           {/* Attendance Line Chart (Previously Scatter Plot) */}
@@ -144,18 +169,18 @@ const AdminDashboard = () => {
           </div>
         </section>
 
-       {/* Special Notices & Meal Chart Section */}
-<section className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-  <div className="bg-gray-100 p-4 rounded shadow-md md:col-span-2">
-    <Notice />
-  </div>
-  <div className="bg-gray-100 p-4 rounded shadow-md">
-    <MealChart />
-  </div>
-</section>
+        {/* Special Notices & Meal Chart Section */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+          <div className="bg-gray-100 p-4 rounded shadow-md md:col-span-2">
+            <Notice />
+          </div>
+          <div className="bg-gray-100 p-4 rounded shadow-md">
+            <MealChart />
+          </div>
+        </section>
 
 
-       {/* <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
+        {/* <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
           <h2 className="text-lg font-bold">Special Notices</h2>
           <ul className="space-y-2">
             <li className="bg-white px-4 py-2 rounded">
