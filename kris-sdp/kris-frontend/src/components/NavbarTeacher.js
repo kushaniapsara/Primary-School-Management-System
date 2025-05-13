@@ -46,7 +46,7 @@ useEffect(() => {
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <MenuBookIcon className="mr-2" />
-              <Link to = "/TeacherStudyMaterials">Study Materials</Link>
+              <Link to = "/StudyMaterials">Study Materials</Link>
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <BarChartIcon className="mr-2" />

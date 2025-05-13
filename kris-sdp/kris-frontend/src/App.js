@@ -17,7 +17,7 @@ import ExtraActTeacher from './Pages/Teacher/ExtraActTeacher.js';
 import ProgressTeacher from './Pages/Teacher/ProgressTeacher.js';
 import TeacherProfile from './Pages/Teacher/TeacherProfile.js';
 import TeacherHomework from './Pages/Teacher/TeacherHomework.js';
-import TeacherStudyMaterials from './Pages/Teacher/TeacherStudyMaterials.js';
+import StudyMaterials from './Pages/Teacher/StudyMaterials.js';
 import ActivityDetails from './Pages/Teacher/ActivityDetails.js';
 import ExtraCurricularPage from './Pages/Teacher/ExtraCurricularPage.js';
 import ProgressPage from './Pages/Teacher/ProgressPage.js';
@@ -130,7 +130,7 @@ function App() {
                     <Route path="/ProgressTeacher" element={<ProgressTeacher />} />
                     <Route path="/TeacherProfile" element={<TeacherProfile />} />
                     <Route path="/TeacherHomework" element={<TeacherHomework />} />
-                    <Route path="/TeacherStudyMaterials" element={<TeacherStudyMaterials />} />
+                    <Route path="/StudyMaterials" element={<StudyMaterials />} />
                     <Route path="/activity/:id" element={<ActivityDetails />} />
                     <Route path="/extra-curricular/:studentId" element={<ExtraCurricularPage />} />
                     <Route path="/progress/:studentId" element={<ProgressPage />} />

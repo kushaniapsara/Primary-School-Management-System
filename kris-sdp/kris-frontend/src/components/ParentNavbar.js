@@ -7,6 +7,8 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import GroupIcon from "@mui/icons-material/Group";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+
 
 const ParentNavbar = () => {
   const [username, setUsername] = useState('');
@@ -40,6 +42,13 @@ const ParentNavbar = () => {
               <AssignmentIcon className="mr-2" />
               <Link to = "/TeacherHomework">Homework</Link>
             </li>
+
+            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+              <MenuBookIcon className="mr-2" />
+              <Link to = "/StudyMaterials">Study Materials</Link>
+            </li>
+
+
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <GroupIcon className="mr-2" />
                   <Link to = "/ParentExtraAct">Extra Curricular</Link>
