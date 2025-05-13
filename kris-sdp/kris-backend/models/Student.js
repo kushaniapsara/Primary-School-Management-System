@@ -24,6 +24,7 @@ const Student = {
         Student.Documents, 
         Student.Profile_photo, 
         Student.Status,
+        Student.monthly_amount,
         Class.Class_name,
         StudentClass.Academic_year
       FROM Student
@@ -81,20 +82,20 @@ const Student = {
     const {
       Full_name, Name_with_initials, Email, Gender, Religion, Date_of_birth, Address, Contact_number, Grade, 
       Syllabus, Immunization, On_any_drugs, Allergies, Sisters_brothers_in_same_school, Joined_date, 
-      Documents, password, Admin_ID, Parent_ID, username, Profile_photo, Class_name, Academic_year
+      Documents, password, Admin_ID, monthly_amount, Parent_ID, username, Profile_photo, Class_name, Academic_year
     } = studentData;
 
     // Step 1: Insert student into Student table
     const sql = `INSERT INTO Student (
       Full_name, Name_with_initials, Email, Gender, Religion, Date_of_birth, Address, Contact_number, Grade,
       Syllabus, Immunization, On_any_drugs, Allergies, Sisters_brothers_in_same_school, Joined_date, 
-      Documents, password, Admin_ID, Parent_ID, username, Profile_photo
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      Documents, password, Admin_ID, monthly_amount, Parent_ID, username, Profile_photo
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
       Full_name, Name_with_initials, Email, Gender, Religion, Date_of_birth, Address, Contact_number, 
       Grade, Syllabus, Immunization, On_any_drugs, Allergies, Sisters_brothers_in_same_school, 
-      Joined_date, Documents, password, Admin_ID, Parent_ID, username, Profile_photo
+      Joined_date, Documents, password, Admin_ID, monthly_amount, Parent_ID, username, Profile_photo
     ];
 
     pool.query(sql, values, (err, result) => {

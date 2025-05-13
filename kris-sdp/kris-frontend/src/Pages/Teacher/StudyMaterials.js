@@ -17,13 +17,13 @@ const StudyMaterials = () => {
           
         </header>
 
-        {/* Search */}
+        {/* Search
         <div className="px-8 py-4">
           <button className="flex items-center bg-gray-200 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
             <SearchIcon className="mr-2" />
             Search
           </button>
-        </div>
+        </div> */}
 
         {/* Study Material Cards */}
         <div className="grid grid-cols-2 gap-6 px-8 py-4">

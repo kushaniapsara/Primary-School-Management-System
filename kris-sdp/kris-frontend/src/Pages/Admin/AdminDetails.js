@@ -34,7 +34,7 @@ const AdminManagement = () => {
     nic: "",
     previousSchools: "",
     status: "",
-    leavingDate: "",
+    //leavingDate: "",
     role: "",
 
 
@@ -84,7 +84,7 @@ const AdminManagement = () => {
           nic: "",
           previousSchools: "",
           status: "",
-          leavingDate: "",
+          //leavingDate: "",
           role: ""
         });
         setProfilePhoto(null);
@@ -256,7 +256,7 @@ const AdminManagement = () => {
             <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newAdmin.password} onChange={handleChange} />
             <TextField fullWidth margin="dense" label="Previous Schools" name="previousSchools" value={newAdmin.previousSchools} onChange={handleChange} />
             <TextField fullWidth margin="dense" label="NIC" name="nic" value={newAdmin.nic} onChange={handleChange} />
-            <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newAdmin.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
+            {/* <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newAdmin.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} /> */}
             <TextField fullWidth margin="dense" label="Role" name="role" value={newAdmin.role} onChange={handleChange} />
             <TextField fullWidth margin="dense" label="Documents" name="documents" value={newAdmin.documents} onChange={handleChange} />
 
@@ -276,8 +276,7 @@ const AdminManagement = () => {
                 ![
                   "fullName", "nameWithInitials", "age", "gender", "contactNumber", "email",
                   "address", "enrollmentDate", "documents", "password", "username",
-                  "nic", "previousSchools", "status", "leavingDate",
-                  "role"
+                  "nic", "previousSchools", "status", "role"
 
                 ].every((field) => {
                   const value = newAdmin[field];

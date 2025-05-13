@@ -52,7 +52,7 @@ const TeacherManagement = () => {
     nic: "",
     previousSchools: "",
     status: "",
-    leavingDate: "",
+    //leavingDate: "",
     role: "",
     grade: "",
     className: ""
@@ -136,7 +136,7 @@ const generateClassOptions = () => {
           nic: "",
           previousSchools: "",
           status: "",
-          leavingDate: "",
+          //leavingDate: "",
           role: "",
           grade:""
         });
@@ -266,6 +266,8 @@ const generateClassOptions = () => {
               <MenuItem value="1">1</MenuItem>
               <MenuItem value="2">2</MenuItem>
               <MenuItem value="3">3</MenuItem>
+              <MenuItem value="4">4</MenuItem>
+              <MenuItem value="5">5</MenuItem>
             </Select>
           </FormControl>
 
@@ -282,6 +284,13 @@ const generateClassOptions = () => {
               <MenuItem value="3A">3A</MenuItem>
               <MenuItem value="3B">3B</MenuItem>
               <MenuItem value="3C">3C</MenuItem>
+              
+                            <MenuItem value="4A">4A</MenuItem>
+                            <MenuItem value="4B">4B</MenuItem>
+                            <MenuItem value="4C">4C</MenuItem>
+                            <MenuItem value="5A">5A</MenuItem>
+                            <MenuItem value="5B">5B</MenuItem>
+                            <MenuItem value="5C">5C</MenuItem>
             </Select>
           </FormControl>
 
@@ -333,6 +342,14 @@ const generateClassOptions = () => {
                 <option value="3A">Grade 3A</option>
                 <option value="3B">Grade 3B</option>
                 <option value="3C">Grade 3C</option>
+
+                <option value="4A">Grade 4A</option>
+            <option value="4B">Grade 4B</option>
+            <option value="4C">Grade 4C</option>
+
+            <option value="5A">Grade 5A</option>
+            <option value="5B">Grade 5B</option>
+            <option value="5C">Grade 5C</option>
               </select>
 
               <input
@@ -488,7 +505,7 @@ const generateClassOptions = () => {
     <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newTeacher.password} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="Previous Schools" name="previousSchools" value={newTeacher.previousSchools} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="NIC" name="nic"  value={newTeacher.nic} onChange={handleChange} />
-    <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newTeacher.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
+    {/* <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newTeacher.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} /> */}
     <TextField fullWidth margin="dense" label="Role" name="role" value={newTeacher.role} onChange={handleChange} />
     <TextField fullWidth margin="dense" label="Documents" name="documents" value={newTeacher.documents} onChange={handleChange} />
 
@@ -505,6 +522,9 @@ const generateClassOptions = () => {
                     <MenuItem value="1">1</MenuItem>
                     <MenuItem value="2">2</MenuItem>
                     <MenuItem value="3">3</MenuItem>
+                    <MenuItem value="4">4</MenuItem>
+                    <MenuItem value="5">5</MenuItem>
+
                     {/* Add more grades as needed */}
                 </Select>
                 </FormControl>
@@ -544,7 +564,7 @@ const generateClassOptions = () => {
                             ![
                               "fullName", "nameWithInitials", "age", "gender", "contactNumber", "email",
                               "address", "enrollmentDate", "documents", "password", "username",
-                              "nic", "previousSchools", "status", "leavingDate",
+                              "nic", "previousSchools", "status", 
                               "role", "grade"
                               
                             ].every((field) => {

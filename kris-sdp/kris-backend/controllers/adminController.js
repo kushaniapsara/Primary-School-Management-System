@@ -29,7 +29,7 @@ exports.addAdmin = (req, res) => {
     }
     const {
       fullName, nameWithInitials, email, gender, age, address, contactNumber, status, 
-      enrollmentDate, documents, password, username, nic, previousSchools,leavingDate, role
+      enrollmentDate, documents, password, username, nic, previousSchools, role
     } = req.body;
 
     console.log("Received admin data:", req.body); // Debugging
@@ -49,7 +49,7 @@ exports.addAdmin = (req, res) => {
       // Insert Admin
       const adminData = {
         Full_name: fullName, Name_with_initials: nameWithInitials, Age: age, Contact_number: contactNumber, Email: email, NIC: nic, 
-        Previous_Schools: previousSchools, Documents: documents,Joined_date: enrollmentDate, Leaving_date: leavingDate,
+        Previous_Schools: previousSchools, Documents: documents,Joined_date: enrollmentDate, 
         Status: status, password: hashedPassword, username: username, role:role, Gender: gender, Address: address,  
              
         Profile_photo: profilePhotoPath // Store image path in database

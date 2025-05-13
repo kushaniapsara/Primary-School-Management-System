@@ -53,7 +53,7 @@ exports.addStudent = (req, res) => {
 
     const {
       fullName, nameWithInitials, email, gender, religion, dob, address, contactNumber, grade, syllabus, vaccination,
-      onAnyDrugs, allergies, sistersBrothersInSameSchool, enrollmentDate, documents, password, adminID, username,
+      onAnyDrugs, allergies, sistersBrothersInSameSchool, enrollmentDate, documents, password, adminID, monthly_amount, username,
       fatherName, fatherContact, fatherNIC, fatherAddress, fatherOccupation,
       motherName, motherContact, motherNIC, motherAddress, motherOccupation, className, academicYear // New fields for class
     } = req.body;
@@ -107,7 +107,7 @@ exports.addStudent = (req, res) => {
           Full_name: fullName, Name_with_initials: nameWithInitials, Email: email, Gender: gender, Religion: religion,
           Date_of_birth: dob, Address: address, Contact_number: contactNumber, Grade: grade, Syllabus: syllabus, Immunization: vaccination,
           On_any_drugs: onAnyDrugs, Allergies: allergies, Sisters_brothers_in_same_school: sistersBrothersInSameSchool,
-          Joined_date: enrollmentDate, Documents: documents, password: hashedPassword, Admin_ID: adminID, Parent_ID: parentID, username: username,
+          Joined_date: enrollmentDate, Documents: documents, password: hashedPassword, Admin_ID: adminID, monthly_amount:monthly_amount, Parent_ID: parentID, username: username,
           Profile_photo: profilePhotoPath, // Store image path in database
           Class_name: className, Academic_year: academicYear // Pass Class details
         };

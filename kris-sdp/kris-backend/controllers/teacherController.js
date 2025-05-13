@@ -42,7 +42,9 @@ exports.addTeacher = (req, res) => {
     }
     const {
       fullName, nameWithInitials, email, gender, age, address, contactNumber, status, 
-      enrollmentDate, documents, password, username, nic, previousSchools,leavingDate, role, grade, className, academicYear,
+      enrollmentDate, documents, password, username, nic, previousSchools,
+      //leavingDate,
+       role, grade, className, academicYear,
     } = req.body;
 
     console.log("Received teacher data:", req.body); // Debugging
@@ -81,7 +83,8 @@ exports.addTeacher = (req, res) => {
       // Insert Teacher
       const teacherData = {
         Full_name: fullName, Name_with_initials: nameWithInitials, Age: age, Contact_number: contactNumber, Email: email, NIC: nic, 
-        Previous_Schools: previousSchools, Documents: documents,Joined_date: enrollmentDate, Leaving_date: leavingDate,
+        Previous_Schools: previousSchools, Documents: documents,Joined_date: enrollmentDate, 
+        //Leaving_date: leavingDate,
         Status: status, password: hashedPassword, username: username, role:role, Gender: gender, Address: address, Grade: grade, Class_name: className, Academic_year: academicYear,
              
         Profile_photo: profilePhotoPath // Store image path in database

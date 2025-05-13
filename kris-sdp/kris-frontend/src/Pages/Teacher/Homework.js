@@ -154,7 +154,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
         </header>
 
         <div className="flex justify-between items-center px-8 py-4">
-          <div className="flex space-x-4">
+          {/* <div className="flex space-x-4">
             <button className="flex items-center bg-white px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
               <SearchIcon className="mr-2" />
               Search
@@ -163,7 +163,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
               <FilterListIcon className="mr-2" />
               Filter
             </button>
-          </div>
+          </div> */}
           {userRole === "Teacher" && ( 
 
           <button

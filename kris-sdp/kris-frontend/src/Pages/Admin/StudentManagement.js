@@ -68,6 +68,7 @@ const StuManagement = () => {
     password: "",
     username: "",
     adminID: "",
+    monthly_amount:"",
     //parentID: "",
     fatherName: "",
     fatherContact: "",
@@ -158,6 +159,7 @@ const StuManagement = () => {
           password: "",
           username: "",
           adminID: "",
+          monthly_amount:"",
           parentID: "",
           fatherName: "",
           fatherContact: "",
@@ -189,53 +191,6 @@ const StuManagement = () => {
   const closeModal = () => {
     setSelectedStudent(null);
   };
-
-
-
-  // const printDetails = () => {
-  //   const modalContent = document.getElementById("student-details-modal");
-
-  //   if (!modalContent) {
-  //     console.error("Error: Student details modal not found.");
-  //     return;
-  //   }
-
-  //   const printWindow = window.open("", "_blank");
-
-  //   if (!printWindow) {
-  //     console.error("Popup blocked! Allow popups and try again.");
-  //     return;
-  //   }
-
-  //   printWindow.document.write(`
-  //     <html>
-  //       <head>
-  //         <title>Print Student Details</title>
-  //         <style>
-  //           body { font-family: Arial, sans-serif; padding: 20px; }
-  //           .print-container { max-width: 600px; margin: auto; }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         <div class="print-container">
-  //           ${modalContent.innerHTML}
-  //         </div>
-  //         <script>
-  //           window.onload = function() {
-  //             window.print();
-  //             window.close();
-  //           };
-  //         </script>
-  //       </body>
-  //     </html>
-  //   `);
-  //   printWindow.document.close();
-  // };
-
-
-
-
-
 
 
 
@@ -348,6 +303,9 @@ const StuManagement = () => {
               <MenuItem value="1">1</MenuItem>
               <MenuItem value="2">2</MenuItem>
               <MenuItem value="3">3</MenuItem>
+              <MenuItem value="4">4</MenuItem>
+              <MenuItem value="5">5</MenuItem>
+
             </Select>
           </FormControl>
 
@@ -364,6 +322,13 @@ const StuManagement = () => {
               <MenuItem value="3A">3A</MenuItem>
               <MenuItem value="3B">3B</MenuItem>
               <MenuItem value="3C">3C</MenuItem>
+              <MenuItem value="4A">4A</MenuItem>
+              <MenuItem value="4B">4B</MenuItem>
+              <MenuItem value="4C">4C</MenuItem>
+              <MenuItem value="5A">5A</MenuItem>
+              <MenuItem value="5B">5B</MenuItem>
+              <MenuItem value="5C">5C</MenuItem>
+
             </Select>
           </FormControl>
 
@@ -423,6 +388,14 @@ const StuManagement = () => {
             <option value="3A">Grade 3A</option>
             <option value="3B">Grade 3B</option>
             <option value="3C">Grade 3C</option>
+
+            <option value="4A">Grade 4A</option>
+            <option value="4B">Grade 4B</option>
+            <option value="4C">Grade 4C</option>
+
+            <option value="5A">Grade 5A</option>
+            <option value="5B">Grade 5B</option>
+            <option value="5C">Grade 5C</option>
           </select>
 
           <input
@@ -601,6 +574,7 @@ const StuManagement = () => {
                 <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newStudent.password} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Admin_Id" name="adminID" value={newStudent.adminID} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Documents" name="documents" value={newStudent.documents} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="monthly_amount" name="monthly_amount" value={newStudent.monthly_amount} onChange={handleChange} />
 
 
                 <FormControl fullWidth margin="dense">
@@ -684,7 +658,7 @@ const StuManagement = () => {
                       "fullName", "nameWithInitials", "dob", "gender", "grade", "religion",
                       "vaccination", "onAnyDrugs", "allergies", "contactNumber", "email",
                       "address", "enrollmentDate", "syllabus", "sistersBrothersInSameSchool",
-                      "documents", "password", "username", "adminID",
+                      "documents", "password", "username", "adminID", "monthly_amount",
                       "fatherName", "fatherContact", "fatherNIC", "fatherAddress", "fatherOccupation",
                       "motherName", "motherContact", "motherNIC", "motherAddress", "motherOccupation",
                       "className"

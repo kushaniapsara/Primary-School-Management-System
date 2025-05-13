@@ -14,7 +14,6 @@ const pool = require("../config/db");
           Teacher.Previous_schools, 
           Teacher.Documents, 
           Teacher.Joined_date, 
-          Teacher.Leaving_date, 
           Teacher.Status,  
           Teacher.role, 
           Teacher.Profile_photo, 
@@ -38,7 +37,8 @@ INNER JOIN (
         INNER JOIN Class ON TeacherClass.Class_ID = Class.Class_ID
         WHERE 1=1
       `;
-  
+  //          Teacher.Leaving_date, 
+
       const values = [];
   
       if (filters.name) {
@@ -74,21 +74,24 @@ INNER JOIN (
   create: (teacherData, callback) => {
     
     const {
-       Full_name, Name_with_initials, Age, Contact_number, Email, NIC, Previous_schools, Documents, Joined_date, Leaving_date, 
+       Full_name, Name_with_initials, Age, Contact_number, Email, NIC, Previous_schools, Documents, Joined_date,
+       // Leaving_date, 
        Status,  password, username, role, Profile_photo, Gender, Address, Grade, Class_name, Academic_year 
       } = teacherData;
     
     
     
     const sql = `INSERT INTO Teacher (
-       Full_name, Name_with_initials, Age, Contact_number, Email, NIC, Previous_schools, Documents, Joined_date, Leaving_date, 
+       Full_name, Name_with_initials, Age, Contact_number, Email, NIC, Previous_schools, Documents, Joined_date, 
        Status,  password, username, role, Profile_photo, Gender, Address, Grade     
         
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+//       Leaving_date, 
 
         const values = [
             Full_name, Name_with_initials, Age, Contact_number, Email, 
-            NIC, Previous_schools, Documents, Joined_date, Leaving_date, 
+            NIC, Previous_schools, Documents, Joined_date, 
+            //Leaving_date, 
            Status, password, username, role, Profile_photo, Gender,
            Address, Grade  
       
