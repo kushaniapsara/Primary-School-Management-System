@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 //import Navbar from "../../components/AdminNavbar";
 import axios from "axios";
+import MealChart from '../Common/MealChart'; 
+
 
 import SearchIcon from "@mui/icons-material/Search";
 import { Bar, Line } from "react-chartjs-2";
@@ -142,8 +144,16 @@ const AdminDashboard = () => {
           </div>
         </section>
 
-        {/* Special Notices */}
-        <Notice />
+       {/* Special Notices & Meal Chart Section */}
+<section className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+  <div className="bg-gray-100 p-4 rounded shadow-md md:col-span-2">
+    <Notice />
+  </div>
+  <div className="bg-gray-100 p-4 rounded shadow-md">
+    <MealChart />
+  </div>
+</section>
+
 
        {/* <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
           <h2 className="text-lg font-bold">Special Notices</h2>

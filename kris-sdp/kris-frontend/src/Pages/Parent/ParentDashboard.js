@@ -2,6 +2,8 @@ import React from 'react';
 import ParentNavbar from '../../components/ParentNavbar';
 import SearchIcon from "@mui/icons-material/Search";
 import Notice from "../Common/Notice"; 
+import MealChart from '../Common/MealChart'; 
+
 
 import { Bar } from 'react-chartjs-2';
 import {
@@ -80,10 +82,8 @@ const ParentDashboard = () => {
 
           {/* Meal Chart */}
           <div className="bg-gray-100 p-4 mt-3 rounded shadow-md">
-            <h2 className="text-lg font-bold">Meal Chart</h2>
-            <p>Today: Fried Rice</p>
-            <p>Tomorrow: Rice and Curry</p>
-            <p>Next day: Noodles/Pasta</p>
+            <MealChart />
+
           </div>
 
           {/* Homework */}
@@ -101,7 +101,6 @@ const ParentDashboard = () => {
             <Bar data={performanceData} options={chartOptions} height={70}/>
           </div>
 
-          {/* Special Notices */}
           {/* Special Notices */}
           <div className="col-span-3 p-2 mx-3 rounded shadow-md">
             <Notice />

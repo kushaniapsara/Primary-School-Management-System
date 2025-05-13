@@ -3,7 +3,8 @@ import Navbar from '../../components/NavbarTeacher';
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import { Bar } from 'react-chartjs-2';
-import Notice from "../Common/Notice"; // Adjust path if needed
+import Notice from "../Common/Notice";
+import MealChart from '../Common/MealChart'; 
 
 import {
   Chart as ChartJS,
@@ -97,10 +98,8 @@ const TeacherDashboard = () => {
 
           {/* Meal Chart */}
           <div className="bg-gray-100 p-4 mt-3 rounded shadow-md">
-            <h2 className="text-lg font-bold">Meal Chart</h2>
-            <p>Today: Fried Rice</p>
-            <p>Tomorrow: Rice and Curry</p>
-            <p>Next day: Noodles/Pasta</p>
+            <MealChart />
+
           </div>
 
           {/* Homework */}

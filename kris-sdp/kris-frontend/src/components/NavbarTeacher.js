@@ -42,7 +42,7 @@ useEffect(() => {
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <AssignmentIcon className="mr-2" />
-              <Link to = "/TeacherHomework">Homework</Link>
+              <Link to = "/Homework">Homework</Link>
             </li>
             <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
               <MenuBookIcon className="mr-2" />

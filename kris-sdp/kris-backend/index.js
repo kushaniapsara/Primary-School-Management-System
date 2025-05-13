@@ -18,6 +18,8 @@ const studyMaterialRoutes = require('./routes/studyMaterialRoutes');
 const AdminRoutes = require("./routes/AdminRoutes");
 const progressRoutes = require('./routes/progressRoutes');
 const TeacherProgressRoutes = require('./routes/TeacherProgressRoutes');
+const mealChartRoutes = require('./routes/mealChartRoutes');
+
 
 
 const enrollmentRoutes = require('./routes/enrollmentRoutes');
@@ -84,6 +86,8 @@ app.use('/api/report', reportRoutes);
 
 // Use the extra curricular routes
 app.use('/api', extraCurricularPageRoutes);
+
+app.use('/api/meal-chart', mealChartRoutes); //mealchart
 
 
 // Default route for '/'
