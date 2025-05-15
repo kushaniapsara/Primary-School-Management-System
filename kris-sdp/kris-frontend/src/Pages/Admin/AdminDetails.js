@@ -19,6 +19,14 @@ const AdminManagement = () => {
   //const [step, setStep] = useState(1); // Step control for multi-part form
   const [profilePhoto, setProfilePhoto] = useState(null); // Added for profile photo
   const [selectedAdmin, setSelectedAdmin] = useState(null); // Added for modal functionality
+    const [errors, setErrors] = useState({}); //for validatings
+
+    const [filters, setFilters] = useState({
+       
+        name: "",
+        status: ""
+      });
+  
   const [newAdmin, setNewAdmin] = useState({
     fullName: "",
     nameWithInitials: "",
@@ -48,7 +56,11 @@ const AdminManagement = () => {
   }, []);
 
   const handleChange = (e) => {
-    setNewAdmin({ ...newAdmin, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    
+    setNewAdmin((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
   };
 
   const handleSubmit = () => {
@@ -107,6 +119,22 @@ const AdminManagement = () => {
     setSelectedAdmin(null);
   };
 
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const handleFilterApply = () => {
+    setAdmins((prevAdmins) => prevAdmins.filter((admin) => {
+      return (
+        (filters.name === "" || admin.Full_name.toLowerCase().includes(filters.name.toLowerCase())) &&  // Add name filtering here
+          (filters.status === "" || String(admin.Status) === filters.status)
+
+
+      );
+    }));
+  };
+
+
 
   const toggleStatus = async (adminId, currentStatus) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
@@ -134,6 +162,78 @@ const AdminManagement = () => {
       console.error(err);
     }
   };
+
+  const validateField = (name, value) => {
+    let error = "";
+  
+    if (!value || value.trim() === "") {
+      error = "This field is required";
+    } else {
+      switch (name) {
+        // case "dob":
+        //   const birthDate = new Date(value);
+        //   const today = new Date();
+        //   let age = today.getFullYear() - birthDate.getFullYear();
+        //   const monthDiff = today.getMonth() - birthDate.getMonth();
+        //   const dayDiff = today.getDate() - birthDate.getDate();
+  
+        //   // Adjust age if birth month/day hasn't occurred yet this year
+        //   if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        //     age--;
+        //   }
+  
+        //   if (isNaN(birthDate.getTime())) {
+        //     error = "Invalid date";
+        //   } else if (age < 5) {
+        //     error = "Student must be at least 5 years old";
+        //   }
+        //   break;
+  
+        case "enrollmentDate":
+          if (isNaN(Date.parse(value))) {
+            error = "Invalid date";
+          }
+          break;
+  
+        case "contactNumber":
+        //case "fatherContact":
+        //case "motherContact":
+          if (!/^\d{10}$/.test(value)) {
+            error = "Contact must be 10 digits";
+          }
+          break;
+  
+        case "email":
+          if (!/^\S+@\S+\.\S+$/.test(value)) {
+            error = "Invalid email format";
+          }
+          break;
+  
+        // case "monthly_amount":
+        //   if (isNaN(value)) {
+        //     error = "Must be a number";
+        //   }
+        //   break;
+  
+        case "password":
+          if (value.length < 6) {
+            error = "Password too short";
+          }
+          break;
+
+          case "age":
+                    if (!/^\d+$/.test(value)) error = "Age must be a valid number";
+                    else if (parseInt(value) < 18 || parseInt(value) > 60) error = "Age must be between 18 and 60";
+                    break;
+  
+        default:
+          break;
+      }
+    }
+  
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
 
 
   return (
@@ -239,7 +339,7 @@ const AdminManagement = () => {
           <DialogContent>
             <TextField fullWidth margin="dense" label="Full Name" name="fullName" value={newAdmin.fullName} onChange={handleChange} />
             <TextField fullWidth margin="dense" label="Name with Initials" name="nameWithInitials" value={newAdmin.nameWithInitials} onChange={handleChange} />
-            <TextField fullWidth margin="dense" label="Age" name="age" value={newAdmin.age} onChange={handleChange} />
+            <TextField fullWidth margin="dense" label="Age" name="age" value={newAdmin.age} onChange={handleChange} error={!!errors.age} helperText={errors.age} />
             <TextField fullWidth margin="dense" select label="Gender" name="gender" value={newAdmin.gender} onChange={handleChange}>
               <MenuItem value="Male">Male</MenuItem>
               <MenuItem value="Female">Female</MenuItem>
@@ -248,12 +348,12 @@ const AdminManagement = () => {
               <MenuItem value="active">Active</MenuItem>
               <MenuItem value="inactive">Deactive</MenuItem>
             </TextField>
-            <TextField fullWidth margin="dense" label="Contact Number" name="contactNumber" value={newAdmin.contactNumber} onChange={handleChange} />
-            <TextField fullWidth margin="dense" label="Email" name="email" value={newAdmin.email} onChange={handleChange} />
+            <TextField fullWidth margin="dense" label="Contact Number" name="contactNumber" value={newAdmin.contactNumber} onChange={handleChange} error={!!errors.contactNumber} helperText={errors.contactNumber}/>
+            <TextField fullWidth margin="dense" label="Email" name="email" value={newAdmin.email} onChange={handleChange} error={!!errors.email} helperText={errors.email} />
             <TextField fullWidth margin="dense" label="Address" name="address" value={newAdmin.address} onChange={handleChange} />
             <TextField fullWidth margin="dense" label="Enrollment Date" name="enrollmentDate" type="date" value={newAdmin.enrollmentDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
             <TextField fullWidth margin="dense" label="Username" name="username" value={newAdmin.username} onChange={handleChange} />
-            <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newAdmin.password} onChange={handleChange} />
+            <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newAdmin.password} onChange={handleChange} error={!!errors.password} helperText={errors.password} />
             <TextField fullWidth margin="dense" label="Previous Schools" name="previousSchools" value={newAdmin.previousSchools} onChange={handleChange} />
             <TextField fullWidth margin="dense" label="NIC" name="nic" value={newAdmin.nic} onChange={handleChange} />
             {/* <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newAdmin.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} /> */}

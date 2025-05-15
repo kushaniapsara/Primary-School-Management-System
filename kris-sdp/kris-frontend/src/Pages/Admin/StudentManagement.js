@@ -33,6 +33,9 @@ const StuManagement = () => {
   const [newClassName, setNewClassName] = useState("");
   const [newYear, setNewYear] = useState("");
 
+  const [errors, setErrors] = useState({}); //for validatings
+
+
 
   // const [selectedStudents, setSelectedStudents] = useState([]);  // Stores the selected students
   //const [newClassName, setNewClassName] = useState('');  // Stores the new class name
@@ -44,6 +47,7 @@ const StuManagement = () => {
     syllabus: "",
     name: "",
     academicYear: "",
+    status: ""
   });
 
 
@@ -68,7 +72,7 @@ const StuManagement = () => {
     password: "",
     username: "",
     adminID: "",
-    monthly_amount:"",
+    monthly_amount: "",
     //parentID: "",
     fatherName: "",
     fatherContact: "",
@@ -117,8 +121,13 @@ const StuManagement = () => {
 
 
   const handleChange = (e) => {
-    setNewStudent({ ...newStudent, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+
+    setNewStudent((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
   };
+
 
   const handleSubmit = () => {
     const formData = new FormData();
@@ -159,7 +168,7 @@ const StuManagement = () => {
           password: "",
           username: "",
           adminID: "",
-          monthly_amount:"",
+          monthly_amount: "",
           parentID: "",
           fatherName: "",
           fatherContact: "",
@@ -205,7 +214,9 @@ const StuManagement = () => {
         (filters.className === "" || student.Class_name === filters.className) &&
         (filters.syllabus === "" || student.Syllabus === filters.syllabus) &&
         (filters.name === "" || student.Full_name.toLowerCase().includes(filters.name.toLowerCase())) &&  // Add name filtering here
-        (filters.academicYear === "" || String(student.Academic_year) === filters.academicYear)
+        (filters.academicYear === "" || String(student.Academic_year) === filters.academicYear) &&
+          (filters.status === "" || String(student.Status) === filters.status)
+
 
       );
     }));
@@ -277,7 +288,71 @@ const StuManagement = () => {
       console.error(err);
     }
   };
+  const validateField = (name, value) => {
+    let error = "";
 
+    if (!value || value.trim() === "") {
+      error = "This field is required";
+    } else {
+      switch (name) {
+        case "dob":
+          const birthDate = new Date(value);
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+          const dayDiff = today.getDate() - birthDate.getDate();
+
+          // Adjust age if birth month/day hasn't occurred yet this year
+          if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            age--;
+          }
+
+          if (isNaN(birthDate.getTime())) {
+            error = "Invalid date";
+          } else if (age < 5) {
+            error = "Student must be at least 5 years old";
+          }
+          break;
+
+        case "enrollmentDate":
+          if (isNaN(Date.parse(value))) {
+            error = "Invalid date";
+          }
+          break;
+
+        case "contactNumber":
+        case "fatherContact":
+        case "motherContact":
+          if (!/^\d{10}$/.test(value)) {
+            error = "Contact must be 10 digits";
+          }
+          break;
+
+        case "email":
+          if (!/^\S+@\S+\.\S+$/.test(value)) {
+            error = "Invalid email format";
+          }
+          break;
+
+        case "monthly_amount":
+          if (isNaN(value)) {
+            error = "Must be a number";
+          }
+          break;
+
+        case "password":
+          if (value.length < 6) {
+            error = "Password too short";
+          }
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
 
 
 
@@ -361,6 +436,17 @@ const StuManagement = () => {
               <MenuItem value="2027">2027</MenuItem>
               <MenuItem value="2028">2028</MenuItem>
               <MenuItem value="2029">2029</MenuItem>
+
+            </Select>
+          </FormControl>
+
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Status</InputLabel>
+            <Select name="status" value={filters.status} onChange={handleFilterChange}>
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+              
 
             </Select>
           </FormControl>
@@ -527,7 +613,7 @@ const StuManagement = () => {
                     {/* Actions */}
                     <div className="mt-4 flex justify-between">
                       <button className="bg-blue-500 text-white px-4 py-2 rounded">✏️ Edit</button>
-                      
+
 
                       <DialogActions>
 
@@ -540,9 +626,9 @@ const StuManagement = () => {
               </div>
             </div>
           )}
-        
 
-</div>
+
+        </div>
         {/* add student form */}
 
         <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
@@ -552,7 +638,7 @@ const StuManagement = () => {
               <>
                 <TextField fullWidth margin="dense" label="Full Name" name="fullName" value={newStudent.fullName} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Name with Initials" name="nameWithInitials" value={newStudent.nameWithInitials} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Date of Birth" name="dob" type="date" value={newStudent.dob} onChange={handleChange} InputLabelProps={{ shrink: true }} />
+                <TextField fullWidth margin="dense" label="Date of Birth" name="dob" type="date" value={newStudent.dob} onChange={handleChange} InputLabelProps={{ shrink: true }} error={!!errors.dob} helperText={errors.dob} />
                 <TextField fullWidth margin="dense" select label="Gender" name="gender" value={newStudent.gender} onChange={handleChange}>
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
@@ -565,13 +651,15 @@ const StuManagement = () => {
                 <TextField fullWidth margin="dense" label="Vaccination Details" name="vaccination" value={newStudent.vaccination} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="On Any Drugs" name="onAnyDrugs" value={newStudent.onAnyDrugs} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Allergies" name="allergies" value={newStudent.allergies} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Contact Number" name="contactNumber" value={newStudent.contactNumber} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Email" name="email" value={newStudent.email} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Contact Number" name="contactNumber" value={newStudent.contactNumber} onChange={handleChange} error={!!errors.contactNumber} helperText={errors.contactNumber} />
+
+                <TextField fullWidth margin="dense" label="Email" name="email" value={newStudent.email} onChange={handleChange} error={!!errors.email} helperText={errors.email} />
+
                 <TextField fullWidth margin="dense" label="Address" name="address" value={newStudent.address} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Sisters/Brothers in the Same School" name="sistersBrothersInSameSchool" value={newStudent.sistersBrothersInSameSchool} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Enrollment Date" name="enrollmentDate" type="date" value={newStudent.enrollmentDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
                 <TextField fullWidth margin="dense" label="Username" name="username" value={newStudent.username} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newStudent.password} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newStudent.password} onChange={handleChange} error={!!errors.password} helperText={errors.password} />
                 <TextField fullWidth margin="dense" label="Admin_Id" name="adminID" value={newStudent.adminID} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Documents" name="documents" value={newStudent.documents} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="monthly_amount" name="monthly_amount" value={newStudent.monthly_amount} onChange={handleChange} />
@@ -618,14 +706,14 @@ const StuManagement = () => {
               <>
                 <h3 className="text-lg font-bold mb-4">Father's Details</h3>
                 <TextField fullWidth margin="dense" label="Name" name="fatherName" value={newStudent.fatherName} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Contact Number" name="fatherContact" value={newStudent.fatherContact} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Contact Number" name="fatherContact" value={newStudent.fatherContact} onChange={handleChange} error={!!errors.fatherContact} helperText={errors.fatherContact} />
                 <TextField fullWidth margin="dense" label="NIC" name="fatherNIC" value={newStudent.fatherNIC} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Occupation" name="fatherOccupation" value={newStudent.fatherOccupation} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Office - Address" name="fatherAddress" value={newStudent.fatherAddress} onChange={handleChange} />
 
                 <h3 className="text-lg font-bold mt-6 mb-4">Mother's Details</h3>
                 <TextField fullWidth margin="dense" label="Name" name="motherName" value={newStudent.motherName} onChange={handleChange} />
-                <TextField fullWidth margin="dense" label="Contact Number" name="motherContact" value={newStudent.motherContact} onChange={handleChange} />
+                <TextField fullWidth margin="dense" label="Contact Number" name="motherContact" value={newStudent.motherContact} onChange={handleChange} error={!!errors.fatherContact} helperText={errors.fatherContact} />
                 <TextField fullWidth margin="dense" label="NIC" name="motherNIC" value={newStudent.motherNIC} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Occupation" name="motherOccupation" value={newStudent.motherOccupation} onChange={handleChange} />
                 <TextField fullWidth margin="dense" label="Office - Address" name="motherAddress" value={newStudent.motherAddress} onChange={handleChange} />

@@ -134,7 +134,7 @@ const Student = {
       SELECT s.*
       FROM Student s
       INNER JOIN StudentClass sc ON s.Student_ID = sc.Student_ID
-      WHERE sc.Class_ID = ?
+      WHERE sc.Class_ID = ? AND s.Status = 'active'
     `;
     pool.query(sql, [classID], callback);
   },

@@ -7,11 +7,17 @@ const getStudentsByClass = (classID, callback) => {
     SELECT s.*
     FROM Student s
     INNER JOIN StudentClass sc ON s.Student_ID = sc.Student_ID
-    WHERE sc.Class_ID = ?
+    WHERE sc.Class_ID = ? 
   `;
-  pool.query(sql, [classID], callback);
-}
-
+  db.query(sql, [classID], (err, results) => {
+    if (err) {
+      console.error("DB query error:", err);
+      return callback(err, null);
+    }
+    console.log("DB query results:", results);
+    callback(null, results);
+  });
+};
 
 // Fetch attendance records for the last 5 days
 const getAttendance = (callback) => {

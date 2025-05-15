@@ -7,3 +7,4 @@ const verifyToken = require('../middleware/auth'); // Import your middleware
 router.post('/', verifyToken, enrollmentController.enrollInActivity);
 
 module.exports = router;
+//extra curricular enrollment
