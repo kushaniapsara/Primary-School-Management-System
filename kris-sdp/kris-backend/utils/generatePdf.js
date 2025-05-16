@@ -120,6 +120,21 @@ async function generatePdf(data, fromDate, toDate, reportType) {
                 }
             }
         ],
+
+
+        footer: function(currentPage, pageCount) {
+    const now = new Date();
+    const formattedDateTime = now.toLocaleString(); // e.g., "5/17/2025, 10:30:15 AM"
+
+    return {
+        columns: [
+            { text: `Generated on: ${formattedDateTime}`, alignment: 'left', fontSize: 8, margin: [40, 0, 0, 0] },
+            { text: `Page ${currentPage} of ${pageCount}`, alignment: 'right', fontSize: 8, margin: [0, 0, 40, 0] }
+        ]
+    };
+},
+
+
         styles: {
             header: {
                 fontSize: 20,

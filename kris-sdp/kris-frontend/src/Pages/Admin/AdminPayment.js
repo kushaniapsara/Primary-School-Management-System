@@ -96,8 +96,13 @@ const AdminPayment = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">🧾 Admin - Student Payments</h2>
+    <div className="flex h-screen overflow-hidden">
+      <div className="flex-1  flex flex-col">
+        <div className="flex justify-between items-center p-6 bg-white border-b">
+          
+
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">Admin - Student Payments</h2>
+      </div>
 
       <div className="flex flex-wrap gap-4 mb-6">
         <button onClick={handleAddAll} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">➕ Add Fee to All</button>
@@ -191,6 +196,8 @@ const AdminPayment = () => {
         </table>
       </div>
     </div>
+        </div>
+
   );
 };
 
