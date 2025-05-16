@@ -8,6 +8,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { NavLink } from 'react-router-dom';
 
 
 const ParentNavbar = () => {
@@ -19,8 +20,17 @@ const ParentNavbar = () => {
       setUsername(storedUsername);
     }
   }, []);
+
+  // Custom function to apply active styling
+  const linkClasses = ({ isActive }) =>
+  `flex items-center px-4 py-2 cursor-pointer rounded-lg transition-all duration-200 
+   ${isActive 
+      ? 'bg-blue-800 text-white font-semibold shadow-md' 
+      : 'hover:bg-blue-200 text-gray-700'
+   }`;
+
   return(
-<div className="bg-white-100 w-64 flex flex-col py-4">
+<div className="bg-white-100 w-66 flex flex-col py-4">
 {/* Username at top-right */}
 <div className="absolute top-12 right-12 text-xl font-semibold text-gray-700">
         {username ? `👋 ${username}` : ""}
@@ -30,48 +40,61 @@ const ParentNavbar = () => {
         </div>
         <nav className="flex-1">
           <ul className="space-y-4">
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+            <li>
+            <NavLink to="/ParentDashboard" className={linkClasses}>
               <DashboardIcon className="mr-2" />
-              <Link to = "/ParentDashboard">Dashboard</Link>
-            </li>
-            {/* <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
-              <BarChartIcon className="mr-2" />
-                <Link to = "/ProgressPage">Progress</Link>
-            </li> */}
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+              Dashboard
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink to="/Homework" className={linkClasses}>
               <AssignmentIcon className="mr-2" />
-              <Link to = "/Homework">Homework</Link>
-            </li>
+              Homework
+            </NavLink>
+          </li>
 
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/StudyMaterials" className={linkClasses}>
               <MenuBookIcon className="mr-2" />
-              <Link to = "/StudyMaterials">Study Materials</Link>
-            </li>
+              Study Materials
+            </NavLink>
+          </li>
 
-
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/ParentExtraAct" className={linkClasses}>
               <GroupIcon className="mr-2" />
-                  <Link to = "/ParentExtraAct">Extra Curricular</Link>
-            </li>
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
-              <AttachMoneyIcon className="mr-2" />
-              <Link to = "/StudentOwnProgress">Progress</Link>
-            </li>
+              Extra Curricular
+            </NavLink>
+          </li>
 
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
-              <AttachMoneyIcon className="mr-2" />
-              <Link to = "/ParentPayment">Payment</Link>
-            </li>
+          <li>
+            <NavLink to="/StudentOwnProgress" className={linkClasses}>
+              <BarChartIcon className="mr-2" />
+              Progress
+            </NavLink>
+          </li>
 
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/ParentPayment" className={linkClasses}>
+              <AttachMoneyIcon className="mr-2" />
+              Payment
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink to="/Profile" className={linkClasses}>
               <AccountCircleIcon className="mr-2" />
-                  <Link to = "/Profile">Profile</Link>
-            </li>
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
-              <AssessmentIcon className="mr-2" />
-              <Link to = "/Reports">Reports</Link>
+              Profile
+            </NavLink>
+          </li>
 
-            </li>
+          <li>
+            <NavLink to="/Reports" className={linkClasses}>
+              <AssessmentIcon className="mr-2" />
+              Reports
+            </NavLink>
+          </li>
           </ul>
         </nav>
       </div>

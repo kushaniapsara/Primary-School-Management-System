@@ -10,6 +10,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import AttachMoneyIcon from "@mui/icons-material/CalendarToday";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { NavLink } from 'react-router-dom';
+
 
 
 const Navbar = () => {
@@ -23,8 +25,17 @@ useEffect(() => {
   }
 }, []);
 
+// Custom function to apply active styling
+  const linkClasses = ({ isActive }) =>
+  `flex items-center px-4 py-2 cursor-pointer rounded-lg transition-all duration-200 
+   ${isActive 
+      ? 'bg-blue-800 text-white font-semibold shadow-md' 
+      : 'hover:bg-blue-200 text-gray-700'
+   }`;
+
+
   return(
-<div className="bg-white-100 w-64 flex flex-col py-4">
+<div className="bg-white-100 w-66 flex flex-col py-4">
 {/* Username at top-right */}
 <div className="absolute top-12 right-12 text-xl font-semibold text-gray-700">
         {username ? `👋 ${username}` : ""}
@@ -34,60 +45,61 @@ useEffect(() => {
         </div>
         <nav className="flex-1">
           <ul className="space-y-4">
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+            <li>
+            <NavLink to="/AdminDashboard" className={linkClasses}>
               <DashboardIcon className="mr-2" />
-              <Link to = "/AdminDashboard">Dashboard</Link>
-            </li>
+              Dashboard
+            </NavLink>
+          </li>
 
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/StudentManagement" className={linkClasses}>
               <MenuBookIcon className="mr-2" />
-              <Link to = "/StudentManagement">Student Management</Link>
-            </li>
+              Student Management
+            </NavLink>
+          </li>
 
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/TeacherManagement" className={linkClasses}>
               <AssignmentIcon className="mr-2" />
-              <Link to = "/TeacherManagement">Teacher Management</Link>
-            </li>
+              Teacher Management
+            </NavLink>
+          </li>
 
-
-            {/* <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
-              <CalendarTodayIcon className="mr-2" />
-              <Link to = "/Attendance">Attendance</Link>
-            </li>
-            */}
-            
-            {/* <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
-              <BarChartIcon className="mr-2" />
-                <Link to = "/ProgressTeacher">Progress</Link>
-            </li> */}
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/ExtraActTeacher" className={linkClasses}>
               <GroupIcon className="mr-2" />
-                  <Link to = "/ExtraActTeacher">Extra Curricular</Link>
-            </li>
+              Extra Curricular
+            </NavLink>
+          </li>
 
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/AdminPayment" className={linkClasses}>
               <AttachMoneyIcon className="mr-2" />
-              <Link to = "/AdminPayment">Payments</Link>
-            </li>
+              Payments
+            </NavLink>
+          </li>
 
-
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/AdminDetails" className={linkClasses}>
               <AdminPanelSettingsIcon className="mr-2" />
-                  <Link to = "/AdminDetails">Admin Details</Link>
-            </li>
+              Admin Details
+            </NavLink>
+          </li>
 
-
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/Profile" className={linkClasses}>
               <AccountCircleIcon className="mr-2" />
-                  <Link to = "/Profile">Profile</Link>
-            </li>
+              Profile
+            </NavLink>
+          </li>
 
-          
-            <li className="flex items-center px-4 py-2 hover:bg-blue-200 cursor-pointer">
+          <li>
+            <NavLink to="/LeavingCertificateGenerator" className={linkClasses}>
               <AssessmentIcon className="mr-2" />
-              <Link to = "/LeavingCertificateGenerator">Reports</Link>
-
-            </li>
+              Reports
+            </NavLink>
+          </li>
           </ul>
         </nav>
       </div>

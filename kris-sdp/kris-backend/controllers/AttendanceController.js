@@ -1,4 +1,6 @@
 const AttendanceModel = require('../models/AttendanceModel');
+const db = require("../config/db");
+
 
 // Fetch students
 // New function for class-specific student list for teacher

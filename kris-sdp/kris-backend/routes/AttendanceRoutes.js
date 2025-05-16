@@ -20,7 +20,7 @@ router.get('/attendance-chart', AttendanceController.getAttendanceChartData);
 router.get("/by-class", verifyToken, AttendanceController.getStudentsByClass);
 
 // New route to get student attendance percentage (parent dashboard)
-router.get('/student/:studentId/percentage', AttendanceController.getStudentAttendancePercentage);
+router.get('/attendance/student/:studentId/percentage', AttendanceController.getStudentAttendancePercentage);
 
 
 

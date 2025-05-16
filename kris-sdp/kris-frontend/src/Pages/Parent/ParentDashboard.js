@@ -41,7 +41,7 @@ const ParentDashboard = () => {
           .then((data) => setProgress(Array.isArray(data) ? data : []))
           .catch((err) => console.error("Error fetching progress:", err));
 
-          
+
      // NEW: Fetch attendance percentage for this student
         fetch(`http://localhost:5001/api/attendance/student/${studentId}/percentage`, {
           headers: { Authorization: localStorage.getItem("token") },
@@ -49,7 +49,7 @@ const ParentDashboard = () => {
           .then((res) => res.json())
           .then((data) => {
             if (data.percentage !== undefined) {
-              setAttendancePercent(data.percentage.toFixed(2));
+setAttendancePercent(Number(data.percentage).toFixed(2));
             } else {
               setAttendancePercent("N/A");
             }
@@ -141,7 +141,7 @@ const ParentDashboard = () => {
 
         <section className="grid grid-cols-3 gap-4 bg-blue-900">
           {/* Attendance */}
-          <div className="bg-gray-100 p-4 mt-3 mx-3 rounded shadow-md text-center">
+          <div className="bg-gray-100 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center ">
             <h2 className="text-lg font-bold">Attendance</h2>
             <p className="text-2xl font-extrabold">
               {attendancePercent === null ? "Loading..." : `${attendancePercent}%`}
@@ -154,9 +154,9 @@ const ParentDashboard = () => {
           </div>
 
           {/* Homework */}
-          <div className="bg-gray-200 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center h-40">
+          <div className="bg-gray-100 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center ">
             <h2 className="text-lg font-bold text-black">Upcoming Homeworks</h2>
-            <p className="text-gray-700 mt-2 text-3xl">{upcomingHomeworkCount}</p>
+            <p className="text-black mt-2 text-3xl font-bold">{upcomingHomeworkCount}</p>
           </div>
 
           {/* Graph: Class Performance */}

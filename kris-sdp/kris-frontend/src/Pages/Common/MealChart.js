@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 const MealChart = () => {
@@ -137,7 +139,7 @@ const MealChart = () => {
                                     className="text-blue-500 hover:underline"
                                     onClick={() => handleEdit(m)}
                                 >
-                                    Edit
+                                    <EditIcon />
                                 </button>
                             )}
 
@@ -146,7 +148,7 @@ const MealChart = () => {
                                     className="text-red-500 hover:underline"
                                     onClick={() => handleDelete(m.id)}
                                 >
-                                    Delete
+                                     <DeleteIcon />
                                 </button>
                             )}
                         </div>

@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import { Bar } from 'react-chartjs-2';
 import Notice from "../Common/Notice";
-import MealChart from '../Common/MealChart'; 
+import MealChart from '../Common/MealChart';
 import axios from "axios";
 
 
@@ -24,7 +24,7 @@ const TeacherDashboard = () => {
 
   const [subjectAverages, setSubjectAverages] = useState([]);
 
-    const [upcomingHomeworkCount, setUpcomingHomeworkCount] = useState(0);
+  const [upcomingHomeworkCount, setUpcomingHomeworkCount] = useState(0);
 
 
   // ✅ Fetch all student progress data (for subjects and marks)
@@ -34,13 +34,13 @@ const TeacherDashboard = () => {
       .then((data) => {
         const result = data.map((entry) => ({
           subject: entry.Subject_name,
-          average: parseFloat(entry.AverageMarks), 
+          average: parseFloat(entry.AverageMarks),
         }));
         setSubjectAverages(result);
       })
       .catch((err) => console.error("Error fetching progress data:", err));
   }, []);
-  
+
   // ✅ Chart configuration using fetched data
   const performanceData = {
     labels: subjectAverages.map((item) => item.subject),
@@ -73,8 +73,8 @@ const TeacherDashboard = () => {
       },
     },
   };
-//homework count
-useEffect(() => {
+  //homework count
+  useEffect(() => {
     const fetchHomeworks = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -99,23 +99,23 @@ useEffect(() => {
 
   return (
     <div className="flex min-h-screen">
-       {/* Main Content */}
-       <div className="flex-1 bg-blue-900">
+      {/* Main Content */}
+      <div className="flex-1 bg-blue-900">
         {/* Header */}
         <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
-        <div className="flex justify-between items-center px-8 py-4">
-          <div className="flex space-x-4">
-            <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-              <SearchIcon className="mr-2" />
-              Search
-            </button>
+          <div className="flex justify-between items-center px-8 py-4">
+            <div className="flex space-x-4">
+              <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
+                <SearchIcon className="mr-2" />
+                Search
+              </button>
+            </div>
+
           </div>
-          
-        </div>
-          
+
         </header>
-      
-       
+
+
 
         <section className="grid grid-cols-3 gap-4 bg-blue-900">
           {/* Attendance */}
@@ -132,9 +132,9 @@ useEffect(() => {
 
           {/* Homework */}
           <div className="bg-gray-200 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center h-40">
-  <h2 className="text-lg font-bold text-black">Upcoming Homeworks</h2>
-  <p className="text-gray-700 mt-2 text-3xl">{upcomingHomeworkCount}</p>
-</div>
+            <h2 className="text-lg font-bold text-black">Upcoming Homeworks</h2>
+            <p className="text-black font-bold mt-2 text-3xl ">{upcomingHomeworkCount}</p>
+          </div>
 
 
           {/* ✅ Graph: Class Performance */}
@@ -146,9 +146,9 @@ useEffect(() => {
           {/* Special Notices */}
           <div className="col-span-3 p-2 mx-3 rounded shadow-md">
             <Notice />
-          </div>          
+          </div>
         </section>
-    </div>
+      </div>
     </div>
   );
 };
