@@ -5,6 +5,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Bar } from 'react-chartjs-2';
 import Notice from "../Common/Notice";
 import MealChart from '../Common/MealChart'; 
+import axios from "axios";
+
 
 import {
   Chart as ChartJS,
@@ -21,6 +23,9 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const TeacherDashboard = () => {
 
   const [subjectAverages, setSubjectAverages] = useState([]);
+
+    const [upcomingHomeworkCount, setUpcomingHomeworkCount] = useState(0);
+
 
   // ✅ Fetch all student progress data (for subjects and marks)
   useEffect(() => {
@@ -68,6 +73,29 @@ const TeacherDashboard = () => {
       },
     },
   };
+//homework count
+useEffect(() => {
+    const fetchHomeworks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:5001/api/homework", {
+          headers: { Authorization: token },
+        });
+
+        const upcomingCount = response.data.filter(
+          (hw) => new Date(hw.Due_date) > new Date()
+        ).length;
+
+        setUpcomingHomeworkCount(upcomingCount);
+      } catch (error) {
+        console.error("Failed to fetch homework data", error);
+      }
+    };
+
+    fetchHomeworks();
+  }, []);
+
+
 
   return (
     <div className="flex min-h-screen">
@@ -103,15 +131,11 @@ const TeacherDashboard = () => {
           </div>
 
           {/* Homework */}
-          <div className="bg-gray-100 p-4 mt-3 mx-3 rounded shadow-md">
-            <div className="flex justify-between">
-              <h2 className="text-lg font-bold">Upcoming Homework</h2>
-              <button className="text-blue-600 hover:text-blue-800">
-                  <EditIcon />
-                </button>
-              </div>
-            <p className="text-xl font-extrabold">2 Activities</p>
-          </div>
+          <div className="bg-gray-200 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center h-40">
+  <h2 className="text-lg font-bold text-black">Upcoming Homeworks</h2>
+  <p className="text-gray-700 mt-2 text-3xl">{upcomingHomeworkCount}</p>
+</div>
+
 
           {/* ✅ Graph: Class Performance */}
           <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">

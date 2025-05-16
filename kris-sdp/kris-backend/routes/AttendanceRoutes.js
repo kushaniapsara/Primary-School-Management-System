@@ -19,6 +19,10 @@ router.get('/attendance-chart', AttendanceController.getAttendanceChartData);
 // For teacher-specific class students
 router.get("/by-class", verifyToken, AttendanceController.getStudentsByClass);
 
+// New route to get student attendance percentage (parent dashboard)
+router.get('/student/:studentId/percentage', AttendanceController.getStudentAttendancePercentage);
+
+
 
 
 module.exports = router;

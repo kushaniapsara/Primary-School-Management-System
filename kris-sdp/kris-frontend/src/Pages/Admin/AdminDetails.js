@@ -12,6 +12,9 @@ import {
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 
+import { FormControl, InputLabel, Select } from '@mui/material';
+
+
 
 const AdminManagement = () => {
   const [admins, setAdmins] = useState([]);
@@ -248,6 +251,41 @@ const AdminManagement = () => {
             Add New Admin
           </Button>
         </div>
+
+<div className="p-7 flex gap-4 bg-white rounded-md shadow-md mx-4">
+          
+
+          
+
+          <FormControl sx={{ minWidth: 200 }}>
+            <TextField
+              label="Name"
+              name="name"
+              value={filters.name}
+              onChange={handleFilterChange}
+              fullWidth
+            />
+          </FormControl>
+
+
+          
+
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Status</InputLabel>
+            <Select name="status" value={filters.status} onChange={handleFilterChange}>
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+              
+
+            </Select>
+          </FormControl>
+
+
+          <Button variant="contained" color="primary" onClick={handleFilterApply}>Filter</Button>
+        </div>
+
+
 
 
         <div className="p-5">

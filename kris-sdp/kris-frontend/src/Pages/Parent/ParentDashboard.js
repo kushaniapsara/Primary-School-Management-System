@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ParentNavbar from '../../components/ParentNavbar';
 import SearchIcon from "@mui/icons-material/Search";
-import Notice from "../Common/Notice"; 
-import MealChart from '../Common/MealChart'; 
+import Notice from "../Common/Notice";
+import MealChart from '../Common/MealChart';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -20,6 +20,12 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const ParentDashboard = () => {
   const [progress, setProgress] = useState([]);
 
+  const [upcomingHomeworkCount, setUpcomingHomeworkCount] = useState(0);
+
+  // NEW: Attendance Percentage state
+  const [attendancePercent, setAttendancePercent] = useState(null);
+
+
   // Fetch student progress data
   useEffect(() => {
     axios
@@ -34,6 +40,24 @@ const ParentDashboard = () => {
           .then((res) => res.json())
           .then((data) => setProgress(Array.isArray(data) ? data : []))
           .catch((err) => console.error("Error fetching progress:", err));
+
+          
+     // NEW: Fetch attendance percentage for this student
+        fetch(`http://localhost:5001/api/attendance/student/${studentId}/percentage`, {
+          headers: { Authorization: localStorage.getItem("token") },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.percentage !== undefined) {
+              setAttendancePercent(data.percentage.toFixed(2));
+            } else {
+              setAttendancePercent("N/A");
+            }
+          })
+          .catch((err) => {
+            console.error("Error fetching attendance percentage:", err);
+            setAttendancePercent("N/A");
+          });
       })
       .catch((err) => {
         console.error("Auth error:", err);
@@ -74,6 +98,31 @@ const ParentDashboard = () => {
     },
   };
 
+
+  //homework count
+  useEffect(() => {
+    const fetchHomeworks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:5001/api/homework", {
+          headers: { Authorization: token },
+        });
+
+        const upcomingCount = response.data.filter(
+          (hw) => new Date(hw.Due_date) > new Date()
+        ).length;
+
+        setUpcomingHomeworkCount(upcomingCount);
+      } catch (error) {
+        console.error("Failed to fetch homework data", error);
+      }
+    };
+
+    fetchHomeworks();
+  }, []);
+
+
+  
   return (
     <div className="flex min-h-screen">
       {/* <ParentNavbar /> */}
@@ -94,7 +143,9 @@ const ParentDashboard = () => {
           {/* Attendance */}
           <div className="bg-gray-100 p-4 mt-3 mx-3 rounded shadow-md text-center">
             <h2 className="text-lg font-bold">Attendance</h2>
-            <p className="text-2xl font-extrabold">75%</p>
+            <p className="text-2xl font-extrabold">
+              {attendancePercent === null ? "Loading..." : `${attendancePercent}%`}
+            </p>
           </div>
 
           {/* Meal Chart */}
@@ -103,23 +154,21 @@ const ParentDashboard = () => {
           </div>
 
           {/* Homework */}
-          <div className="bg-gray-100 p-4 mt-3 mx-3 rounded shadow-md">
-            <div className="flex justify-between">
-              <h2 className="text-lg font-bold">Upcoming Homework</h2>
-            </div>
-            <p className="text-xl font-extrabold">2 Activities</p>
+          <div className="bg-gray-200 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center h-40">
+            <h2 className="text-lg font-bold text-black">Upcoming Homeworks</h2>
+            <p className="text-gray-700 mt-2 text-3xl">{upcomingHomeworkCount}</p>
           </div>
 
           {/* Graph: Class Performance */}
           <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
             <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
-            <Bar data={performanceData} options={chartOptions} height={70}/>
+            <Bar data={performanceData} options={chartOptions} height={70} />
           </div>
 
           {/* Special Notices */}
           <div className="col-span-3 p-2 mx-3 rounded shadow-md">
             <Notice />
-          </div>  
+          </div>
         </section>
       </div>
     </div>

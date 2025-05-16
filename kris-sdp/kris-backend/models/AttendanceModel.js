@@ -95,5 +95,10 @@ const getAttendanceChartData = (callback) => {
 
 
 
+// In your attendanceController.js
+
+
+
+
 
 module.exports = { getStudentsByClass, getAttendance, saveAttendance, getAttendanceChartData };

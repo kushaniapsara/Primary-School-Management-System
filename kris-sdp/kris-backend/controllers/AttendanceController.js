@@ -56,4 +56,23 @@ const getAttendanceChartData = (req, res) => {
     });
 };
 
-module.exports = { getStudentsByClass, getAttendance, saveAttendance, getAttendanceChartData };
+
+// Get attendance percentage for a student (for Parent Dashboard)
+const getStudentAttendancePercentage = (req, res) => {
+  const studentId = req.params.studentId;
+  const sql = `
+    SELECT 
+      COUNT(*) AS total,
+      SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS present
+    FROM Attendance
+    WHERE Student_ID = ?
+  `;
+  db.query(sql, [studentId], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    const { total, present } = results[0];
+    const percentage = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
+    res.json({ percentage });
+  });
+};
+
+module.exports = { getStudentsByClass, getAttendance, saveAttendance, getAttendanceChartData, getStudentAttendancePercentage };
