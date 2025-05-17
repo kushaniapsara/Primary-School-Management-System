@@ -14,11 +14,11 @@ exports.generateReport = async (req, res) => {
   switch (reportType) {
     case 'attendance':
       sql = 'SELECT Student_ID, Date, Status FROM Attendance WHERE Date BETWEEN ? AND ?';
-      params = [];
+      //params = [];
       break;
 
     case 'student':
-      sql = 'SELECT Student_ID, Full_name, Grade FROM Student';
+  sql = 'SELECT Student_ID, Full_name, Grade FROM Student';
       params = [];
       break;
 
@@ -29,7 +29,7 @@ exports.generateReport = async (req, res) => {
 
     case 'payment':
       sql = 'SELECT Student_ID, Amount, Paid_Date FROM Payment WHERE Paid_Date BETWEEN ? AND ?';
-      params = [];
+      //params = [];
       break;
 
     default:
@@ -138,7 +138,7 @@ exports.generateLeavingCertificate = async (req, res) => {
 };
 
 exports.getStudents = (req, res) => {
-  const query = 'SELECT Student_ID AS student_id, Full_name AS student_name FROM Student';
+  const query = 'SELECT Student_ID AS student_id, Full_name AS student_name FROM Student WHERE Status = active ';
   db.query(query, (err, results) => {
     if (err) {
       console.error('SQL Error:', err);

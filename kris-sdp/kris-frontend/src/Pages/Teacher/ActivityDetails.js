@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, CircularProgress, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { jwtDecode } from "jwt-decode";
+
 
 const ActivityDetails = () => {
   const { id } = useParams(); // Get activity id from URL params
@@ -10,6 +12,8 @@ const ActivityDetails = () => {
   const [loadingImages, setLoadingImages] = useState(true); // Loading state for images
   // useState for caption
   const [caption, setCaption] = useState("");
+    const [userRole, setUserRole] = useState(""); // NEW state to track user role
+  
 
   // Fetch activity details based on the id
   useEffect(() => {
@@ -41,6 +45,23 @@ const ActivityDetails = () => {
       });
   }, [id]);
 
+  // to hide buttons
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          setUserRole(decoded.role);
+          console.log(decoded.role); // Add this line to check the value
+  
+        } catch (error) {
+          console.error("Invalid token", error);
+          setUserRole(""); // assuming your token has a 'role' field
+        }
+      }
+    }, []);
+  
+
   // Handle multiple image uploads
   const handleImageUpload = async (event) => {
     const files = event.target.files;
@@ -60,9 +81,6 @@ const ActivityDetails = () => {
       console.error("Upload error:", error);
     }
   };
-  
-
-
   
 
   if (!activity)
@@ -87,7 +105,7 @@ const ActivityDetails = () => {
       });
     };
     
-  
+   
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-8">
@@ -127,6 +145,9 @@ const ActivityDetails = () => {
           {/* Upload Button */}
           {/* Upload Images + Caption */}
          <div className="flex flex-col gap-2 mb-4"></div>
+
+                 {userRole === "Admin" && (
+
           <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-fit mb-4">
             Upload Images
             <input
@@ -136,7 +157,7 @@ const ActivityDetails = () => {
               onChange={handleImageUpload}
               className="hidden"
             />
-          </label>
+          </label> )}
           
 
 

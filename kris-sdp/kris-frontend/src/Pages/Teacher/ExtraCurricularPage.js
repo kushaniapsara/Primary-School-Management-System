@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+
 const ExtraCurricularPage = () => {
   const { studentId } = useParams();
   const [activities, setActivities] = useState([]);

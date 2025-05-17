@@ -37,7 +37,8 @@ const AdminLogin = () => {
         setUserType('Admin'); // Set userType to Admin
         setMessage(response.data.message);
         console.log("frontend:", response); // debug
-        navigate('/AdminDashboard'); // Redirect to Admin Dashboard
+        navigate('/AdminDashboard'); 
+        window.location.reload();// Redirect to Admin Dashboard
       }
     } catch (error) {
       setMessage(error.response?.data?.message || 'An error occurred');

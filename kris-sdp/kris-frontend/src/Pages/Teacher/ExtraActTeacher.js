@@ -83,7 +83,7 @@ const ExtraActTeacher = () => {
               activities.map((activity) => (
                 <div
                   key={activity.id} // Use correct ID field
-                  className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-green-900 transition duration-300 cursor-pointer"
+                  className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-blue-200 transition duration-300 cursor-pointer"
                   onClick={() => navigate(`/activity/${activity.id}`)} // Use `id`
                 >
                   <div className="flex justify-center mb-4">

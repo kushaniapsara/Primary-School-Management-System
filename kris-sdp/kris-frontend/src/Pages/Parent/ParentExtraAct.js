@@ -119,7 +119,7 @@ const ExtraActParent = () => {
             activities.map((activity) => (
               <div
                 key={activity.Activity_ID || activity.id}
-                className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-green-700 transition duration-300"
+                className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-blue-200 transition duration-300"
                 onClick={() => navigate(`/activity/${activity.id}`)} // Use `id`
 
               >

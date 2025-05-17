@@ -95,3 +95,22 @@ exports.getAllStudentPayments = (req, res) => {
     res.status(200).json(results);
   });
 };
+
+exports.addCustomFee = async (req, res) => {
+  const { student_id, amount, description } = req.body;
+  if (!student_id || !amount || !description) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  try {
+    await pool.promise().query(
+      `INSERT INTO student_payable (student_id, amount, description, month_year)
+       VALUES (?, ?, ?, ?)`,
+      [student_id, amount, description, "Custom"]  // Fixed string here
+    );
+    res.json({ message: 'Custom fee added successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to add custom fee' });
+  }
+};
