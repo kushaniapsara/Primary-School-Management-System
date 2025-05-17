@@ -1,5 +1,7 @@
 // controllers/studentControllerPayment.js
 const pool = require('../config/db');  // ✅ correct path to db
+const generatePdf = require('../utils/pdfSlipGenerator'); // ⬅️ This is the new utility for generating payment slip PDF
+
 
 // Handler to get student payment info by ID
 const getStudentByID = (req, res) => {
@@ -93,6 +95,40 @@ const getStudentPaymentHistory = (req, res) => {
     });
   };
   
-  
+  // New: Generate and send payment slip as PDF
+const downloadPaymentSlip = (req, res) => {
+  const { student_id, amount, description } = req.body;
 
-module.exports = { getStudentByID, getStudentAmount, addStudentPayment,getStudentPaymentHistory };
+  const query = 'SELECT Name_with_initials FROM student WHERE Student_ID = ?';
+
+  pool.query(query, [student_id], async (err, result) => {
+    if (err || result.length === 0) {
+      return res.status(500).json({ message: 'Failed to retrieve student info' });
+    }
+
+    const studentName = result[0].Name_with_initials;
+    const currentDate = new Date().toLocaleDateString();
+    const formattedAmount = `Rs. ${parseFloat(amount).toFixed(2)}`;
+
+    const data = [
+      { label: 'Student ID', value: student_id },
+      { label: 'Student Name', value: studentName },
+      { label: 'Amount Paid', value: formattedAmount },
+      { label: 'Description', value: description },
+      { label: 'Payment Date', value: currentDate }
+    ];
+
+    try {
+      const pdfBuffer = await generatePdf(data);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename=payment_slip.pdf');
+      res.send(pdfBuffer);
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ message: 'Failed to generate PDF' });
+    }
+  });
+};
+
+module.exports = { getStudentByID, getStudentAmount, addStudentPayment,getStudentPaymentHistory,   downloadPaymentSlip
+ };

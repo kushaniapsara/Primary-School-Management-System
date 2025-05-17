@@ -11,6 +11,11 @@ const ParentPayment = () => {
   const [messageType, setMessageType] = useState(''); // success or error
   const [paymentHistory, setPaymentHistory] = useState([]);
 
+  //slip
+  const [loading, setLoading] = useState(false);
+  const [downloadReady, setDownloadReady] = useState(false);
+  const [lastPaymentData, setLastPaymentData] = useState(null);
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -63,7 +68,13 @@ const ParentPayment = () => {
       setTotalAmount(res.data.totalAmount);
 
       const historyRes = await axios.get(`http://localhost:5001/api/students/payment/history/${userID}`);
-      setPaymentHistory(historyRes.data);
+const updatedHistory = historyRes.data;
+    setPaymentHistory(updatedHistory);
+    
+      // Set the last payment data for the slip
+    const lastPayment = updatedHistory[updatedHistory.length - 1];
+    setLastPaymentData(lastPayment);
+    setDownloadReady(true);
 
     } catch (err) {
       console.error('Payment error:', err);
@@ -71,6 +82,29 @@ const ParentPayment = () => {
       setMessage('Failed to submit payment.');
     }
   };
+
+const handleDownloadSlip = async () => {
+    if (!lastPaymentData) return;
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5001/api/students/payment/download-slip',
+        lastPaymentData,
+        { responseType: 'blob' }
+      );
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'payment_slip.pdf';
+      link.click();
+    } catch (err) {
+      console.error('Failed to download payment slip:', err);
+      setMessageType('error');
+      setMessage('Failed to download payment slip.');
+    }
+  };
+
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl mt-8">
@@ -116,6 +150,17 @@ const ParentPayment = () => {
               {message}
             </div>
           )}
+
+
+{downloadReady && (
+            <button
+              onClick={handleDownloadSlip}
+              className="mb-6 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md"
+            >
+              Download Payment Slip 📄
+            </button>
+          )}
+
 
           <hr className="my-6" />
 

@@ -29,6 +29,9 @@ const reportRoutes = require('./routes/reportRoutes');
 
 const extraCurricularPageRoutes = require('./routes/extraCurricularPageRoutes');
 
+const googleLinkRoutes = require('./routes/googleLinkRoutes');
+
+
 
 
 dotenv.config();
@@ -88,6 +91,9 @@ app.use('/api/report', reportRoutes);
 app.use('/api', extraCurricularPageRoutes);
 
 app.use('/api/meal-chart', mealChartRoutes); //mealchart
+
+app.use('/api/google-link', googleLinkRoutes);
+
 
 
 // Default route for '/'

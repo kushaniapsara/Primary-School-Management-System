@@ -71,6 +71,21 @@ const Profile = () => {
     }
   };
 
+
+  const handleOpenSchedule = async () => {
+  try {
+    const response = await axios.get("http://localhost:5001/api/google-link");
+    const link = response.data.link;
+    if (link) {
+      window.open(link, "_blank"); // opens in a new tab
+    }
+  } catch (error) {
+    console.error("Error fetching schedule link:", error);
+    setMessage("Failed to load schedule.");
+  }
+};
+
+
   return (
     <div className="flex min-h-screen"> 
 
@@ -120,9 +135,14 @@ const Profile = () => {
 
         {/* Action Buttons */}
         <div className="mt-10 flex flex-wrap gap-4 justify-center">
-          <button className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-all">
-            📚 Class Schedule
-          </button>
+        <button
+  onClick={handleOpenSchedule}
+  className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
+>
+  📚 Class Schedule
+</button>
+
+
           <button
             onClick={handleViewStudents}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg transition-all"

@@ -9,6 +9,8 @@ import Profile from './Pages/Common/Profile.js';
 import StudentProfiles from './Pages/Common/StudentProfiles.js';
 import Reports from './Pages/Common/Reports.js';
 import LeavingCertificateGenerator from './Pages/Common/LeavingCertificateGenerator.js';
+import GoogleSheetPage from './Pages/Common/GoogleSheetPage.js';
+
 
 // Teacher Pages
 import TeacherDashboard from './Pages/Teacher/TeacherDashboard.js';
@@ -165,6 +167,8 @@ function App() {
                     <Route path="/Profile" element={<Profile />} />
                     <Route path="/StudentProfiles" element={<StudentProfiles />} />
                     <Route path="/LeavingCertificateGenerator" element={<LeavingCertificateGenerator />} />
+                    <Route path="/class-schedule" element={<GoogleSheetPage />} />
+
   
                     {/* Catch-All */}
                     <Route path="*" element={<Navigate to={`/${userRole}Dashboard`} />} />

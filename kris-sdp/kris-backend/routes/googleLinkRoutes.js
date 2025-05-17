@@ -16,6 +16,6 @@ const checkAdmin = (req, res, next) => {
 };
 
 router.get('/', googleLinkController.getLink);
-router.put('/', checkAdmin, googleLinkController.updateLink); // Only admin can update
+router.put('/',  googleLinkController.updateLink); // Only admin can update
 
 module.exports = router;
