@@ -15,6 +15,8 @@ const printer = new PdfPrinter(fonts);
 
 async function generatePdf(dataArray) {
   const logoBase64 = fs.readFileSync('uploads/school_logo.png', { encoding: 'base64' });
+    const paidBase64  = fs.readFileSync('uploads/paid.jpg',        { encoding: 'base64' }); // ← NEW
+
 
   const tableBody = [
     [
@@ -58,6 +60,12 @@ async function generatePdf(dataArray) {
           widths: ['30%', '*'],
           body: tableBody
         }
+      },
+      {
+        image: `data:image/jpg;base64,${paidBase64}`,
+        alignment: 'center',     // centre under the table
+        width: 150,              // adjust size as you like
+        margin: [0, 10, 0, 0]    // top margin to separate from table
       }
     ],
     footer: (currentPage, pageCount) => {

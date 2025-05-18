@@ -522,6 +522,7 @@ const StuManagement = () => {
                   />
                 </th>
                 {/*existing headers */}
+                <th className="border-2 border-black px-4 py-2 text-center">Student ID</th>
                 <th className="border-2 border-black px-4 py-2 text-center">Student Name</th>
                 <th className="border-2 border-black px-4 py-2 text-center">Class</th>
                 <th className="border-2 border-black px-4 py-2 text-center">Academic Year</th>
@@ -550,6 +551,8 @@ const StuManagement = () => {
                       onChange={() => toggleSelect(student.Student_ID)}
                     />
                   </td>
+
+                  <td className="border-2 border-black px-4 py-2 text-center">{student.Student_ID}</td>
 
                   <td className="border-2 border-black px-4 py-2 text-center">{student.Full_name}</td>
                   <td className="border-2 border-black px-4 py-2 text-center">{student.Class_name}</td>

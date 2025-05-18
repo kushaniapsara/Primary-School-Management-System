@@ -16,7 +16,7 @@ const ParentPayment = () => {
   const [downloadReady, setDownloadReady] = useState(false);
   const [lastPaymentData, setLastPaymentData] = useState(null);
   // NEW: payload that will be sent to the server
-const [slipPayload, setSlipPayload] = useState(null);
+  const [slipPayload, setSlipPayload] = useState(null);
 
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const [slipPayload, setSlipPayload] = useState(null);
       setMessage('Please enter a payment amount.');
       return;
     }
-  let userID;            // ← declare it here so it’s in scope later
+    let userID;            // ← declare it here so it’s in scope later
 
     try {
       const token = localStorage.getItem('token');
@@ -73,13 +73,13 @@ const [slipPayload, setSlipPayload] = useState(null);
       setTotalAmount(res.data.totalAmount);
 
       const historyRes = await axios.get(`http://localhost:5001/api/students/payment/history/${userID}`);
-const updatedHistory = historyRes.data;
-    setPaymentHistory(updatedHistory);
-    
+      const updatedHistory = historyRes.data;
+      setPaymentHistory(updatedHistory);
+
       // Set the last payment data for the slip
-    const lastPayment = updatedHistory[updatedHistory.length - 1];
-    setLastPaymentData(lastPayment);
-    setDownloadReady(true);
+      const lastPayment = updatedHistory[updatedHistory.length - 1];
+      setLastPaymentData(lastPayment);
+      setDownloadReady(true);
 
     } catch (err) {
       console.error('Payment error:', err);
@@ -88,61 +88,61 @@ const updatedHistory = historyRes.data;
     }
 
 
-//for slip
-// 1️⃣ Build the payload **before** you clear the form
-  const payload = {
-    student_id: userID,
-    amount: parseFloat(paymentAmount).toFixed(2),   // keep it positive
-    description: description || 'Online payment',
+    //for slip
+    // 1️⃣ Build the payload **before** you clear the form
+    const payload = {
+      student_id: userID,
+      amount: parseFloat(paymentAmount).toFixed(2),   // keep it positive
+      description: description || 'Online payment',
+    };
+    setSlipPayload(payload);
+
+    // 2️⃣ Clear form, update UI as before
+    setPaymentAmount('');
+    setDescription('');
+    setDownloadReady(true);
+    console.log('Slip payload:', payload);    // should show student_id
+
+
   };
-  setSlipPayload(payload);
-
-  // 2️⃣ Clear form, update UI as before
-  setPaymentAmount('');
-  setDescription('');
-  setDownloadReady(true);
-console.log('Slip payload:', payload);    // should show student_id
 
 
+
+
+  //slip
+  const handleDownloadSlip = async (payment) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:5001/api/students/payment/download-slip',
+        {
+          student_id: payment.student_id,
+          amount: payment.amount,
+          description: payment.description,
+        },
+        {
+          responseType: 'blob',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Payment_Slip.pdf');
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Failed to download payment slip:', error);
+    }
   };
-
-
-
-
-//slip
-const handleDownloadSlip = async (payment) => {
-  try {
-    const response = await axios.post(
-      'http://localhost:5001/api/students/payment/download-slip',
-      {
-        student_id: payment.student_id,
-        amount: payment.amount,
-        description: payment.description,
-      },
-      {
-        responseType: 'blob',
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
-
-    const blob = new Blob([response.data], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'Payment_Slip.pdf');
-    link.click();
-    link.remove();
-  } catch (error) {
-    console.error('Failed to download payment slip:', error);
-  }
-};
 
 
 
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl mt-8">
-      <h2 className="text-2xl font-bold mb-4 text-blue-600">💳 Payment Information</h2>
+      <h2 className="text-2xl font-bold mb-4 text-black">Payment Information</h2>
 
       {studentData ? (
         <div>
@@ -186,14 +186,14 @@ const handleDownloadSlip = async (payment) => {
           )}
 
 
-{downloadReady && slipPayload && (
-  <button
-    onClick={() => handleDownloadSlip(slipPayload)}
-    className="mb-6 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md"
-  >
-    Download Payment Slip 📄
-  </button>
-)}
+          {downloadReady && slipPayload && (
+            <button
+              onClick={() => handleDownloadSlip(slipPayload)}
+              className="mb-6 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md"
+            >
+              Download Payment Slip 📄
+            </button>
+          )}
 
 
 

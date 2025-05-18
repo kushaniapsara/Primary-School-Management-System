@@ -9,6 +9,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import AttachMoneyIcon from "@mui/icons-material/CalendarToday";
+import VerifiedIcon from '@mui/icons-material/Verified';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { NavLink } from 'react-router-dom';
 
@@ -96,6 +97,13 @@ useEffect(() => {
 
           <li>
             <NavLink to="/LeavingCertificateGenerator" className={linkClasses}>
+              <VerifiedIcon className="mr-2" />
+              Leaving Certificates
+            </NavLink>
+          </li>
+
+           <li>
+            <NavLink to="/Reports" className={linkClasses}>
               <AssessmentIcon className="mr-2" />
               Reports
             </NavLink>

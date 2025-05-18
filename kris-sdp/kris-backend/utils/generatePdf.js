@@ -21,10 +21,10 @@ async function generatePdf(data, fromDate, toDate, reportType) {
     let tableHeaders = [];
     let tableRows = [];
 
-     // Utility function to safely convert value to string
-     const safeText = (value) => (value !== undefined && value !== null ? String(value) : '');
+    // Utility function to safely convert value to string
+    const safeText = (value) => (value !== undefined && value !== null ? String(value) : '');
 
-    
+
 
     switch (reportType) {
         case 'attendance':
@@ -51,7 +51,7 @@ async function generatePdf(data, fromDate, toDate, reportType) {
             reportTitle = 'Extra-Curricular Activities Report';
             tableHeaders = ['Activity Name', 'Teacher_incharge', 'Location'];
             tableRows = data.map(row => [
-                { text: row.Activity_name  || '' },
+                { text: row.Activity_name || '' },
                 { text: row.Teacher_incharge || '' },
                 { text: row.Location || '' }
             ]);
@@ -61,9 +61,11 @@ async function generatePdf(data, fromDate, toDate, reportType) {
             reportTitle = 'Payment Report';
             tableHeaders = ['Student ID', 'Amount', 'Paid Date'];
             tableRows = data.map(row => [
-                { text: row.Student_ID || '' },
-                { text: row.Amount || '' },
-                { text: row.Paid_Date || '' }
+                { text: row.student_id || '' },
+                { text: row.amount || '' },
+                { text: row.date || '' }
+
+
             ]);
             break;
 
@@ -122,17 +124,17 @@ async function generatePdf(data, fromDate, toDate, reportType) {
         ],
 
 
-        footer: function(currentPage, pageCount) {
-    const now = new Date();
-    const formattedDateTime = now.toLocaleString(); // e.g., "5/17/2025, 10:30:15 AM"
+        footer: function (currentPage, pageCount) {
+            const now = new Date();
+            const formattedDateTime = now.toLocaleString(); // e.g., "5/17/2025, 10:30:15 AM"
 
-    return {
-        columns: [
-            { text: `Generated on: ${formattedDateTime}`, alignment: 'left', fontSize: 8, margin: [40, 0, 0, 0] },
-            { text: `Page ${currentPage} of ${pageCount}`, alignment: 'right', fontSize: 8, margin: [0, 0, 40, 0] }
-        ]
-    };
-},
+            return {
+                columns: [
+                    { text: `Generated on: ${formattedDateTime}`, alignment: 'left', fontSize: 8, margin: [40, 0, 0, 0] },
+                    { text: `Page ${currentPage} of ${pageCount}`, alignment: 'right', fontSize: 8, margin: [0, 0, 40, 0] }
+                ]
+            };
+        },
 
 
         styles: {

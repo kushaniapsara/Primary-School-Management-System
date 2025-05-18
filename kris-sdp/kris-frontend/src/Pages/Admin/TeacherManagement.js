@@ -443,6 +443,7 @@ const TeacherManagement = () => {
                     onClick={(e) => e.stopPropagation()}
                   />
                 </th>
+                <th className="border-2 border-black px-4 py-2 text-center"><b>Teacher ID</b></th>
                 <th className="border-2 border-black px-4 py-2 text-center"><b>Full Name</b></th>
                 <th className="border-2 border-black px-4 py-2 text-center"><b>Class</b></th>
                 <th className="border-2 border-black px-4 py-2 text-center"><b>Academic Year</b></th>
@@ -470,6 +471,7 @@ const TeacherManagement = () => {
                     />
                   </td>
 
+                  <td className="border-2 border-black px-4 py-2 text-center">{teacher.Teacher_ID}</td>
 
                   <td className="border-2 border-black px-4 py-2 text-center">{teacher.Full_name}</td>
                   <td className="border-2 border-black px-4 py-2 text-center">{teacher.Class_name}</td>
