@@ -15,6 +15,9 @@ const ParentPayment = () => {
   const [loading, setLoading] = useState(false);
   const [downloadReady, setDownloadReady] = useState(false);
   const [lastPaymentData, setLastPaymentData] = useState(null);
+  // NEW: payload that will be sent to the server
+const [slipPayload, setSlipPayload] = useState(null);
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -47,11 +50,13 @@ const ParentPayment = () => {
       setMessage('Please enter a payment amount.');
       return;
     }
+  let userID;            // ← declare it here so it’s in scope later
 
     try {
       const token = localStorage.getItem('token');
       const decoded = jwtDecode(token);
-      const userID = decoded.userID;
+      // const 
+      userID = decoded.userID;
 
       await axios.post('http://localhost:5001/api/students/payment/add', {
         student_id: userID,
@@ -81,29 +86,58 @@ const updatedHistory = historyRes.data;
       setMessageType('error');
       setMessage('Failed to submit payment.');
     }
+
+
+//for slip
+// 1️⃣ Build the payload **before** you clear the form
+  const payload = {
+    student_id: userID,
+    amount: parseFloat(paymentAmount).toFixed(2),   // keep it positive
+    description: description || 'Online payment',
+  };
+  setSlipPayload(payload);
+
+  // 2️⃣ Clear form, update UI as before
+  setPaymentAmount('');
+  setDescription('');
+  setDownloadReady(true);
+console.log('Slip payload:', payload);    // should show student_id
+
+
   };
 
-const handleDownloadSlip = async () => {
-    if (!lastPaymentData) return;
 
-    try {
-      const response = await axios.post(
-        'http://localhost:5001/api/students/payment/download-slip',
-        lastPaymentData,
-        { responseType: 'blob' }
-      );
 
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = 'payment_slip.pdf';
-      link.click();
-    } catch (err) {
-      console.error('Failed to download payment slip:', err);
-      setMessageType('error');
-      setMessage('Failed to download payment slip.');
-    }
-  };
+
+//slip
+const handleDownloadSlip = async (payment) => {
+  try {
+    const response = await axios.post(
+      'http://localhost:5001/api/students/payment/download-slip',
+      {
+        student_id: payment.student_id,
+        amount: payment.amount,
+        description: payment.description,
+      },
+      {
+        responseType: 'blob',
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Payment_Slip.pdf');
+    link.click();
+    link.remove();
+  } catch (error) {
+    console.error('Failed to download payment slip:', error);
+  }
+};
+
+
 
 
   return (
@@ -152,14 +186,16 @@ const handleDownloadSlip = async () => {
           )}
 
 
-{downloadReady && (
-            <button
-              onClick={handleDownloadSlip}
-              className="mb-6 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md"
-            >
-              Download Payment Slip 📄
-            </button>
-          )}
+{downloadReady && slipPayload && (
+  <button
+    onClick={() => handleDownloadSlip(slipPayload)}
+    className="mb-6 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md"
+  >
+    Download Payment Slip 📄
+  </button>
+)}
+
+
 
 
           <hr className="my-6" />
@@ -173,7 +209,7 @@ const handleDownloadSlip = async () => {
                     <th className="px-4 py-2 border">Date</th>
                     <th className="px-4 py-2 border">Amount</th>
                     <th className="px-4 py-2 border">Description</th>
-                    <th className="px-4 py-2 border">Month/Year</th>
+                    <th className="px-4 py-2 border">Type</th>
                   </tr>
                 </thead>
                 <tbody>

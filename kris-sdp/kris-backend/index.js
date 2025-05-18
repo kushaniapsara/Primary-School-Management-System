@@ -90,6 +90,7 @@ app.use('/api/report', reportRoutes);
 // Use the extra curricular routes
 app.use('/api', extraCurricularPageRoutes);
 
+
 app.use('/api/meal-chart', mealChartRoutes); //mealchart
 
 app.use('/api/google-link', googleLinkRoutes);

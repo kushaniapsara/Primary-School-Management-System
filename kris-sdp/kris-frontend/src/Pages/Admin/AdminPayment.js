@@ -178,7 +178,7 @@ const AdminPayment = () => {
               <select
                 value={selectedStudentID}
                 onChange={e => setSelectedStudentID(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               >
                 <option value="" disabled>Select Student</option>
@@ -197,7 +197,7 @@ const AdminPayment = () => {
                 value={customAmount}
                 onChange={handleAmountChange}
                 placeholder="e.g. 1500.00"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -208,8 +208,8 @@ const AdminPayment = () => {
                 type="text"
                 value={customDescription}
                 onChange={e => setCustomDescription(e.target.value)}
-                placeholder="e.g. Lab Fee"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="e.g. Extra Class"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -219,7 +219,7 @@ const AdminPayment = () => {
                 type="submit"
                 disabled={isAddButtonDisabled}
                 className={`w-full py-2 rounded text-white font-semibold transition ${
-                  isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700'
+                  isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                 }`}
               >
                 Add Fee
@@ -327,7 +327,7 @@ const AdminPayment = () => {
                   Description
                 </th>
                 <th className="p-4 text-left font-semibold text-gray-700" style={{ minWidth: '120px' }}>
-                  Month/Year
+                  Type
                 </th>
               </tr>
             </thead>

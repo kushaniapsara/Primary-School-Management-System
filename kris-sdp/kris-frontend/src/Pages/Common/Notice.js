@@ -122,7 +122,7 @@ const Notice = () => {
 
   return (
 <div className="flex w-full h-full">
-<div className="flex-1 bg-blue-900">
+{/* <div className="flex-1 bg-blue-900"> */}
        
 
        
@@ -231,7 +231,7 @@ const Notice = () => {
           </div>
         )}
       </div>
-    </div>
+    // </div>
   );
 };
 

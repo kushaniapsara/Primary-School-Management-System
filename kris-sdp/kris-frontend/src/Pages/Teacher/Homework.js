@@ -19,14 +19,14 @@ const Homework = () => {
     Due_date: "",
   });
 
-const [userRole, setUserRole] = useState(""); // NEW state to track user role
+  const [userRole, setUserRole] = useState(""); // NEW state to track user role
 
 
 
-  
 
-// to hide buttons
- useEffect(() => {
+
+  // to hide buttons
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -50,17 +50,17 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
         console.error("No token found!");
         return;
       }
-  
+
       const response = await axios.get("http://localhost:5001/api/homework", {
         headers: { Authorization: token }, // Send token for authentication
       });
-  
+
       setHomeworkList(response.data);
     } catch (error) {
       console.error("Error fetching homework data!", error);
     }
   };
-  
+
 
   useEffect(() => {
     fetchHomework();
@@ -76,9 +76,9 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
   const handleSaveHomework = async () => {
     try {
       const token = localStorage.getItem("token");
-  
+
       const { Homework_task, Due_date } = homeworkData;
-  
+
       if (editingHomework) {
         // Update existing homework
         await axios.put(
@@ -86,7 +86,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
           { Homework_task, Due_date },
           { headers: { Authorization: token } }
         );
-  
+
         setHomeworkList(
           homeworkList.map((hw) =>
             hw.Homework_ID === editingHomework.Homework_ID
@@ -103,7 +103,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
         );
         setHomeworkList([...homeworkList, response.data]);
       }
-  
+
       setShowModal(false);
       setEditingHomework(null);
       setHomeworkData({ Homework_task: "", Due_date: "" }); // Removed Class_ID
@@ -112,7 +112,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
       alert("Failed to save homework. Please try again.");
     }
   };
-  
+
 
   // Open modal for adding/editing
   const openModal = (homework = null) => {
@@ -145,7 +145,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
       }
       alert("Failed to save homework. Please try again.");
     }
-    
+
   };
 
   return (
@@ -153,7 +153,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
       <div className="flex-1 bg-gray-200">
         <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
           <h1 className="text-2xl font-bold">Homework</h1>
-          
+
         </header>
 
         <div className="flex justify-between items-center px-8 py-4">
@@ -167,16 +167,16 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
               Filter
             </button>
           </div> */}
-          {userRole === "Teacher" && ( 
+          {userRole === "Teacher" && (
 
-          <button
-            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            onClick={() => openModal()}
-          >
-            <AddIcon className="mr-2" />
-            Add Activity
-          </button>
-        )} 
+            <button
+              className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              onClick={() => openModal()}
+            >
+              <AddIcon className="mr-2" />
+              Add Activity
+            </button>
+          )}
         </div>
 
         <div className="px-8">
@@ -193,15 +193,21 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
                       <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="text-blue-600 hover:text-blue-800" onClick={() => openModal(homework)}>
-                        <EditIcon />
-                      </button>
-                      <button
-                        className="text-red-600 hover:text-red-800"
-                        onClick={() => handleDeleteHomework(homework.Homework_ID)}
-                      >
-                        <DeleteIcon />
-                      </button>
+
+                      {userRole === "Teacher" && (
+
+                        <button className="text-blue-600 hover:text-blue-800" onClick={() => openModal(homework)}>
+                          <EditIcon />
+                        </button>)}
+
+                      {userRole === "Teacher" && (
+
+                        <button
+                          className="text-red-600 hover:text-red-800"
+                          onClick={() => handleDeleteHomework(homework.Homework_ID)}
+                        >
+                          <DeleteIcon />
+                        </button>)}
                     </div>
                   </div>
                 ))}
@@ -246,7 +252,7 @@ const [userRole, setUserRole] = useState(""); // NEW state to track user role
                 value={homeworkData.Due_date}
                 onChange={handleInputChange}
               />
-              
+
               <div className="flex justify-end space-x-4">
                 <button className="px-4 py-2 bg-gray-300 rounded-md" onClick={() => setShowModal(false)}>
                   Cancel

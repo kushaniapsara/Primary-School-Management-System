@@ -24,9 +24,9 @@ const MusicPage = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("title", title);  // Replace with actual value
-    formData.append("description", description); // Replace with actual value
-    formData.append("class_id", classId); // Replace with actual Class_ID
+    formData.append("title", title);  
+    // formData.append("description", description); 
+    // formData.append("class_id", classId);
 
 
     try {
@@ -98,9 +98,9 @@ const MusicPage = () => {
 
           <div className="flex items-center space-x-4 bg-white p-4 rounded-lg">
             <input type="file" onChange={handleFileChange} className="border p-2 rounded w-1/4" />
-            <input type="text" placeholder="Title" onChange={(e) => setTitle(e.target.value)} className="border p-2 rounded w-1/4" />
-            <input type="text" placeholder="Description" onChange={(e) => setDescription(e.target.value)} className="border p-2 rounded w-1/4" />
-            <input type="number" placeholder="Class ID" onChange={(e) => setClassId(e.target.value)} className="border p-2 rounded w-1/6" />
+            <input type="text" placeholder="Caption" onChange={(e) => setTitle(e.target.value)} className="border p-2 rounded w-1/4" />
+            {/* <input type="text" placeholder="Description" onChange={(e) => setDescription(e.target.value)} className="border p-2 rounded w-1/4" /> */}
+            {/* <input type="number" placeholder="Class ID" onChange={(e) => setClassId(e.target.value)} className="border p-2 rounded w-1/6" /> */}
             <button onClick={handleUpload} className="bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
           </div>
         )}

@@ -140,7 +140,7 @@ const ActivityDetails = () => {
         {/* Right: Achievements Section */}
         <div className="w-2/3 bg-white shadow-lg rounded-xl p-6 min-h-[500px] flex flex-col">
           <Typography variant="h5" className="font-semibold text-gray-800 mb-4">
-            Achievements
+            Achievements of Students
           </Typography>
           {/* Upload Button */}
           {/* Upload Images + Caption */}
@@ -177,6 +177,7 @@ const ActivityDetails = () => {
               )}
 
                
+                 {userRole === "Admin" && (
 
               <IconButton
                     size="small"
@@ -184,7 +185,7 @@ const ActivityDetails = () => {
                     onClick={() => handleDeleteImage(image.Image_ID)}
                     >
                     <Delete fontSize="small" className="text-red-500" />
-                  </IconButton>
+                  </IconButton> )}
                 </div>
               ))
             ) : (

@@ -80,7 +80,7 @@ const getStudentPaymentHistory = (req, res) => {
     const studentID = req.params.id;
   
     const query = `
-      SELECT id, date, amount, description, month_year
+      SELECT id, date, amount, description, month_year, student_id
       FROM student_payable
       WHERE student_id = ?
       ORDER BY date DESC`;
@@ -97,9 +97,14 @@ const getStudentPaymentHistory = (req, res) => {
   
   // New: Generate and send payment slip as PDF
 const downloadPaymentSlip = (req, res) => {
+      console.log("Received for PDF:", req.body); // ✅ log raw data
+
+  
   const { student_id, amount, description } = req.body;
 
-  const query = 'SELECT Name_with_initials FROM student WHERE Student_ID = ?';
+
+
+  const query = 'SELECT Name_with_initials FROM Student WHERE Student_ID = ?';
 
   pool.query(query, [student_id], async (err, result) => {
     if (err || result.length === 0) {
