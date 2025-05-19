@@ -90,7 +90,7 @@ const ParentNavbar = () => {
           </li>
 
           <li>
-            <NavLink to="/Reports" className={linkClasses}>
+            <NavLink to="/ProgressReport" className={linkClasses}>
               <AssessmentIcon className="mr-2" />
               Reports
             </NavLink>

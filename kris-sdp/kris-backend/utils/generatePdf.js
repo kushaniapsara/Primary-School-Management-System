@@ -39,18 +39,21 @@ async function generatePdf(data, fromDate, toDate, reportType) {
 
         case 'student':
             reportTitle = 'Student Report';
-            tableHeaders = ['Student ID', 'Full Name', 'Grade'];
+            tableHeaders = ['Student ID', 'Full Name', 'Syllabus', 'Contact Number'];
             tableRows = data.map(row => [
                 { text: row.Student_ID || '' },
                 { text: row.Full_name || '' },
-                { text: row.Grade || '' }
+                { text: row.Syllabus || '' },
+                { text: row.Contact_number || '' }
+
             ]);
             break;
 
         case 'extra-curricular':
             reportTitle = 'Extra-Curricular Activities Report';
-            tableHeaders = ['Activity Name', 'Teacher_incharge', 'Location'];
+            tableHeaders = ['Activity_ID', 'Activity Name', 'Teacher_incharge', 'Location'];
             tableRows = data.map(row => [
+                { text: row.Activity_ID || '' },
                 { text: row.Activity_name || '' },
                 { text: row.Teacher_incharge || '' },
                 { text: row.Location || '' }
@@ -59,15 +62,69 @@ async function generatePdf(data, fromDate, toDate, reportType) {
 
         case 'payment':
             reportTitle = 'Payment Report';
-            tableHeaders = ['Student ID', 'Amount', 'Paid Date'];
+            tableHeaders = ['Student ID', 'Amount', 'Description', 'Paid Date'];
             tableRows = data.map(row => [
                 { text: row.student_id || '' },
                 { text: row.amount || '' },
-                { text: row.date || '' }
+                { text: row.description || '' },
+                { text: safeText(row.date) || '' }
 
 
             ]);
             break;
+
+
+
+        case 'progress':
+            reportTitle = 'Progress Report';
+
+            const student = data[0]; // All rows belong to this student
+            const fullName = student.Full_name || '';
+            const studentId = student.Student_ID || '';
+
+            // Subject rows
+            let totalMarks = 0;
+            let subjectCount = 0;
+            const progressRows = [
+                [
+                    { text: 'Subject', bold: true, fillColor: '#f0f0f0' },
+                    { text: 'Marks', bold: true, fillColor: '#f0f0f0' }
+                ]
+            ];
+
+            data.forEach(row => {
+                const marks = parseFloat(row.Marks);
+                totalMarks += marks;
+                subjectCount++;
+
+                progressRows.push([
+                    { text: row.Subject_name || '' },
+                    { text: marks.toFixed(2) }
+                ]);
+            });
+
+            const average = subjectCount ? (totalMarks / subjectCount).toFixed(2) : '0.00';
+
+            // Final table
+            tableRows = [
+                [
+                    { text: `Student ID: ${studentId}`, bold: true },
+                    { text: `Name: ${fullName}`, bold: true }
+                ],
+                ...progressRows,
+                [
+                    { text: 'Average Marks', bold: true },
+                    { text: average, bold: true }
+                ]
+            ];
+
+            // 2-column structure instead of 4
+            tableHeaders = ['', ''];
+            break;
+
+
+
+
 
         default:
             reportTitle = 'Report';
@@ -113,11 +170,14 @@ async function generatePdf(data, fromDate, toDate, reportType) {
                 margin: [0, 0, 0, 10]
             },
             { text: reportTitle, style: 'subheader' },
-            { text: `From ${fromDate} to ${toDate}`, style: 'subheader' },
-            {
+            // Only show date range if report type is NOT progress
+            ...(reportType !== 'progress'
+                ? [{ text: `From ${fromDate} to ${toDate}`, style: 'subheader' }]
+                : []
+            ), {
                 table: {
                     headerRows: 1,
-                    widths: ['*', '*', '*'],
+                    widths: ['*', '*', '*', '*'],
                     body: tableBody
                 }
             }

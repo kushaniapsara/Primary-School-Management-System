@@ -4,7 +4,8 @@ const pool = require("../config/db");
   const Teacher = {
     getAll: (filters, callback) => {
       let sql = `
-        SELECT 
+        SELECT
+        Teacher.Teacher_ID, 
           Teacher.Full_name, 
           Teacher.Name_with_initials, 
           Teacher.Age, 

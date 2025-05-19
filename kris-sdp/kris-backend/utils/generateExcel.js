@@ -49,11 +49,11 @@ function getTableHeader(reportType) {
         case 'attendance':
             return ['Student ID', 'Date', 'Status'];
         case 'student':
-            return ['Student ID', 'Full Name', 'Grade'];
+            return ['Student ID', 'Full Name', 'Syllabus', 'Contact_number'];
         case 'extra-curricular':
-            return ['Activity Name', 'Teacher_incharge', 'Location'];
+            return ['Activity_ID', 'Activity Name', 'Teacher_incharge', 'Location'];
         case 'payment':
-            return ['Student ID', 'Amount', 'Paid Date'];
+            return ['Student ID', 'Amount', 'Description', 'Paid Date'];
         default:
             return [];
     }
@@ -65,11 +65,16 @@ function formatDataByType(data, reportType) {
         case 'attendance':
             return data.map(row => [row.Student_ID || '', row.Date || '', row.Status || '']);
         case 'student':
-            return data.map(row => [row.Student_ID || '', row.Full_name || '', row.Grade || '']);
+            return data.map(row => [row.Student_ID || '', row.Full_name || '', row.Syllabus || '', row.Contact_number || '']);
         case 'extra-curricular':
-            return data.map(row => [row.Activity_name || '', row.Teacher_incharge || '', row.Location || '']);
+            return data.map(row => [row.Activity_ID || '', row.Activity_name || '', row.Teacher_incharge || '', row.Location || '']);
         case 'payment':
-            return data.map(row => [row.Student_ID || '', row.Amount || '', row.Paid_Date || '']);
+            return data.map(row => [
+                row.student_id || row.Student_ID || '',
+                row.amount || row.Amount || '',
+                row.description || row.Description || '',
+                row.date || row.Date || ''
+            ]);
         default:
             return [];
     }

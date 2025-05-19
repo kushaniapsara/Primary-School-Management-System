@@ -18,17 +18,17 @@ exports.generateReport = async (req, res) => {
       break;
 
     case 'student':
-  sql = 'SELECT Student_ID, Full_name, Grade FROM Student';
+  sql = 'SELECT Student_ID, Full_name, Syllabus, Contact_number FROM Student';
       params = [];
       break;
 
     case 'extra-curricular':
-      sql = 'SELECT Activity_name, Teacher_incharge, Location FROM ExtraCurricularActivity';
+      sql = 'SELECT Activity_ID, Activity_name, Teacher_incharge, Location FROM ExtraCurricularActivity';
       params = [];
       break;
 
     case 'payment':
-      sql = 'SELECT student_id, amount, date FROM student_payable WHERE date BETWEEN ? AND ?';
+      sql = 'SELECT student_id, amount, description, date FROM student_payable WHERE date BETWEEN ? AND ?';
       //params = [];
       break;
 
@@ -195,4 +195,59 @@ exports.getStudentDetails = (req, res) => {
       });
     });
   });
+};
+
+
+
+//for progress report
+
+exports.generateProgressReport = async (req, res) => {
+  const { format } = req.body;
+  const studentId = req.userID; // Extracted from JWT by middleware
+
+  if (!studentId) {
+    return res.status(401).send({ error: 'Unauthorized or Student ID missing' });
+  }
+
+  if (format.toLowerCase() !== 'pdf') {
+    return res.status(400).send({ error: 'Only PDF format is supported for progress reports.' });
+  }
+
+  try {
+    // 1. Get student progress data
+    const [results] = await db.promise().query(
+      `SELECT 
+        s.Student_ID, 
+        s.Full_name, 
+        sub.Subject_name, 
+        ss.Marks 
+      FROM StudentSubject ss
+      JOIN Student s ON ss.Student_ID = s.Student_ID
+      JOIN Subject sub ON ss.Subject_ID = sub.Subject_ID
+      WHERE s.Student_ID = ?`,
+      [studentId]
+    );
+
+    if (results.length === 0) {
+      return res.status(404).send({ error: 'No progress data found for this student' });
+    }
+
+    // 2. Generate PDF
+    const timestamp = Date.now();
+    const filename = `progress_report_${studentId}_${timestamp}.pdf`;
+    const filePath = path.join(__dirname, '..', 'downloads', filename);
+
+    const buffer = await generatePdf(results, '', '', 'progress');
+    fs.writeFileSync(filePath, buffer);
+
+    res.send({
+      success: true,
+      file: filename,
+      fileUrl: `/api/report/download/${filename}` // This should match your download route
+    });
+
+  } catch (err) {
+    console.error('Progress Report Error:', err);
+    res.status(500).send({ error: 'Failed to generate progress report' });
+  }
 };

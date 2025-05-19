@@ -2,7 +2,9 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
-const { generateReport, generateLeavingCertificate, getStudents, getStudentDetails} = require('../controllers/reportController');
+const verifyToken = require('../middleware/auth'); // Ensure token validation
+
+const { generateReport, generateLeavingCertificate, getStudents, getStudentDetails, generateProgressReport} = require('../controllers/reportController');
 
 router.post('/generate', generateReport);
 
@@ -11,6 +13,10 @@ router.post('/generate-leaving-certificate', generateLeavingCertificate);
 
 router.get('/students', getStudents);
 router.get('/student/:studentId', getStudentDetails);
+
+//for progress reports
+router.post('/progress-report', verifyToken, generateProgressReport);
+
 
 // Download route
 router.get('/download/:filename', (req, res) => {
