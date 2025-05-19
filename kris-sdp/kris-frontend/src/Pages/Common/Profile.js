@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -10,6 +11,12 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+
+  const [editLinkModal, setEditLinkModal] = useState(false);
+  const [newScheduleLink, setNewScheduleLink] = useState("");
+
+    const [userRole, setUserRole] = useState("");
+  
 
   const navigate = useNavigate();
 
@@ -38,17 +45,17 @@ const Profile = () => {
     navigate("/");
   };
 
-  const handleViewStudents = async () => {
-    try {
-      const response = await axios.get("http://localhost:5001/api/students");
-      if (response.status === 200) {
-        localStorage.setItem("students", JSON.stringify(response.data));
-        navigate("/StudentProfiles");
-      }
-    } catch (error) {
-      setMessage(error.response?.data?.message || "Error fetching student profiles");
-    }
-  };
+  // const handleViewStudents = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:5001/api/students");
+  //     if (response.status === 200) {
+  //       localStorage.setItem("students", JSON.stringify(response.data));
+  //       navigate("/StudentProfiles");
+  //     }
+  //   } catch (error) {
+  //     setMessage(error.response?.data?.message || "Error fetching student profiles");
+  //   }
+  // };
 
   const handlePasswordReset = async () => {
     if (newPassword !== confirmPassword) {
@@ -84,6 +91,20 @@ const Profile = () => {
     }
   };
 
+
+  // to hide buttons
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          setUserRole(decoded.role);
+        } catch (error) {
+          console.error("Invalid token", error);
+          setUserRole("");
+        }
+      }
+    }, []);
 
   return (
 
@@ -139,18 +160,69 @@ const Profile = () => {
           <div className="mt-10 flex flex-wrap gap-4 justify-center">
             <button
               onClick={handleOpenSchedule}
-              className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
+              className="bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
             >
               📚 Class Schedule
             </button>
 
 
-            <button
+            {/* edit schedule link */}
+            {userRole === "Admin" && (
+              <button
+                onClick={() => setEditLinkModal(true)}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
+              >
+                ✏️
+              </button>
+            )}
+
+            {editLinkModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-white text-black p-6 rounded-xl shadow-lg w-full max-w-md">
+                  <h2 className="text-2xl font-bold mb-4">Edit Class Schedule Link</h2>
+                  <input
+                    type="text"
+                    placeholder="Enter new schedule link"
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 mb-4"
+                    value={newScheduleLink}
+                    onChange={(e) => setNewScheduleLink(e.target.value)}
+                  />
+                  <div className="flex justify-between">
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await axios.put(
+                            "http://localhost:5001/api/google-link",
+                            { link: newScheduleLink }
+                          );
+                          setMessage("Schedule link updated.");
+                          setEditLinkModal(false);
+                        } catch (error) {
+                          setMessage(error.response?.data?.error || "Failed to update link.");
+                        }
+                      }}
+                      className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditLinkModal(false)}
+                      className="bg-gray-400 text-black px-4 py-2 rounded-md hover:bg-gray-500"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+
+            {/* <button
               onClick={handleViewStudents}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
             >
               👥 View Student Profiles
-            </button>
+            </button> */}
             <button
               onClick={() => setShowPasswordModal(true)}
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-lg transition-all"

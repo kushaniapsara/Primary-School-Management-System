@@ -295,6 +295,8 @@ const AdminManagement = () => {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-100 border-b-2 border-black">
+                  <th className="border-2 border-black px-4 py-2 text-center"><b>Admin ID</b></th>
+
                   <th className="border-2 border-black px-4 py-2 text-center"><b>Full Name</b></th>
                   {/*<th className="border-2 border-black px-4 py-2 text-center"><b>Class</b></th>*/}
                   <th className="border-2 border-black px-4 py-2 text-center"><b>Contact</b></th>
@@ -308,6 +310,8 @@ const AdminManagement = () => {
                     className="border-b-2 border-black bg-gray-200 cursor-pointer hover:bg-gray-400"
                     onClick={() => openModal(admin)} // ✅ Correctly pass admin data
                   >
+                    <td className="border-2 border-black px-4 py-2 text-center">{admin.Admin_ID}</td>
+
                     <td className="border-2 border-black px-4 py-2 text-center">{admin.Full_name}</td>
                     {/* <td className="border-2 border-black px-4 py-2 text-center">{admin.Class}</td>*/}
                     <td className="border-2 border-black px-4 py-2 text-center">{admin.Contact_number}</td>

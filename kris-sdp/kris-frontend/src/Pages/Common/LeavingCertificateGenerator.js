@@ -172,6 +172,9 @@ const LeavingCertificateGenerator = () => {
               )}
 
               <form onSubmit={handleSubmit} className="grid gap-4">
+                <label htmlFor="dateOfAdmission" className="block text-sm font-medium mb-1">
+                  Date of Admission
+                </label>
                 {/* Date of Admission */}
                 <input
                   type="date"
@@ -215,7 +218,9 @@ const LeavingCertificateGenerator = () => {
                 )}
 
 
-
+                <label htmlFor="dateOfLeaving" className="block text-sm font-medium mb-1">
+                  Date of Leaving
+                </label>
                 {/* Date of Leaving */}
                 <input
                   type="date"
