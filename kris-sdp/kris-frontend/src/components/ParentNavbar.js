@@ -32,7 +32,7 @@ const ParentNavbar = () => {
   return(
 <div className="bg-white-100 w-66 flex flex-col py-4">
 {/* Username at top-right */}
-<div className="absolute top-12 right-12 text-xl font-semibold text-gray-700">
+<div className="absolute top-15 right-12 text-xl font-semibold text-gray-700">
         {username ? `👋 ${username}` : ""}
       </div>
         <div className="flex flex-col items-center mb-6">

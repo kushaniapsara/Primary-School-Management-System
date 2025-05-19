@@ -161,113 +161,116 @@ function Attendance() {
 
 
   // === Count Present and Absent ===
- const presentCount = students.filter(
-  (student) => todayAttendance[student.Student_ID] === "green"
-).length;
+  const presentCount = students.filter(
+    (student) => todayAttendance[student.Student_ID] === "green"
+  ).length;
 
-const absentCount = students.filter(
-  (student) => todayAttendance[student.Student_ID] === "pink"
-).length;
+  const absentCount = students.filter(
+    (student) => todayAttendance[student.Student_ID] === "pink"
+  ).length;
 
 
 
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-1 bg-blue-900">
-        <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
-          <h1 className="text-2xl font-bold">Daily Attendance</h1>
-        </header>
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
 
-        <div className="bg-blue-900 p-4 rounded-lg">
-          <div className="overflow-x-auto bg-gray-200 p-4 rounded-lg">
-            <table className="table-auto w-full border-separate border-spacing-2 border border-blue-500 shadow-md rounded-lg">
-              <thead>
-                <tr className="bg-blue-100">
-                  <th className="border border-blue-400 p-2 rounded-md">
-                    Student Name
-                  </th>
-                  {dates.map((dateObj) => (
-                    <th
-                      key={dateObj}
-                      className="border border-blue-400 p-2 rounded-md"
-                    >
-                      {dateObj.label}
+      <div className="flex min-h-screen">
+        <div className="flex-1 bg-blue-900">
+          <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
+            <h1 className="text-2xl font-bold">Daily Attendance</h1>
+          </header>
+
+          <div className="bg-blue-900 p-4 rounded-lg">
+            <div className="overflow-x-auto bg-gray-200 p-4 rounded-lg">
+              <table className="table-auto w-full border-separate border-spacing-2 border border-blue-500 shadow-md rounded-lg">
+                <thead>
+                  <tr className="bg-blue-100">
+                    <th className="border border-blue-400 p-2 rounded-md">
+                      Student Name
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student) => (
-                  <tr
-                    key={student.Student_ID}
-                    className="hover:bg-gray-100 transition"
-                  >
-                    <td className="border border-blue-300 p-2 rounded-md">
-                      {student.Full_name}
-                    </td>
-
-                    {/* Display last 4 days' attendance records */}
-                    {dates.slice(0, -1).map((dateObj) => (
-                      <td
-                        key={dateObj.value}
-                        className={`border border-blue-300 p-2 rounded-md ${attendanceData[student.Student_ID]?.records[
-                          dateObj.value
-                        ]
-                          ? attendanceData[student.Student_ID].records[
-                            dateObj.value
-                          ] === "Present"
-                            ? "bg-green-400"
-                            : "bg-pink-400"
-                          : "bg-white"
-                          }`}
+                    {dates.map((dateObj) => (
+                      <th
+                        key={dateObj}
+                        className="border border-blue-400 p-2 rounded-md"
                       >
-                        {attendanceData[student.Student_ID]?.records[
-                          dateObj.value
-                        ] || ""}
-                      </td>
+                        {dateObj.label}
+                      </th>
                     ))}
-
-                    {/* Today’s Attendance (Clickable) */}
-                    <td
-                      className={`border border-blue-300 p-2 cursor-pointer rounded-md ${todayAttendance[student.Student_ID] === "green"
-                        ? "bg-green-400"
-                        : todayAttendance[student.Student_ID] === "pink"
-                          ? "bg-pink-400"
-                          : "bg-white"
-                        }`}
-                      onClick={() => handleCellClick(student.Student_ID)}
-                    ></td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {students.map((student) => (
+                    <tr
+                      key={student.Student_ID}
+                      className="hover:bg-gray-100 transition"
+                    >
+                      <td className="border border-blue-300 p-2 rounded-md">
+                        {student.Full_name}
+                      </td>
 
-          {/* Footer */}
-          <div className="flex justify-between mt-4 mx-20 items-center text-white">
-            <div className="bg-white text-blue-900 rounded-xl shadow-lg p-6 w-full max-w-sm">
-              <h2 className="text-lg font-bold mb-4 text-center">Today's Summary</h2>
-              <div className="space-y-2 text-center">
-                <p className="font-semibold">
-                  Total Students: <span className="text-black">{students.length}</span>
-                </p>
-                <p className="font-semibold">
-                  Present Today: <span className="text-green-600">{presentCount}</span>
-                </p>
-                <p className="font-semibold">
-                  Absent Today: <span className="text-red-600">{absentCount}</span>
-                </p>
-              </div>
+                      {/* Display last 4 days' attendance records */}
+                      {dates.slice(0, -1).map((dateObj) => (
+                        <td
+                          key={dateObj.value}
+                          className={`border border-blue-300 p-2 rounded-md ${attendanceData[student.Student_ID]?.records[
+                            dateObj.value
+                          ]
+                            ? attendanceData[student.Student_ID].records[
+                              dateObj.value
+                            ] === "Present"
+                              ? "bg-green-400"
+                              : "bg-pink-400"
+                            : "bg-white"
+                            }`}
+                        >
+                          {attendanceData[student.Student_ID]?.records[
+                            dateObj.value
+                          ] || ""}
+                        </td>
+                      ))}
+
+                      {/* Today’s Attendance (Clickable) */}
+                      <td
+                        className={`border border-blue-300 p-2 cursor-pointer rounded-md ${todayAttendance[student.Student_ID] === "green"
+                          ? "bg-green-400"
+                          : todayAttendance[student.Student_ID] === "pink"
+                            ? "bg-pink-400"
+                            : "bg-white"
+                          }`}
+                        onClick={() => handleCellClick(student.Student_ID)}
+                      ></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
-            <button
-              onClick={handleSave}
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Save and Submit
-            </button>
-          </div>
+            {/* Footer */}
+            <div className="flex justify-between mt-4 mx-20 items-center text-white">
+              <div className="bg-white text-blue-900 rounded-xl shadow-lg p-6 w-full max-w-sm">
+                <h2 className="text-lg font-bold mb-4 text-center">Today's Summary</h2>
+                <div className="space-y-2 text-center">
+                  <p className="font-semibold">
+                    Total Students: <span className="text-black">{students.length}</span>
+                  </p>
+                  <p className="font-semibold">
+                    Present Today: <span className="text-green-600">{presentCount}</span>
+                  </p>
+                  <p className="font-semibold">
+                    Absent Today: <span className="text-red-600">{absentCount}</span>
+                  </p>
+                </div>
+              </div>
 
+              <button
+                onClick={handleSave}
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                Save and Submit
+              </button>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>

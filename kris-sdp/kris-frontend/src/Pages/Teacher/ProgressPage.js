@@ -90,6 +90,8 @@ const ProgressPage = () => {
   };
 
   return (
+        <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
+
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">Student Progress</h1>
 
@@ -151,6 +153,7 @@ const ProgressPage = () => {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 };

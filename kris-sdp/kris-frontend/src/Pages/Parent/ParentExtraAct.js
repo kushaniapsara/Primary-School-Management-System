@@ -137,16 +137,19 @@ const ExtraActParent = () => {
 
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Content */}
-      <div className="flex-1 bg-blue-900 flex flex-col">
-        {/* Header */}
-        <div className="flex justify-between items-center p-6 bg-white border-b">
-          <h2 className="text-2xl font-bold">Extra Curricular Activities</h2>
 
-        </div>
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
 
-        {/* enrolled activities
+      <div className="flex h-screen overflow-hidden">
+        {/* Content */}
+        <div className="flex-1 bg-blue-900 flex flex-col">
+          {/* Header */}
+          <div className="flex justify-between items-center p-6 bg-white border-b">
+            <h2 className="text-2xl font-bold">Extra Curricular Activities</h2>
+
+          </div>
+
+          {/* enrolled activities
         <button
           onClick={handleEnrolledActivities}
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
@@ -158,52 +161,52 @@ const ExtraActParent = () => {
 
 
 
-        {/* Activity Cards */}
-        <div className="flex-1 overflow-y-auto p-6">
+          {/* Activity Cards */}
+          <div className="flex-1 overflow-y-auto p-6">
 
-          <div className="grid grid-cols-3 gap-6 p-6">
-            {activities.length > 0 ? (
-              activities.map((activity) => (
-                <div
-                  key={activity.Activity_ID || activity.id}
-                  className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-blue-200 transition duration-300"
-                  onClick={() => navigate(`/activity/${activity.id}`)} // Use `id`
+            <div className="grid grid-cols-3 gap-6 p-6">
+              {activities.length > 0 ? (
+                activities.map((activity) => (
+                  <div
+                    key={activity.Activity_ID || activity.id}
+                    className="p-6 bg-white border rounded-lg shadow hover:shadow-lg hover:bg-blue-200 transition duration-300"
+                    onClick={() => navigate(`/activity/${activity.id}`)} // Use `id`
 
-                >
-                  <div className="flex justify-center mb-4">
-                    <Avatar
-                      sx={{
-                        width: 150,
-                        height: 150,
-                        fontSize: "5rem",
-                        //opacity: enrolledActivities.has(activity.Activity_ID || activity.id) ? 1 : 0.5,
-                      }}
-                      className="bg-blue-100"
-                    >
-                      {activity.img}
-                    </Avatar>
+                  >
+                    <div className="flex justify-center mb-4">
+                      <Avatar
+                        sx={{
+                          width: 150,
+                          height: 150,
+                          fontSize: "5rem",
+                          //opacity: enrolledActivities.has(activity.Activity_ID || activity.id) ? 1 : 0.5,
+                        }}
+                        className="bg-blue-100"
+                      >
+                        {activity.img}
+                      </Avatar>
+                    </div>
+                    <h3 className="text-center font-semibold text-lg mb-4">
+                      {activity.name}
+                    </h3>
+                    {/* Hide Enroll Button if already enrolled */}
+                    {!enrolledActivities.has(activity.Activity_ID || activity.id) && (
+                      <button
+                        className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition"
+                        onClick={() => handleEnroll(activity.Activity_ID || activity.id)}
+                      >
+                        Enroll
+                      </button>
+                    )}
                   </div>
-                  <h3 className="text-center font-semibold text-lg mb-4">
-                    {activity.name}
-                  </h3>
-                  {/* Hide Enroll Button if already enrolled */}
-                  {!enrolledActivities.has(activity.Activity_ID || activity.id) && (
-                    <button
-                      className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition"
-                      onClick={() => handleEnroll(activity.Activity_ID || activity.id)}
-                    >
-                      Enroll
-                    </button>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p className="text-white col-span-3 text-center">No activities available</p>
-            )}
+                ))
+              ) : (
+                <p className="text-white col-span-3 text-center">No activities available</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

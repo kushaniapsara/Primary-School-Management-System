@@ -1,45 +1,45 @@
 //no need 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 
-const AdminProfile = () => {
-  const [profile, setProfile] = useState(null);
-  const [message, setMessage] = useState('');
+// const AdminProfile = () => {
+//   const [profile, setProfile] = useState(null);
+//   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem('token');
+//   useEffect(() => {
+//     const fetchProfile = async () => {
+//       try {
+//         const token = localStorage.getItem('token');
 
-        const response = await axios.get('http://localhost:5001/api/admin/profile', {
-          headers: { Authorization: token },
-        });
+//         const response = await axios.get('http://localhost:5001/api/admin/profile', {
+//           headers: { Authorization: token },
+//         });
 
-        setProfile(response.data);
-      } catch (error) {
-        setMessage(error.response?.data?.message || 'Error fetching profile');
-      }
-    };
+//         setProfile(response.data);
+//       } catch (error) {
+//         setMessage(error.response?.data?.message || 'Error fetching profile');
+//       }
+//     };
 
-    fetchProfile();
-  }, []);
+//     fetchProfile();
+//   }, []);
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-xl font-semibold mb-4">Admin Profile</h1>
-      {message && <p className="text-red-500">{message}</p>}
-      {profile ? (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <p><strong>Username:</strong> {profile.username}</p>
-          <p><strong>Full Name:</strong> {profile.full_name}</p>
-          <p><strong>Email:</strong> {profile.email}</p>
-          <p><strong>Role:</strong> Admin</p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
-};
+//   return (
+//     <div className="container mx-auto p-4">
+//       <h1 className="text-xl font-semibold mb-4">Admin Profile</h1>
+//       {message && <p className="text-red-500">{message}</p>}
+//       {profile ? (
+//         <div className="bg-white p-6 rounded-lg shadow-md">
+//           <p><strong>Username:</strong> {profile.username}</p>
+//           <p><strong>Full Name:</strong> {profile.full_name}</p>
+//           <p><strong>Email:</strong> {profile.email}</p>
+//           <p><strong>Role:</strong> Admin</p>
+//         </div>
+//       ) : (
+//         <p>Loading...</p>
+//       )}
+//     </div>
+//   );
+// };
 
-export default AdminProfile;
+// export default AdminProfile;

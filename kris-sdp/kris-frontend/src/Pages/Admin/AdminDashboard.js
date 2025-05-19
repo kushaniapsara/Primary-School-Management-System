@@ -33,13 +33,13 @@ const AdminDashboard = () => {
       .then((data) => {
         const result = data.map((entry) => ({
           subject: entry.Subject_name,
-          average: parseFloat(entry.AverageMarks), 
+          average: parseFloat(entry.AverageMarks),
         }));
         setSubjectAverages(result);
       })
       .catch((err) => console.error("Error fetching progress data:", err));
   }, []);
-  
+
   // ✅ Chart configuration using fetched data
   const performanceData = {
     labels: subjectAverages.map((item) => item.subject),
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
       },
       title: {
         display: true,
-        text: 'Class Performance',
+        text: 'Subject Performance',
       },
     },
     scales: {
@@ -132,55 +132,58 @@ const AdminDashboard = () => {
 
 
   return (
-    <div className="flex min-h-screen">
-      {/* <Navbar />  */}
-      {/* Main Content */}
-      <div className="flex-1 bg-blue-900">
-        {/* Header */}
-        <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
-          <div className="flex justify-between items-center px-8 py-4">
-            <div className="flex space-x-4">
+
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
+
+      <div className="flex min-h-screen">
+        {/* <Navbar />  */}
+        {/* Main Content */}
+        <div className="flex-1 bg-blue-900">
+          {/* Header */}
+          <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
+            <div className="flex justify-between items-center px-8 py-4">
+              {/* <div className="flex space-x-4">
               <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
                 <SearchIcon className="mr-2" />
                 Search
               </button>
+            </div> */}
             </div>
-          </div>
 
-        </header>
+          </header>
 
-        {/* Performance Graph & Attendance Chart Section */}
-        <section className="grid grid-cols-2 gap-4 bg-blue-900 p-4">
-          {/* Performance Graph */}
-          <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
-            <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
-             {/* ✅ Graph: Class Performance */}
-          <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
-            <Bar data={performanceData} options={chartOptions} height={160} />
-          </div>
-          </div>
-
-          {/* Attendance Line Chart (Previously Scatter Plot) */}
-          <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
-            <h2 className="text-lg font-bold text-center mb-4">Attendance</h2>
-            <div className="h-[300px]">
-              <Line data={attendanceChartData} options={attendanceChartOptions} />
+          {/* Performance Graph & Attendance Chart Section */}
+          <section className="grid grid-cols-2 gap-4 bg-blue-900 p-4">
+            {/* Performance Graph */}
+            <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
+              <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
+              {/* ✅ Graph: Class Performance */}
+              <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
+                <Bar data={performanceData} options={chartOptions} height={160} />
+              </div>
             </div>
-          </div>
-        </section>
 
-        {/* Special Notices & Meal Chart Section */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-          <div className="bg-gray-100 p-4 rounded shadow-md md:col-span-2">
-            <Notice />
-          </div>
-          <div className="bg-gray-100 p-4 rounded shadow-md">
-            <MealChart />
-          </div>
-        </section>
+            {/* Attendance Line Chart (Previously Scatter Plot) */}
+            <div className="bg-gray-200 p-4 rounded shadow-md h-[360px]">
+              <h2 className="text-lg font-bold text-center mb-4">Attendance</h2>
+              <div className="h-[300px]">
+                <Line data={attendanceChartData} options={attendanceChartOptions} />
+              </div>
+            </div>
+          </section>
+
+          {/* Special Notices & Meal Chart Section */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+            <div className="bg-gray-100 p-4 rounded shadow-md md:col-span-2">
+              <Notice />
+            </div>
+            <div className="bg-gray-100 p-4 rounded shadow-md">
+              <MealChart />
+            </div>
+          </section>
 
 
-        {/* <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
+          {/* <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
           <h2 className="text-lg font-bold">Special Notices</h2>
           <ul className="space-y-2">
             <li className="bg-white px-4 py-2 rounded">
@@ -194,6 +197,7 @@ const AdminDashboard = () => {
             </li>
           </ul>
         </section>*/}
+        </div>
       </div>
     </div>
   );

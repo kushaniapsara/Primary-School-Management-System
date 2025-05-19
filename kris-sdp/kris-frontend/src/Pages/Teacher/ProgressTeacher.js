@@ -163,115 +163,118 @@ const Dashboard = () => {
 
 
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
 
-      {/* Main Content */}
-      <div className="flex-1 bg-blue-900">
-        {/* Header */}
-        <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
-          <h1 className="text-2xl font-bold">Progress</h1>
+      <div className="flex h-screen">
 
-        </header>
+        {/* Main Content */}
+        <div className="flex-1 bg-blue-900">
+          {/* Header */}
+          <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
+            <h1 className="text-2xl font-bold">Progress</h1>
 
-
-
-
-        <div className="col-span-1 bg-gray-200 mt-4 mx-4 p-4 rounded-md h-96 overflow-auto  ">
-          <h2 className="text-lg font-bold mb-4">Average Marks of Students of the Class</h2>
-          <table className="w-full">
-            <thead>
-              <tr className="border-b-2 border-gray-300">
-                <th className="text-left py-2">Name</th>
-                {subjects.map((subject, index) => (
-                  <th key={index} className="text-left py-2">{subject.Subject_name}</th>
-                ))}
-                <th className="text-left py-2">Average</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {students.map((student, index) => {
-                const studentProgress = studentProgressData[student.Student_ID] || [];
-
-                return (
-                  <tr key={index} className="border-b border-gray-200">
-                    <td className="py-1">{student.Full_name}</td>
-
-                    {subjects.map((subject, i) => {
-                      const subjectData = studentProgress.find(p => p.Subject_ID === subject.Subject_ID);
-                      const value = subjectData ? subjectData.Marks : '';
-
-                      return (
-                        <td key={i} className="py-1">
-                          <input
-                            type="number"
-                            value={value}
-                            onChange={(e) => handleMarkChange(student.Student_ID, subject.Subject_ID, e.target.value)}
-                            className="w-16 p-1 rounded border"
-                          />
-                        </td>
-                      );
-                    })}
-
-                    {/* average cell if you want to keep it */}
-                    <td className="py-1">
-                      {(studentProgress.length
-                        ? (studentProgress.reduce((sum, p) => sum + p.Marks, 0) / studentProgress.length).toFixed(2)
-                        : "N/A")}
-                    </td>
-                  </tr>
-                );
-              })}
-
-            </tbody>
+          </header>
 
 
 
-          </table>
-        </div>
+
+          <div className="col-span-1 bg-gray-200 mt-4 mx-4 p-4 rounded-md h-96 overflow-auto  ">
+            <h2 className="text-lg font-bold mb-4">Average Marks of Students of the Class</h2>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b-2 border-gray-300">
+                  <th className="text-left py-2">Name</th>
+                  {subjects.map((subject, index) => (
+                    <th key={index} className="text-left py-2">{subject.Subject_name}</th>
+                  ))}
+                  <th className="text-left py-2">Average</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {students.map((student, index) => {
+                  const studentProgress = studentProgressData[student.Student_ID] || [];
+
+                  return (
+                    <tr key={index} className="border-b border-gray-200">
+                      <td className="py-1">{student.Full_name}</td>
+
+                      {subjects.map((subject, i) => {
+                        const subjectData = studentProgress.find(p => p.Subject_ID === subject.Subject_ID);
+                        const value = subjectData ? subjectData.Marks : '';
+
+                        return (
+                          <td key={i} className="py-1">
+                            <input
+                              type="number"
+                              value={value}
+                              onChange={(e) => handleMarkChange(student.Student_ID, subject.Subject_ID, e.target.value)}
+                              className="w-16 p-1 rounded border"
+                            />
+                          </td>
+                        );
+                      })}
+
+                      {/* average cell if you want to keep it */}
+                      <td className="py-1">
+                        {(studentProgress.length
+                          ? (studentProgress.reduce((sum, p) => sum + p.Marks, 0) / studentProgress.length).toFixed(2)
+                          : "N/A")}
+                      </td>
+                    </tr>
+                  );
+                })}
+
+              </tbody>
 
 
 
-        <div className="grid grid-cols-3 gap-6">
-          <div>
-            <button
-              onClick={handleSaveMarks}
-              className="mt-4 mx-4 bg-green-500 text-white p-2 rounded hover:bg-green-600"
-            >
-              Save All Marks
-            </button>
+            </table>
           </div>
 
 
-          <div>
-            <button
-              onClick={handleViewStudents}
-              className="w-auto bg-blue-500 text-white p-3 rounded-md cursor-pointer hover:bg-blue-600 mt-4 mx-4">
-              View Student Profiles
-            </button>
-          </div>
 
-          <div className="mt-4 mx-4 bg-white p-4 rounded shadow">
-            <h3 className="font-semibold mb-2">Add New Subject</h3>
-            <div className="flex gap-2 items-center">
-              <input
-                type="text"
-                placeholder="Subject Name"
-                className="border rounded p-2 w-60"
-                value={newSubject}
-                onChange={(e) => setNewSubject(e.target.value)}
-              />
+          <div className="grid grid-cols-3 gap-6">
+            <div>
               <button
-                onClick={handleAddSubject}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                onClick={handleSaveMarks}
+                className="mt-4 mx-4 bg-green-500 text-white p-2 rounded hover:bg-green-600"
               >
-                Add Subject
+                Save All Marks
               </button>
             </div>
+
+
+            <div>
+              <button
+                onClick={handleViewStudents}
+                className="w-auto bg-blue-500 text-white p-3 rounded-md cursor-pointer hover:bg-blue-600 mt-4 mx-4">
+                View Student Profiles
+              </button>
+            </div>
+
+            <div className="mt-4 mx-4 bg-white p-4 rounded shadow">
+              <h3 className="font-semibold mb-2">Add New Subject</h3>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="text"
+                  placeholder="Subject Name"
+                  className="border rounded p-2 w-60"
+                  value={newSubject}
+                  onChange={(e) => setNewSubject(e.target.value)}
+                />
+                <button
+                  onClick={handleAddSubject}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  Add Subject
+                </button>
+              </div>
+            </div>
+
+
+
           </div>
-
-
-
         </div>
       </div>
     </div>

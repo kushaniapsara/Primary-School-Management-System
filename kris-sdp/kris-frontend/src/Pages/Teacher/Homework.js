@@ -149,15 +149,17 @@ const Homework = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="flex-1 bg-gray-200">
-        <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
-          <h1 className="text-2xl font-bold">Homework</h1>
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
 
-        </header>
+      <div className="flex h-screen">
+        <div className="flex-1 bg-gray-200">
+          <header className="flex justify-between items-center bg-white px-8 py-4 border-b border-gray-300">
+            <h1 className="text-2xl font-bold">Homework</h1>
 
-        <div className="flex justify-between items-center px-8 py-4">
-          {/* <div className="flex space-x-4">
+          </header>
+
+          <div className="flex justify-between items-center px-8 py-4">
+            {/* <div className="flex space-x-4">
             <button className="flex items-center bg-white px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
               <SearchIcon className="mr-2" />
               Search
@@ -167,103 +169,104 @@ const Homework = () => {
               Filter
             </button>
           </div> */}
-          {userRole === "Teacher" && (
+            {userRole === "Teacher" && (
 
-            <button
-              className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              onClick={() => openModal()}
-            >
-              <AddIcon className="mr-2" />
-              Add Activity
-            </button>
-          )}
-        </div>
-
-        <div className="px-8">
-          {/* Upcoming Homework Section */}
-          <div className="bg-blue-900 text-white p-4 rounded-md mb-6">
-            <h2 className="text-xl font-bold mb-4">Upcoming Homework</h2>
-            <div className="rounded-md h-60 overflow-auto p-2 space-y-4">
-              {homeworkList
-                .filter((hw) => new Date(hw.Due_date) > new Date())
-                .map((homework) => (
-                  <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
-                    <div>
-                      <p className="font-bold">Activity: {homework.Homework_task}</p>
-                      <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
-                    </div>
-                    <div className="flex space-x-2">
-
-                      {userRole === "Teacher" && (
-
-                        <button className="text-blue-600 hover:text-blue-800" onClick={() => openModal(homework)}>
-                          <EditIcon />
-                        </button>)}
-
-                      {userRole === "Teacher" && (
-
-                        <button
-                          className="text-red-600 hover:text-red-800"
-                          onClick={() => handleDeleteHomework(homework.Homework_ID)}
-                        >
-                          <DeleteIcon />
-                        </button>)}
-                    </div>
-                  </div>
-                ))}
-            </div>
+              <button
+                className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                onClick={() => openModal()}
+              >
+                <AddIcon className="mr-2" />
+                Add Activity
+              </button>
+            )}
           </div>
 
-          {/* Recent Activities Section */}
-          <div className="bg-blue-900 text-white p-4 rounded-md">
-            <h2 className="text-xl font-bold mb-4">Recent Activities</h2>
-            <div className="rounded-md h-60 overflow-auto p-2 space-y-4">
-              {homeworkList
-                .filter((homework) => new Date(homework.Due_date) <= new Date())
-                .map((homework) => (
-                  <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
-                    <div>
-                      <p className="font-bold">Activity: {homework.Homework_task}</p>
-                      <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
+          <div className="px-8">
+            {/* Upcoming Homework Section */}
+            <div className="bg-blue-900 text-white p-4 rounded-md mb-6">
+              <h2 className="text-xl font-bold mb-4">Upcoming Homework</h2>
+              <div className="rounded-md h-60 overflow-auto p-2 space-y-4">
+                {homeworkList
+                  .filter((hw) => new Date(hw.Due_date) > new Date())
+                  .map((homework) => (
+                    <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
+                      <div>
+                        <p className="font-bold">Activity: {homework.Homework_task}</p>
+                        <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
+                      </div>
+                      <div className="flex space-x-2">
+
+                        {userRole === "Teacher" && (
+
+                          <button className="text-blue-600 hover:text-blue-800" onClick={() => openModal(homework)}>
+                            <EditIcon />
+                          </button>)}
+
+                        {userRole === "Teacher" && (
+
+                          <button
+                            className="text-red-600 hover:text-red-800"
+                            onClick={() => handleDeleteHomework(homework.Homework_ID)}
+                          >
+                            <DeleteIcon />
+                          </button>)}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Modal for Adding/Editing Homework */}
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-md">
-              <h2 className="text-xl font-bold mb-4">{editingHomework ? "Edit Homework" : "Add New Homework"}</h2>
-              <input
-                type="text"
-                name="Homework_task"
-                placeholder="Homework Task"
-                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                value={homeworkData.Homework_task}
-                onChange={handleInputChange}
-              />
-              <input
-                type="date"
-                name="Due_date"
-                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-                value={homeworkData.Due_date}
-                onChange={handleInputChange}
-              />
-
-              <div className="flex justify-end space-x-4">
-                <button className="px-4 py-2 bg-gray-300 rounded-md" onClick={() => setShowModal(false)}>
-                  Cancel
-                </button>
-                <button className="px-4 py-2 bg-blue-500 text-white rounded-md" onClick={handleSaveHomework}>
-                  {editingHomework ? "Update" : "Add"}
-                </button>
+            {/* Recent Activities Section */}
+            <div className="bg-blue-900 text-white p-4 rounded-md">
+              <h2 className="text-xl font-bold mb-4">Recent Activities</h2>
+              <div className="rounded-md h-60 overflow-auto p-2 space-y-4">
+                {homeworkList
+                  .filter((homework) => new Date(homework.Due_date) <= new Date())
+                  .map((homework) => (
+                    <div key={homework.Homework_ID} className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-md">
+                      <div>
+                        <p className="font-bold">Activity: {homework.Homework_task}</p>
+                        <p>Due on {new Date(homework.Due_date).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
-        )}
+
+          {/* Modal for Adding/Editing Homework */}
+          {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-md">
+                <h2 className="text-xl font-bold mb-4">{editingHomework ? "Edit Homework" : "Add New Homework"}</h2>
+                <input
+                  type="text"
+                  name="Homework_task"
+                  placeholder="Homework Task"
+                  className="w-full border border-gray-300 rounded-md p-2 mb-4"
+                  value={homeworkData.Homework_task}
+                  onChange={handleInputChange}
+                />
+                <input
+                  type="date"
+                  name="Due_date"
+                  className="w-full border border-gray-300 rounded-md p-2 mb-4"
+                  value={homeworkData.Due_date}
+                  onChange={handleInputChange}
+                />
+
+                <div className="flex justify-end space-x-4">
+                  <button className="px-4 py-2 bg-gray-300 rounded-md" onClick={() => setShowModal(false)}>
+                    Cancel
+                  </button>
+                  <button className="px-4 py-2 bg-blue-500 text-white rounded-md" onClick={handleSaveHomework}>
+                    {editingHomework ? "Update" : "Add"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

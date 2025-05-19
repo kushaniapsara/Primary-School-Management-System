@@ -42,14 +42,14 @@ const ParentDashboard = () => {
           .catch((err) => console.error("Error fetching progress:", err));
 
 
-     // NEW: Fetch attendance percentage for this student
+        // NEW: Fetch attendance percentage for this student
         fetch(`http://localhost:5001/api/attendance/student/${studentId}/percentage`, {
           headers: { Authorization: localStorage.getItem("token") },
         })
           .then((res) => res.json())
           .then((data) => {
             if (data.percentage !== undefined) {
-setAttendancePercent(Number(data.percentage).toFixed(2));
+              setAttendancePercent(Number(data.percentage).toFixed(2));
             } else {
               setAttendancePercent("N/A");
             }
@@ -122,54 +122,57 @@ setAttendancePercent(Number(data.percentage).toFixed(2));
   }, []);
 
 
-  
+
   return (
-    <div className="flex min-h-screen">
-      {/* <ParentNavbar /> */}
-      <div className="flex-1 bg-blue-900">
-        {/* Header */}
-        <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
-          <div className="flex justify-between items-center px-8 py-4">
-            <div className="flex space-x-4">
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
+
+      <div className="flex min-h-screen">
+        {/* <ParentNavbar /> */}
+        <div className="flex-1 bg-blue-900">
+          {/* Header */}
+          <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
+            <div className="flex justify-between items-center px-8 py-4">
+              {/* <div className="flex space-x-4">
               <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
                 <SearchIcon className="mr-2" />
                 Search
               </button>
+            </div> */}
             </div>
-          </div>
-        </header>
+          </header>
 
-        <section className="grid grid-cols-3 gap-4 bg-blue-900">
-          {/* Attendance */}
-          <div className="bg-gray-100 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center ">
-            <h2 className="text-lg font-bold">Attendance</h2>
-            <p className="text-2xl font-extrabold">
-              {attendancePercent === null ? "Loading..." : `${attendancePercent}%`}
-            </p>
-          </div>
+          <section className="grid grid-cols-3 gap-4 bg-blue-900">
+            {/* Attendance */}
+            <div className="bg-gray-100 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center ">
+              <h2 className="text-lg font-bold">Attendance</h2>
+              <p className="text-2xl font-extrabold">
+                {attendancePercent === null ? "Loading..." : `${attendancePercent}%`}
+              </p>
+            </div>
 
-          {/* Meal Chart */}
-          <div className="bg-gray-100 p-4 mt-3 rounded shadow-md">
-            <MealChart />
-          </div>
+            {/* Meal Chart */}
+            <div className="bg-gray-100 p-4 mt-3 rounded shadow-md">
+              <MealChart />
+            </div>
 
-          {/* Homework */}
-          <div className="bg-gray-100 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center ">
-            <h2 className="text-lg font-bold text-black">Upcoming Homeworks</h2>
-            <p className="text-black mt-2 text-3xl font-bold">{upcomingHomeworkCount}</p>
-          </div>
+            {/* Homework */}
+            <div className="bg-gray-100 shadow-md rounded-md p-4 mx-4 my-4 flex flex-col items-center justify-center ">
+              <h2 className="text-lg font-bold text-black">Upcoming Homeworks</h2>
+              <p className="text-black mt-2 text-3xl font-bold">{upcomingHomeworkCount}</p>
+            </div>
 
-          {/* Graph: Class Performance */}
-          <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
-            <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
-            <Bar data={performanceData} options={chartOptions} height={70} />
-          </div>
+            {/* Graph: Class Performance */}
+            <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
+              <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
+              <Bar data={performanceData} options={chartOptions} height={70} />
+            </div>
 
-          {/* Special Notices */}
-          <div className="col-span-3 p-2 mx-3 rounded shadow-md">
-            <Notice />
-          </div>
-        </section>
+            {/* Special Notices */}
+            <div className="col-span-3 p-2 mx-3 rounded shadow-md">
+              <Notice />
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );

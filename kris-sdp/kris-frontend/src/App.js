@@ -17,7 +17,7 @@ import ProgressReport from './Pages/Common/ProgressReport.js';
 // Teacher Pages
 import TeacherDashboard from './Pages/Teacher/TeacherDashboard.js';
 import Attendance from './Pages/Teacher/Attendance.js';
-import ExtraActTeacher from './Pages/Teacher/ExtraActTeacher.js';
+import ExtraAct from './Pages/Teacher/ExtraAct.js';
 import ProgressTeacher from './Pages/Teacher/ProgressTeacher.js';
 import TeacherProfile from './Pages/Teacher/TeacherProfile.js';
 import Homework from './Pages/Teacher/Homework.js';
@@ -130,7 +130,7 @@ function App() {
                     {/* Teacher Routes */}
                     <Route path="/TeacherDashboard" element={<TeacherDashboard />} />
                     <Route path="/Attendance" element={<Attendance />} />
-                    <Route path="/ExtraActTeacher" element={<ExtraActTeacher />} />
+                    <Route path="/ExtraAct" element={<ExtraAct />} />
                     <Route path="/ProgressTeacher" element={<ProgressTeacher />} />
                     <Route path="/TeacherProfile" element={<TeacherProfile />} />
                     <Route path="/Homework" element={<Homework />} />
