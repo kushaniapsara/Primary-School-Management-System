@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../../components/NavbarTeacher";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -23,8 +22,8 @@ const Profile = () => {
           headers: { Authorization: token },
         });
         console.log("Profile data:", response.data);
-        setProfile(response.data);      
-       // localStorage.setItem("username", response.data.username); 
+        setProfile(response.data);
+        // localStorage.setItem("username", response.data.username); 
 
       } catch (error) {
         setMessage(error.response?.data?.message || "Error fetching profile");
@@ -73,21 +72,21 @@ const Profile = () => {
 
 
   const handleOpenSchedule = async () => {
-  try {
-    const response = await axios.get("http://localhost:5001/api/google-link");
-    const link = response.data.link;
-    if (link) {
-      window.open(link, "_blank"); // opens in a new tab
+    try {
+      const response = await axios.get("http://localhost:5001/api/google-link");
+      const link = response.data.link;
+      if (link) {
+        window.open(link, "_blank"); // opens in a new tab
+      }
+    } catch (error) {
+      console.error("Error fetching schedule link:", error);
+      setMessage("Failed to load schedule.");
     }
-  } catch (error) {
-    console.error("Error fetching schedule link:", error);
-    setMessage("Failed to load schedule.");
-  }
-};
+  };
 
 
   return (
-    <div className="flex min-h-screen"> 
+    <div className="flex min-h-screen">
 
       <div className="flex-1 bg-blue-900 p-8">
         <header className="flex justify-between items-center bg-white text-black rounded-xl px-6 py-4 shadow-md mb-6">
@@ -135,12 +134,12 @@ const Profile = () => {
 
         {/* Action Buttons */}
         <div className="mt-10 flex flex-wrap gap-4 justify-center">
-        <button
-  onClick={handleOpenSchedule}
-  className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
->
-  📚 Class Schedule
-</button>
+          <button
+            onClick={handleOpenSchedule}
+            className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
+          >
+            📚 Class Schedule
+          </button>
 
 
           <button

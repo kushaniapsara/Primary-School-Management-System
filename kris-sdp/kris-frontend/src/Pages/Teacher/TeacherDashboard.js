@@ -26,6 +26,12 @@ const TeacherDashboard = () => {
 
   const [upcomingHomeworkCount, setUpcomingHomeworkCount] = useState(0);
 
+  //for attendance
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [presentToday, setPresentToday] = useState(0);
+  const [absentToday, setAbsentToday] = useState(0);
+
+
 
   // ✅ Fetch all student progress data (for subjects and marks)
   useEffect(() => {
@@ -95,6 +101,63 @@ const TeacherDashboard = () => {
     fetchHomeworks();
   }, []);
 
+  //attendance count
+ useEffect(() => {
+  const fetchAttendanceSummary = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // Fetch students of the class
+      const studentRes = await axios.get("http://localhost:5001/api/students/by-class", {
+        headers: { Authorization: token },
+      });
+
+      const classStudents = studentRes.data; // contains Full_name and Student_ID
+      const classStudentIds = classStudents.map((s) => s.Student_ID);
+
+      // Fetch attendance records
+      const { data: attendance } = await axios.get("http://localhost:5001/api/attendance", {
+        headers: { Authorization: token },
+      });
+
+      const getLocalDateString = (d = new Date()) => {
+        const local = new Date(d);
+        local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+        return local.toISOString().split("T")[0];
+      };
+
+      const today = getLocalDateString();
+
+      // Filter attendance for today and only for class students
+      const todayAttendance = attendance.filter((entry) => {
+        const entryDate = getLocalDateString(new Date(entry.Date));
+        return (
+          entryDate === today && classStudentIds.includes(entry.Student_ID)
+        );
+      });
+
+      const presentCount = todayAttendance.filter(
+        (e) => e.Status === "Present" || e.Status === 1
+      ).length;
+
+      const absentCount = todayAttendance.filter(
+        (e) => e.Status === "Absent" || e.Status === 0
+      ).length;
+
+      const totalCount = classStudentIds.length;
+
+      setTotalStudents(totalCount);
+      setPresentToday(presentCount);
+      setAbsentToday(absentCount);
+    } catch (err) {
+      console.error("Failed to fetch attendance data", err);
+    }
+  };
+
+  fetchAttendanceSummary();
+}, []);
+
+
 
 
   return (
@@ -104,12 +167,12 @@ const TeacherDashboard = () => {
         {/* Header */}
         <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
           <div className="flex justify-between items-center px-8 py-4">
-            <div className="flex space-x-4">
+            {/* <div className="flex space-x-4">
               <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
                 <SearchIcon className="mr-2" />
                 Search
               </button>
-            </div>
+            </div> */}
 
           </div>
 
@@ -119,10 +182,23 @@ const TeacherDashboard = () => {
 
         <section className="grid grid-cols-3 gap-4 bg-blue-900">
           {/* Attendance */}
-          <div className="bg-gray-100 p-4 mt-3 mx-3 rounded shadow-md text-center">
-            <h2 className="text-lg font-bold">Attendance Today</h2>
-            <p className="text-2xl font-extrabold">22</p>
+          {/* Attendance Summary Card */}
+          <div className="bg-white text-blue-900 rounded-xl shadow-lg p-6 mt-3 mx-3 w-full">
+            <h2 className="text-lg font-bold mb-4 text-center">Today's Attendance</h2>
+            <div className="space-y-2 text-center">
+              <p className="font-semibold">
+                Total Students: <span className="text-black">{totalStudents}</span>
+              </p>
+              <p className="font-semibold">
+                Present Today: <span className="text-green-600">{presentToday}</span>
+              </p>
+              <p className="font-semibold">
+                Absent Today: <span className="text-red-600">{absentToday}</span>
+              </p>
+            </div>
           </div>
+
+
 
           {/* Meal Chart */}
           <div className="bg-gray-100 p-4 mt-3 rounded shadow-md">

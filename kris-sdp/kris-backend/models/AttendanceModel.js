@@ -23,7 +23,7 @@ const getStudentsByClass = (classID, callback) => {
 const getAttendance = (callback) => {
   const fiveDaysAgo = new Date();
   fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 4);
-  const formattedDate = fiveDaysAgo.toISOString().split('T')[0];
+  const formattedDate = fiveDaysAgo.toISOString().split("T")[0];
 
   const query = `
      SELECT s.Student_ID, s.Full_name, DATE(a.Date) AS Date, 
@@ -36,36 +36,76 @@ ORDER BY a.Date ASC;
   `;
 
   db.query(query, [formattedDate], (error, results) => {
-      if (error) {
-          console.error('Error fetching attendance:', error);
-          return callback(error, null);
-      }
-      callback(null, results);
+    if (error) {
+      console.error("Error fetching attendance:", error);
+      return callback(error, null);
+    }
+    callback(null, results);
   });
 };
 
-
 // Save attendance records to the database
-const saveAttendance = (date, attendanceData, callback) => {
-  console.log('Saving Attendance:', attendanceData);  // Debugging line
+const saveAttendance = (classID, date, attendanceData, callback) => {
+  console.log("Saving Attendance:", attendanceData, classID); // Debugging line
 
-  const queries = attendanceData.map(entry => 
-    new Promise((resolve, reject) => {
-      db.query(
-        'INSERT INTO Attendance (Student_ID, Date, Status) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE Status = VALUES(Status)',
-        [entry.student_id, date, entry.status],
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-    })
+  const queries = attendanceData.map(
+    (entry) =>
+      new Promise((resolve, reject) => {
+        db.query(
+          `SELECT COUNT(*) AS count, Attendance_ID FROM Attendance WHERE Student_ID = ? AND Date = ?`,
+          [entry.student_id, date],
+          (error, results) => {
+            if (error) {
+              console.error("Error checking attendance:", error);
+              return reject(error);
+            }
+
+            const count = results[0].count;
+            if (count > 0) {
+              console.log(
+                db.query(
+                  `UPDATE Attendance SET Status = ? WHERE Student_ID = ? AND Date = ?`,
+                  [entry.status, entry.student_id, date],
+                  (error, result) => {
+                    if (error) {
+                      console.error("Error updating attendance:", error);
+                      return reject(error);
+                    }
+                    resolve(result);
+                  }
+                )
+              );
+            } else {
+              db.query(
+                `INSERT INTO Attendance (Student_ID, Date, Status,Class_ID) VALUES (?, ?, ?,?)`,
+                [entry.student_id, date, entry.status, classID],
+                (error, result) => {
+                  if (error) {
+                    console.error("Error inserting attendance:", error);
+                    return reject(error);
+                  }
+                  resolve(result);
+                }
+              );
+            }
+          }
+        );
+
+        // db.query(
+        //   "INSERT INTO Attendance (Student_ID, Date, Status,Class_ID) VALUES (?, ?, ?,?) ON DUPLICATE KEY UPDATE Status = VALUES(Status)",
+        //   [entry.student_id, date, entry.status, classID],
+        //   (error, result) => {
+        //     if (error) reject(error);
+        //     else resolve(result);
+        //   }
+        // );
+      })
   );
 
   Promise.all(queries)
     .then(() => callback(null, true))
-    .catch(error => {
-      console.error('Error saving attendance:', error);
+    .catch((error) => {
+      console.error("Error saving attendance:", error);
       callback(error, null);
     });
 };
@@ -86,19 +126,18 @@ const getAttendanceChartData = (callback) => {
 
   db.query(query, (error, results) => {
     if (error) {
-      console.error('Error fetching attendance:', error);
+      console.error("Error fetching attendance:", error);
       return callback(error, null);
     }
     callback(null, results);
   });
 };
 
-
-
 // In your attendanceController.js
 
-
-
-
-
-module.exports = { getStudentsByClass, getAttendance, saveAttendance, getAttendanceChartData };
+module.exports = {
+  getStudentsByClass,
+  getAttendance,
+  saveAttendance,
+  getAttendanceChartData,
+};
