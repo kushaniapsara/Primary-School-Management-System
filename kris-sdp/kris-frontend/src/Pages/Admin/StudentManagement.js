@@ -521,7 +521,7 @@ const StuManagement = () => {
 
 
 
-
+<div className="p-5"> <div className="max-h-[500px] overflow-y-auto border rounded">
           <div className="p-5">
 
             <table className="w-full border-collapse">
@@ -595,6 +595,7 @@ const StuManagement = () => {
                 ))}
               </tbody>
             </table>
+            </div> </div>
 
             {/* 🔹 Student Profile Modal */}
             {selectedStudent && (

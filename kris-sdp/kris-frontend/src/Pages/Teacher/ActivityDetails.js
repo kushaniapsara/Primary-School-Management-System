@@ -17,6 +17,10 @@ const ActivityDetails = () => {
   const [enrolledStudents, setEnrolledStudents] = useState([]); //for enrolled students
   const [loadingStudents, setLoadingStudents] = useState(true);
 
+  // to count enrolled students
+  const enrolledCount = enrolledStudents.length;
+
+
 
 
   // Fetch activity details based on the id
@@ -150,9 +154,10 @@ const ActivityDetails = () => {
             <p className="text-gray-600 text-lg">
               📜 {activity.Description || "No description available."}
             </p>
-            <p className="text-gray-600 text-lg mt-4">
-              {/* 👥 Active Students: {activity.active_students || "N/A"} */}
+            <p className="text-gray-700 font-semibold">
+              🧒Total Enrolled Students: <span className="font-normal">{enrolledStudents.length}</span>
             </p>
+
             <p className="text-gray-600 text-lg">
               👨‍🏫 Teacher-in-Charge: {activity.Teacher_incharge || "N/A"}
             </p>
@@ -160,36 +165,36 @@ const ActivityDetails = () => {
 
             {/* Enrolled Students Card */}
             {(userRole === "Admin" || userRole === "Teacher") && (
-            <div className="bg-blue-200 rounded-xl p-6 shadow-md mt-6">
-              <Typography variant="h6" className="font-semibold text-gray-800 mb-4">
-                ⛹️‍♂️ Enrolled Students
-              </Typography>
+              <div className="bg-blue-200 rounded-xl p-6 shadow-md mt-6">
+                <Typography variant="h6" className="font-semibold text-gray-800 mb-4">
+                  ⛹️‍♂️ Enrolled Students
+                </Typography>
 
-              {loadingStudents ? (
-                <p className="text-gray-500">Loading students...</p>
-              ) : enrolledStudents.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 max-h-[300px] overflow-y-auto pr-2">
-                  {enrolledStudents.map((student) => (
-                    <div
-                      key={student.Student_ID}
-                      className="bg-white rounded-lg shadow p-4 border border-gray-200"
-                    >
-                      <p className="text-sm text-gray-700 font-semibold">
-                        ID: <span className="font-normal">{student.Student_ID}</span>
-                      </p>
-                      <p className="text-sm text-gray-700 font-semibold">
-                        Name: <span className="font-normal">{student.Full_Name}</span>
-                      </p>
-                      <p className="text-sm text-gray-700 font-semibold">
-                        Contact: <span className="font-normal">{student.Contact_number || "N/A"}</span>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500">No students enrolled yet.</p>
-              )}
-            </div>)}
+                {loadingStudents ? (
+                  <p className="text-gray-500">Loading students...</p>
+                ) : enrolledStudents.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 max-h-[300px] overflow-y-auto pr-2">
+                    {enrolledStudents.map((student) => (
+                      <div
+                        key={student.Student_ID}
+                        className="bg-white rounded-lg shadow p-4 border border-gray-200"
+                      >
+                        <p className="text-sm text-gray-700 font-semibold">
+                          ID: <span className="font-normal">{student.Student_ID}</span>
+                        </p>
+                        <p className="text-sm text-gray-700 font-semibold">
+                          Name: <span className="font-normal">{student.Full_Name}</span>
+                        </p>
+                        <p className="text-sm text-gray-700 font-semibold">
+                          Contact: <span className="font-normal">{student.Contact_number || "N/A"}</span>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">No students enrolled yet.</p>
+                )}
+              </div>)}
 
 
 
