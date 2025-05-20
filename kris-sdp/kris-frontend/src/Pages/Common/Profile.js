@@ -6,6 +6,9 @@ import { jwtDecode } from "jwt-decode";
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [message, setMessage] = useState("");
+  const [role, setRole] = useState(""); // Extracted from token
+
+
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -14,9 +17,11 @@ const Profile = () => {
 
   const [editLinkModal, setEditLinkModal] = useState(false);
   const [newScheduleLink, setNewScheduleLink] = useState("");
+  const [showLocation, setShowLocation] = useState(false);
 
-    const [userRole, setUserRole] = useState("");
-  
+
+  const [userRole, setUserRole] = useState("");
+
 
   const navigate = useNavigate();
 
@@ -62,20 +67,23 @@ const Profile = () => {
       setPasswordMessage("New passwords do not match.");
       return;
     }
-
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:5001/api/auth/reset-password",
         { currentPassword, newPassword },
         { headers: { Authorization: token } }
       );
       setPasswordMessage("Password successfully updated.");
       setShowPasswordModal(false);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
     } catch (error) {
       setPasswordMessage(error.response?.data?.message || "Error resetting password");
     }
   };
+
 
 
   const handleOpenSchedule = async () => {
@@ -93,18 +101,29 @@ const Profile = () => {
 
 
   // to hide buttons
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decoded = jwtDecode(token);
-          setUserRole(decoded.role);
-        } catch (error) {
-          console.error("Invalid token", error);
-          setUserRole("");
-        }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserRole(decoded.role);
+      } catch (error) {
+        console.error("Invalid token", error);
+        setUserRole("");
       }
-    }, []);
+    }
+  }, []);
+
+  // Helper to extract user ID and label
+  const getUserId = (profile) => {
+    if (profile.Student_ID) return { label: "Student ID", value: profile.Student_ID };
+    if (profile.Teacher_ID) return { label: "Teacher ID", value: profile.Teacher_ID };
+    if (profile.Admin_ID) return { label: "Admin ID", value: profile.Admin_ID };
+    return { label: "User ID", value: "N/A" };
+  };
+  const userIdInfo = profile ? getUserId(profile) : { label: "User ID", value: "" };
+
+
 
   return (
 
@@ -136,18 +155,43 @@ const Profile = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-xl font-semibold">User ID</p>
+                <p className="text-xl font-semibold">User Name</p>
                 <p className="mt-2 px-4 py-2 bg-gray-100 text-black rounded-lg text-center">
                   {profile.username}
+
                 </p>
+
+                <p className="text-xl font-semibold">{userIdInfo.label}</p>
+                <p className="mt-2 px-4 py-2 bg-gray-100 text-black rounded-lg text-center">
+                  {userIdInfo.value}
+                </p>
+
               </div>
 
               {/* Profile Info */}
               <div className="lg:col-span-2 bg-white text-black rounded-xl shadow-lg p-8 space-y-3">
                 <h2 className="text-2xl font-bold text-center">{profile.Full_name}</h2>
                 <p className="text-lg">📧 Email: {profile.Email}</p>
-                <p className="text-lg">🧑‍🏫 Role: {profile.role}</p>
-                <p className="text-lg">🏫 Class: {profile.class || "N/A"}</p>
+                {/* <p className="text-lg">🧑‍🏫 Role: {role}</p> */}
+                <p className="text-lg">
+                  🏫 Class:{" "}
+                  {profile.class_name ? (
+                    <span
+                      className="text-blue-700 underline cursor-pointer ml-1"
+                      title="Show class location"
+                      onClick={() => setShowLocation((prev) => !prev)}
+                    >
+                      {profile.class_name}
+                    </span>
+                  ) : (
+                    "N/A"
+                  )}
+                </p>
+                {showLocation && profile.class_location && (
+                  <div className="text-md bg-blue-50 px-4 py-2 rounded-lg shadow inline-block my-2">
+                    📍 <span className="font-semibold">Location:</span> {profile.class_location}
+                  </div>
+                )}
                 <p className="text-lg">🏠 Address: {profile.Address}</p>
                 <p className="text-lg">📞 Contact: {profile.Contact_number}</p>
               </div>
@@ -155,6 +199,7 @@ const Profile = () => {
           ) : (
             <p className="text-center text-white text-lg mt-6">Loading...</p>
           )}
+
 
           {/* Action Buttons */}
           <div className="mt-10 flex flex-wrap gap-4 justify-center">
@@ -242,7 +287,6 @@ const Profile = () => {
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
               <div className="bg-white text-black p-6 rounded-xl shadow-lg w-full max-w-md">
                 <h2 className="text-2xl font-bold mb-4">Reset Password</h2>
-
                 <div className="space-y-4">
                   <div>
                     <label className="block font-medium mb-1">Current Password</label>
@@ -253,7 +297,6 @@ const Profile = () => {
                       onChange={(e) => setCurrentPassword(e.target.value)}
                     />
                   </div>
-
                   <div>
                     <label className="block font-medium mb-1">New Password</label>
                     <input
@@ -263,7 +306,6 @@ const Profile = () => {
                       onChange={(e) => setNewPassword(e.target.value)}
                     />
                   </div>
-
                   <div>
                     <label className="block font-medium mb-1">Confirm New Password</label>
                     <input
@@ -274,11 +316,9 @@ const Profile = () => {
                     />
                   </div>
                 </div>
-
                 {passwordMessage && (
                   <p className="text-red-600 text-center mt-4">{passwordMessage}</p>
                 )}
-
                 <div className="flex justify-between mt-6">
                   <button
                     onClick={handlePasswordReset}
@@ -292,6 +332,7 @@ const Profile = () => {
                   >
                     Cancel
                   </button>
+
                 </div>
               </div>
             </div>

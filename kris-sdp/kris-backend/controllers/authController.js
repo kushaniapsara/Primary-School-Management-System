@@ -175,3 +175,61 @@ WHERE sc.Student_ID = ?
 
 
 //for the profile
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const { userID, role } = decoded;
+
+    const { currentPassword, newPassword } = req.body;
+
+    // Input validation
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Both current and new passwords are required." });
+    }
+
+    // Determine table and ID field based on role
+    let table, idField;
+    if (role === 'Teacher') {
+      table = 'Teacher';
+      idField = 'Teacher_ID';
+    } else if (role === 'Student') {
+      table = 'Student';
+      idField = 'Student_ID';
+    } else if (role === 'Admin') {
+      table = 'Admin';
+      idField = 'Admin_ID';
+    } else {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    // Fetch current user
+    const userQuery = `SELECT * FROM ?? WHERE ${idField} = ?`;
+    const results = await queryAsync(userQuery, [table, userID]);
+    if (results.length === 0) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    const user = results[0];
+
+    // Compare current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password is incorrect." });
+    }
+
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password in DB
+    const updateQuery = `UPDATE ?? SET password = ? WHERE ${idField} = ?`;
+    await queryAsync(updateQuery, [table, hashedNewPassword, userID]);
+
+    return res.status(200).json({ message: "Password updated successfully." });
+  } catch (error) {
+    console.error('Password Reset Error:', error);
+    return res.status(500).json({ message: "Server error", error });
+  }
+};

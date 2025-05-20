@@ -18,7 +18,7 @@ exports.generateReport = async (req, res) => {
       break;
 
     case 'student':
-  sql = 'SELECT Student_ID, Full_name, Syllabus, Contact_number FROM Student';
+  sql = 'SELECT Student_ID, Full_name, Syllabus, Contact_number FROM Student WHERE Status = "active"';
       params = [];
       break;
 

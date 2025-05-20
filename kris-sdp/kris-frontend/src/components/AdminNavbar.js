@@ -13,6 +13,8 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { NavLink } from 'react-router-dom';
 
+import NavbarUserMenu from "./NavbarUserMenu";
+
 
 
 const Navbar = () => {
@@ -38,8 +40,9 @@ useEffect(() => {
   return(
 <div className="bg-white-100 w-66 flex flex-col py-4">
 {/* Username at top-right */}
+<NavbarUserMenu username={username} />
 <div className="absolute top-15 right-12 text-xl font-semibold text-gray-700">
-        {username ? `👋 ${username}` : ""}
+        {/* {username ? `👋 ${username}` : ""} */}
       </div>
         <div className="flex flex-col items-center mb-6">
         <img src="/assets/b.png" alt="KRIS Logo" className="w-34 h-24 mx-auto mb-2"/>

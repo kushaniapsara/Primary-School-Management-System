@@ -132,9 +132,14 @@ const Student = {
   getStudentsByClass: (classID, callback) => {
     const sql = `
       SELECT s.*
-      FROM Student s
-      INNER JOIN StudentClass sc ON s.Student_ID = sc.Student_ID
-      WHERE sc.Class_ID = ? AND s.Status = 'active'
+    FROM Student s
+    INNER JOIN StudentClass sc ON s.Student_ID = sc.Student_ID
+    INNER JOIN (
+      SELECT Student_ID, MAX(Academic_year) AS LatestYear
+      FROM StudentClass
+      GROUP BY Student_ID
+    ) latest ON sc.Student_ID = latest.Student_ID AND sc.Academic_year = latest.LatestYear
+    WHERE sc.Class_ID = ? AND s.Status = 'active'
     `;
     pool.query(sql, [classID], callback);
   },
