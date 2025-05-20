@@ -666,7 +666,7 @@ const StuManagement = () => {
                   <TextField fullWidth margin="dense" label="Enrollment Date" name="enrollmentDate" type="date" value={newStudent.enrollmentDate} onChange={handleChange} InputLabelProps={{ shrink: true }} />
                   <TextField fullWidth margin="dense" label="Username" name="username" value={newStudent.username} onChange={handleChange} />
                   <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newStudent.password} onChange={handleChange} error={!!errors.password} helperText={errors.password} />
-                  <TextField fullWidth margin="dense" label="Admin_Id" name="adminID" value={newStudent.adminID} onChange={handleChange} />
+                  {/* <TextField fullWidth margin="dense" label="Admin_Id" name="adminID" value={newStudent.adminID} onChange={handleChange} /> */}
                   <TextField fullWidth margin="dense" label="Documents" name="documents" value={newStudent.documents} onChange={handleChange} />
                   <TextField fullWidth margin="dense" label="monthly_amount" name="monthly_amount" value={newStudent.monthly_amount} onChange={handleChange} />
 
@@ -682,6 +682,9 @@ const StuManagement = () => {
                       <MenuItem value="1">1</MenuItem>
                       <MenuItem value="2">2</MenuItem>
                       <MenuItem value="3">3</MenuItem>
+                      <MenuItem value="4">4</MenuItem>
+                      <MenuItem value="5">5</MenuItem>
+
                       {/* Add more grades as needed */}
                     </Select>
                   </FormControl>
@@ -752,7 +755,7 @@ const StuManagement = () => {
                         "fullName", "nameWithInitials", "dob", "gender", "grade", "religion",
                         "vaccination", "onAnyDrugs", "allergies", "contactNumber", "email",
                         "address", "enrollmentDate", "syllabus", "sistersBrothersInSameSchool",
-                        "documents", "password", "username", "adminID", "monthly_amount",
+                        "documents", "password", "username", "monthly_amount",
                         "fatherName", "fatherContact", "fatherNIC", "fatherAddress", "fatherOccupation",
                         "motherName", "motherContact", "motherNIC", "motherAddress", "motherOccupation",
                         "className"
