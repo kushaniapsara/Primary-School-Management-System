@@ -371,7 +371,7 @@ const StuManagement = () => {
 
     <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
 
-      <div className="flex h-screen overflow-hidden">
+<div className="flex min-h-screen overflow-auto">
         <div className="flex-1 bg-blue-900 flex flex-col">
           <div className="flex justify-between items-center p-6 bg-white border-b">
             <h2 className="text-2xl font-bold">Student Management</h2>
@@ -519,9 +519,11 @@ const StuManagement = () => {
 
           </div>
 
+<div className="overflow-x-auto">
 
 
-<div className="p-5"> <div className="max-h-[500px] overflow-y-auto border rounded">
+<div className="p-5"> 
+{/* <div className="max-h-[500px] overflow-y-auto border rounded"> */}
           <div className="p-5">
 
             <table className="w-full border-collapse">
@@ -595,7 +597,9 @@ const StuManagement = () => {
                 ))}
               </tbody>
             </table>
-            </div> </div>
+            </div> 
+            </div>
+            
 
             {/* 🔹 Student Profile Modal */}
             {selectedStudent && (

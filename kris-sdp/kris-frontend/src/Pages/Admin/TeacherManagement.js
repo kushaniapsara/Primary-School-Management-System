@@ -225,7 +225,7 @@ const TeacherManagement = () => {
       console.error("Error promoting teachers:", error);
     }
   };
-
+  // toggle status
   const toggleStatus = async (teacherId, currentStatus) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
 
@@ -283,13 +283,13 @@ const TeacherManagement = () => {
           else if (parseInt(value) < 18 || parseInt(value) > 60) error = "Age must be between 18 and 60";
           break;
 
-          case "nic":
-  if (!/^[A-Za-z0-9]+$/.test(value)) {
-    error = "NIC should contain only letters and numbers";
-  } else if (value.length < 10 || value.length > 12) {
-    error = "NIC must be between 10 and 12 characters long";
-  }
-  break;
+        case "nic":
+          if (!/^[A-Za-z0-9]+$/.test(value)) {
+            error = "NIC should contain only letters and numbers";
+          } else if (value.length < 10 || value.length > 12) {
+            error = "NIC must be between 10 and 12 characters long";
+          }
+          break;
 
         default:
           break;
@@ -302,8 +302,8 @@ const TeacherManagement = () => {
   return (
     <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
 
-      <div className="flex h-screen overflow-hidden">
-        <div className="flex-1 bg-blue-900 flex flex-col">
+      <div className="flex min-h-screen overflow-auto">
+        <div className="flex-1 bg-blue-900 flex flex-col min-h-screen">
           <div className="flex justify-between items-center p-6 bg-white border-b">
             <h2 className="text-2xl font-bold">Teacher Management</h2>
           </div>

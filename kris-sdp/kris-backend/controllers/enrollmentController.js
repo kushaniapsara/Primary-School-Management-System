@@ -39,7 +39,7 @@ exports.enrollInActivity = (req, res) => {
           return res.status(500).json({ error: 'Failed to enroll student.' });
         }
 
-                // Update the student count in ExtraCurricularActivity table
+                // Update the student count in ExtraCurricularActivity table(now only from the frontend)
         const updateCountQuery = `UPDATE ExtraCurricularActivity 
                                   SET Student_count = Student_count + 1 
                                   WHERE Activity_ID = ?`;
