@@ -159,7 +159,7 @@ const ActivityDetails = () => {
             <p className="text-gray-600 text-lg">📍 Location: {activity.Location || "N/A"}</p>
 
             {/* Enrolled Students Card */}
-            {userRole === "Admin" && (
+            {(userRole === "Admin" || userRole === "Teacher") && (
             <div className="bg-blue-200 rounded-xl p-6 shadow-md mt-6">
               <Typography variant="h6" className="font-semibold text-gray-800 mb-4">
                 ⛹️‍♂️ Enrolled Students

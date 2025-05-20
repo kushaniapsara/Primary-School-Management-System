@@ -18,9 +18,15 @@ const ExtraActTeacher = () => {
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Control emoji picker visibility
-  const [newActivity, setNewActivity] = useState({ name: "", img: "" });
-    const [userRole, setUserRole] = useState("");
-  
+  const [newActivity, setNewActivity] = useState({
+    name: "",
+    img: "",
+    description: "",
+    teacher_incharge: "",
+    location: ""
+  });
+  const [userRole, setUserRole] = useState("");
+
 
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -45,8 +51,10 @@ const ExtraActTeacher = () => {
 
   // Handle submit
   const handleSubmit = () => {
-    if (!newActivity.name || !newActivity.img) {
-      alert("Both name and emoji are required!");
+    const { name, img, description, teacher_incharge, location } = newActivity;
+
+    if (!name || !img || !description || !teacher_incharge || !location) {
+      alert("All fields are required!");
       return;
     }
 
@@ -57,26 +65,43 @@ const ExtraActTeacher = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setActivities([...activities, { id: data.id, name: newActivity.name, img: newActivity.img }]); // Ensure ID consistency
-        setOpen(false); // Close dialog
-        setNewActivity({ name: "", img: "" }); // Reset form
+        setActivities([
+          ...activities,
+          {
+            id: data.id,
+            name,
+            img,
+            description,
+            teacher_incharge,
+            location,
+          },
+        ]);
+        setOpen(false);
+        setNewActivity({
+          name: "",
+          img: "",
+          description: "",
+          teacher_incharge: "",
+          location: "",
+        });
       })
       .catch((err) => console.error("Error adding activity:", err));
   };
 
+
   //to hide buttons
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decoded = jwtDecode(token);
-          setUserRole(decoded.role);
-        } catch (error) {
-          console.error("Invalid token", error);
-          setUserRole("");
-        }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserRole(decoded.role);
+      } catch (error) {
+        console.error("Invalid token", error);
+        setUserRole("");
       }
-    }, []);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
@@ -91,11 +116,11 @@ const ExtraActTeacher = () => {
 
           {/* Add Activity Button */}
           <div className="p-6">
-          {userRole === "Admin" && (
-            <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
-              Add Activity
-            </Button>
-          )}
+            {userRole === "Admin" && (
+              <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+                Add Activity
+              </Button>
+            )}
           </div>
 
           {/* Activity Cards */}
@@ -132,6 +157,33 @@ const ExtraActTeacher = () => {
                 label="Activity Name"
                 name="name"
                 value={newActivity.name}
+                onChange={handleChange}
+              />
+
+              <TextField
+                fullWidth
+                margin="dense"
+                label="Description"
+                name="description"
+                value={newActivity.description}
+                onChange={handleChange}
+              />
+
+              <TextField
+                fullWidth
+                margin="dense"
+                label="Teacher In-Charge"
+                name="teacher_incharge"
+                value={newActivity.teacher_incharge}
+                onChange={handleChange}
+              />
+
+              <TextField
+                fullWidth
+                margin="dense"
+                label="Location"
+                name="location"
+                value={newActivity.location}
                 onChange={handleChange}
               />
 

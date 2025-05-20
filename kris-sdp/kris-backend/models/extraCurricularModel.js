@@ -8,9 +8,16 @@ const getAllActivities = (callback) => {
   });
 };
 
+// Add a new activity
 const addActivity = (activity, callback) => {
-  const query = "INSERT INTO ExtraCurricularActivity (Activity_name, Activity_emoji) VALUES (?, ?)";
-  db.query(query, [activity.name, activity.img], (err, result) => {
+  const query = `
+    INSERT INTO ExtraCurricularActivity 
+    (Activity_name, Activity_emoji, Description, Teacher_incharge, Location) 
+    VALUES (?, ?, ?, ?, ?)
+  `;
+  const { name, img, description, teacher_incharge, location } = activity;
+
+  db.query(query, [name, img, description, teacher_incharge, location], (err, result) => {
     if (err) return callback(err, null);
     callback(null, { id: result.insertId, ...activity });
   });

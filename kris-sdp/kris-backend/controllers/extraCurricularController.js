@@ -1,4 +1,5 @@
 const db = require("../config/db"); // Make sure you have a database connection
+const extraCurricularModel = require("../models/extraCurricularModel");
 
 exports.getAllActivities = (req, res) => {
   const sql = "SELECT Activity_ID AS id, Activity_name AS name, Activity_emoji AS img FROM ExtraCurricularActivity";
@@ -18,22 +19,23 @@ exports.getAllActivities = (req, res) => {
 };
 
 
+// Add a new activity
 exports.addActivity = (req, res) => {
-  const { name, img } = req.body;
+  const { name, img, description, teacher_incharge, location } = req.body;
 
-  if (!name || !img) {
-    return res.status(400).json({ message: "Activity name and emoji are required" });
+  if (!name || !img || !description || !teacher_incharge || !location) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
-  const sql = "INSERT INTO ExtraCurricularActivity (Activity_name, Activity_emoji) VALUES (?, ?)";
-  
-  db.query(sql, [name, img], (err, result) => {
+  const newActivity = { name, img, description, teacher_incharge, location };
+
+  extraCurricularModel.addActivity(newActivity, (err, result) => {
     if (err) {
-      console.error("Database error:", err);
+      console.error("Error adding activity:", err);
       return res.status(500).json({ message: "Server error" });
     }
 
-    res.status(201).json({ message: "Activity added successfully", id: result.insertId });
+    res.status(201).json({ message: "Activity added successfully", id: result.id });
   });
 };
 
