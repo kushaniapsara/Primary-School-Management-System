@@ -282,6 +282,15 @@ const TeacherManagement = () => {
           if (!/^\d+$/.test(value)) error = "Age must be a valid number";
           else if (parseInt(value) < 18 || parseInt(value) > 60) error = "Age must be between 18 and 60";
           break;
+
+          case "nic":
+  if (!/^[A-Za-z0-9]+$/.test(value)) {
+    error = "NIC should contain only letters and numbers";
+  } else if (value.length < 10 || value.length > 12) {
+    error = "NIC must be between 10 and 12 characters long";
+  }
+  break;
+
         default:
           break;
       }
@@ -564,7 +573,7 @@ const TeacherManagement = () => {
               <TextField fullWidth margin="dense" label="Username" name="username" value={newTeacher.username} onChange={handleChange} />
               <TextField fullWidth margin="dense" label="Password" name="password" type="password" value={newTeacher.password} onChange={handleChange} error={!!errors.password} helperText={errors.password} />
               <TextField fullWidth margin="dense" label="Previous Schools" name="previousSchools" value={newTeacher.previousSchools} onChange={handleChange} />
-              <TextField fullWidth margin="dense" label="NIC" name="nic" value={newTeacher.nic} onChange={handleChange} />
+              <TextField fullWidth margin="dense" label="NIC" name="nic" value={newTeacher.nic} onChange={handleChange} error={!!errors.nic} helperText={errors.nic} />
               {/* <TextField fullWidth margin="dense" label="Leaving Date" name="leavingDate" type="date" value={newTeacher.leavingDate} onChange={handleChange} InputLabelProps={{ shrink: true }} /> */}
               <TextField fullWidth margin="dense" label="Role" name="role" value={newTeacher.role} onChange={handleChange} />
               <TextField fullWidth margin="dense" label="Documents" name="documents" value={newTeacher.documents} onChange={handleChange} />

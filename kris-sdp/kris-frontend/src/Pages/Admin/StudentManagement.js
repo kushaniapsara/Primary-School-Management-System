@@ -346,6 +346,17 @@ const StuManagement = () => {
           }
           break;
 
+          case "fatherNIC":
+                      case "motherNIC":
+
+  if (!/^[A-Za-z0-9]+$/.test(value)) {
+    error = "NIC should contain only letters and numbers";
+  } else if (value.length < 10 || value.length > 12) {
+    error = "NIC must be between 10 and 12 characters long";
+  }
+  break;
+
+
         default:
           break;
       }
@@ -716,14 +727,14 @@ const StuManagement = () => {
                   <h3 className="text-lg font-bold mb-4">Father's Details</h3>
                   <TextField fullWidth margin="dense" label="Name" name="fatherName" value={newStudent.fatherName} onChange={handleChange} />
                   <TextField fullWidth margin="dense" label="Contact Number" name="fatherContact" value={newStudent.fatherContact} onChange={handleChange} error={!!errors.fatherContact} helperText={errors.fatherContact} />
-                  <TextField fullWidth margin="dense" label="NIC" name="fatherNIC" value={newStudent.fatherNIC} onChange={handleChange} />
+                  <TextField fullWidth margin="dense" label="NIC" name="fatherNIC" value={newStudent.fatherNIC} onChange={handleChange} error={!!errors.fatherNIC} helperText={errors.fatherNIC} />
                   <TextField fullWidth margin="dense" label="Occupation" name="fatherOccupation" value={newStudent.fatherOccupation} onChange={handleChange} />
                   <TextField fullWidth margin="dense" label="Office - Address" name="fatherAddress" value={newStudent.fatherAddress} onChange={handleChange} />
 
                   <h3 className="text-lg font-bold mt-6 mb-4">Mother's Details</h3>
                   <TextField fullWidth margin="dense" label="Name" name="motherName" value={newStudent.motherName} onChange={handleChange} />
                   <TextField fullWidth margin="dense" label="Contact Number" name="motherContact" value={newStudent.motherContact} onChange={handleChange} error={!!errors.fatherContact} helperText={errors.fatherContact} />
-                  <TextField fullWidth margin="dense" label="NIC" name="motherNIC" value={newStudent.motherNIC} onChange={handleChange} />
+                  <TextField fullWidth margin="dense" label="NIC" name="motherNIC" value={newStudent.motherNIC} onChange={handleChange} error={!!errors.motherNIC} helperText={errors.motherNIC}/>
                   <TextField fullWidth margin="dense" label="Occupation" name="motherOccupation" value={newStudent.motherOccupation} onChange={handleChange} />
                   <TextField fullWidth margin="dense" label="Office - Address" name="motherAddress" value={newStudent.motherAddress} onChange={handleChange} />
 
