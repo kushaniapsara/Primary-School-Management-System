@@ -30,6 +30,8 @@ import ReadingPage from './Pages/Teacher/ReadingPage.js';
 import VideosPage from './Pages/Teacher/VideosPage.js';
 import GeneralKnowledgePage from './Pages/Teacher/GeneralKnowledgePage.js';
 
+import AddSubMarks from './Pages/Teacher/addsubmarks.js';
+
 // Parent Pages (role: Student)
 import ParentDashboard from './Pages/Parent/ParentDashboard.js';
 //import ParentProgress from './Pages/Parent/ParentProgress.js';
@@ -139,6 +141,8 @@ function App() {
                     <Route path="/extra-curricular/:studentId" element={<ExtraCurricularPage />} />
                     <Route path="/progress/:studentId" element={<ProgressPage />} />
                     <Route path="/Reports" element={<Reports />} />
+
+                    <Route path="/addsubmarks" element={<AddSubMarks />} />
   
                     {/* Study Materials */}
                     <Route path="/study-materials/music" element={<MusicPage />} />

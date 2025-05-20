@@ -3,13 +3,25 @@ const router = express.Router();
 const progressController = require('../controllers/progressController');
 const verifyToken = require('../middleware/auth'); // Ensure token validation
 
+// New route: Get all students in teacher's class for selected academic year
+// New extended progress for all students in class/year with subject details
+router.get(
+  "/students/details",
+  verifyToken,
+  progressController.getStudentSubjectsByClassAndYear
+);
 
+router.post("/addsubmarks", verifyToken, progressController.addSubjectMarks);
+
+// In routes/progress.js:
+router.get("/subjects", verifyToken, progressController.getSubjectsForClass);
+router.get('/students', verifyToken, progressController.getStudentsByClassAndYear)
 //router.post('/add', progressController.addProgress);
 
 //router.put('/update', progressController.updateProgress);
 
-// New route for fetching all subjects
-router.get('/subjects', progressController.getAllSubjects);
+// // New route for fetching all subjects
+// router.get('/subjects', progressController.getAllSubjects);
 
 
 // Comment-related routes
