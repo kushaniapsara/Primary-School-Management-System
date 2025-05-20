@@ -50,3 +50,25 @@ exports.getActivityById = (req, res) => {
     res.json(result[0]); // Return the first match
   });
 };
+
+
+//enrolled students
+exports.getEnrolledStudents = (req, res) => {
+  const activityId = req.params.id;
+
+  const query = `
+    SELECT s.Student_ID, s.Full_Name, s.Contact_number
+    FROM Student s
+    JOIN StudentExtraCurricularActivity sea ON s.Student_ID = sea.Student_ID
+    WHERE sea.Activity_ID = ? AND sea.Status = 'active'
+  `;
+
+  db.query(query, [activityId], (err, results) => {
+    if (err) {
+      console.error("Error fetching enrolled students:", err);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    res.json(results);
+  });
+};

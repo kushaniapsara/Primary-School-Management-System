@@ -9,6 +9,10 @@ router.post("/activities", extraCurricularController.addActivity);
 
 router.get("/activities/:id", extraCurricularController.getActivityById);
 
+// ✅ Correct nested route
+router.get("/activities/:id/students", extraCurricularController.getEnrolledStudents);
+
+
 
 
 

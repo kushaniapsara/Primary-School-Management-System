@@ -14,6 +14,10 @@ const ActivityDetails = () => {
   const [caption, setCaption] = useState("");
   const [userRole, setUserRole] = useState(""); // NEW state to track user role
 
+  const [enrolledStudents, setEnrolledStudents] = useState([]); //for enrolled students
+  const [loadingStudents, setLoadingStudents] = useState(true);
+
+
 
   // Fetch activity details based on the id
   useEffect(() => {
@@ -44,6 +48,22 @@ const ActivityDetails = () => {
         setLoadingImages(false); // Set loading to false on error
       });
   }, [id]);
+
+  // Fetch enrolled students
+  useEffect(() => {
+    fetch(`http://localhost:5001/api/activities/${id}/students`)
+      .then((res) => res.json())
+      .then((data) => {
+        setEnrolledStudents(data);
+        setLoadingStudents(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching enrolled students:", err);
+        setEnrolledStudents([]);
+        setLoadingStudents(false);
+      });
+  }, [id]);
+
 
   // to hide buttons
   useEffect(() => {
@@ -108,9 +128,9 @@ const ActivityDetails = () => {
 
 
   return (
-    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-blue-900 p-6">
 
-      <div className="flex flex-col items-center min-h-screen bg-gray-100 p-8">
+      <div className="flex flex-col items-center min-h-screen bg-blue-900 p-8">
         {/* Two-Column Layout with Activity Name and Emoji in Left Card */}
         <div className="flex w-full max-w-6xl gap-8">
           {/* Left: Activity Details */}
@@ -131,13 +151,53 @@ const ActivityDetails = () => {
               📜 {activity.Description || "No description available."}
             </p>
             <p className="text-gray-600 text-lg mt-4">
-              👥 Active Students: {activity.active_students || "N/A"}
+              {/* 👥 Active Students: {activity.active_students || "N/A"} */}
             </p>
             <p className="text-gray-600 text-lg">
               👨‍🏫 Teacher-in-Charge: {activity.Teacher_incharge || "N/A"}
             </p>
             <p className="text-gray-600 text-lg">📍 Location: {activity.Location || "N/A"}</p>
+
+            {/* Enrolled Students Card */}
+            {userRole === "Admin" && (
+            <div className="bg-blue-200 rounded-xl p-6 shadow-md mt-6">
+              <Typography variant="h6" className="font-semibold text-gray-800 mb-4">
+                ⛹️‍♂️ Enrolled Students
+              </Typography>
+
+              {loadingStudents ? (
+                <p className="text-gray-500">Loading students...</p>
+              ) : enrolledStudents.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 max-h-[300px] overflow-y-auto pr-2">
+                  {enrolledStudents.map((student) => (
+                    <div
+                      key={student.Student_ID}
+                      className="bg-white rounded-lg shadow p-4 border border-gray-200"
+                    >
+                      <p className="text-sm text-gray-700 font-semibold">
+                        ID: <span className="font-normal">{student.Student_ID}</span>
+                      </p>
+                      <p className="text-sm text-gray-700 font-semibold">
+                        Name: <span className="font-normal">{student.Full_Name}</span>
+                      </p>
+                      <p className="text-sm text-gray-700 font-semibold">
+                        Contact: <span className="font-normal">{student.Contact_number || "N/A"}</span>
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No students enrolled yet.</p>
+              )}
+            </div>)}
+
+
+
+
           </div>
+
+
+
 
           {/* Right: Achievements Section */}
           <div className="w-2/3 bg-white shadow-lg rounded-xl p-6 min-h-[500px] flex flex-col">

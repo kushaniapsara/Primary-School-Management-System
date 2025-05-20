@@ -141,7 +141,7 @@ const ParentPayment = () => {
 
 
   return (
-    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
+    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-blue-100 p-6">
 
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl mt-8">
         <h2 className="text-2xl font-bold mb-4 text-black">Payment Information</h2>
@@ -151,8 +151,8 @@ const ParentPayment = () => {
             <div className="mb-6">
               <p><strong>Student ID:</strong> {studentData.Student_ID}</p>
               <p><strong>Name:</strong> {studentData.Name_with_initials}</p>
-              <p><strong>Monthly Fee:</strong> Rs. {parseFloat(studentData.monthly_amount).toFixed(2)}</p>
-              <p><strong>Total Payable Amount:</strong> Rs. {parseFloat(totalAmount).toFixed(2)}</p>
+              <p><strong>Monthly Fee:</strong> LKR. {parseFloat(studentData.monthly_amount).toFixed(2)}</p>
+              <p><strong>Total Payable Amount:</strong> LKR. {parseFloat(totalAmount).toFixed(2)}</p>
             </div>
 
             <hr className="my-6" />
@@ -218,7 +218,7 @@ const ParentPayment = () => {
                     {paymentHistory.map((payment, index) => (
                       <tr key={index} className="hover:bg-gray-50">
                         <td className="px-4 py-2 border">{new Date(payment.date).toLocaleDateString()}</td>
-                        <td className="px-4 py-2 border">Rs. {parseFloat(payment.amount).toFixed(2)}</td>
+                        <td className="px-4 py-2 border">LKR. {parseFloat(payment.amount).toFixed(2)}</td>
                         <td className="px-4 py-2 border">{payment.description || 'No Description'}</td>
                         <td className="px-4 py-2 border">{payment.month_year}</td>
                       </tr>

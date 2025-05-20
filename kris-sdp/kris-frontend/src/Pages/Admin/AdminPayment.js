@@ -131,11 +131,11 @@ const AdminPayment = () => {
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
           <div className="bg-white rounded-lg shadow p-5 text-center">
             <p className="text-gray-500">Over Collected</p>
-            <p className="text-2xl font-semibold">Rs. {summary.totalCollected.toFixed(2)}</p>
+            <p className="text-2xl font-semibold">LKR. {summary.totalCollected.toFixed(2)}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-5 text-center">
             <p className="text-gray-500">Total Due</p>
-            <p className="text-2xl font-semibold">Rs. {summary.totalDue.toFixed(2)}</p>
+            <p className="text-2xl font-semibold">LKR. {summary.totalDue.toFixed(2)}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-5 text-center">
             <p className="text-gray-500">Paid Students</p>
@@ -191,7 +191,7 @@ const AdminPayment = () => {
             </div>
 
             <div>
-              <label className="block mb-2 font-medium text-gray-700">Amount (Rs.)</label>
+              <label className="block mb-2 font-medium text-gray-700">Amount (LKR.)</label>
               <input
                 type="text"
                 value={customAmount}
@@ -277,13 +277,13 @@ const AdminPayment = () => {
                 >
                   <td className="p-4 text-gray-900">{s.Student_ID}</td>
                   <td className="p-4 text-gray-900">{s.Name_with_initials}</td>
-                  <td className="p-4 font-semibold text-gray-900">Rs. {parseFloat(s.monthly_amount || 0).toFixed(2)}</td>
+                  <td className="p-4 font-semibold text-gray-900">LKR. {parseFloat(s.monthly_amount || 0).toFixed(2)}</td>
                   <td
                     className={`p-4 font-semibold ${
                       s.total_payable < 0 ? 'text-green-600' : s.total_payable > 0 ? 'text-red-600' : 'text-gray-800'
                     }`}
                   >
-                    Rs. {parseFloat(s.total_payable || 0).toFixed(2)}
+                    LKR. {parseFloat(s.total_payable || 0).toFixed(2)}
                   </td>
                   <td className="p-4 text-gray-900">{s.total_payable <= 0 ? '🟢 Up-to-date' : '🔴 Has Dues'}</td>
                 </tr>
@@ -347,7 +347,7 @@ const AdminPayment = () => {
                         p.amount < 0 ? 'text-green-600' : 'text-red-600'
                       }`}
                     >
-                      Rs. {parseFloat(p.amount).toFixed(2)}
+                      LKR. {parseFloat(p.amount).toFixed(2)}
                     </td>
                     <td className="p-4 text-gray-900">{p.description}</td>
                     <td className="p-4 text-gray-900">{p.month_year}</td>
