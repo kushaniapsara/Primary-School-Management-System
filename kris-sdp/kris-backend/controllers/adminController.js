@@ -91,3 +91,36 @@ exports.updateAdminStatus = (req, res) => {
     res.status(200).json({ message: 'Status updated successfully' });
   });
 };
+
+
+
+
+// controllers/subjectController.js
+const db = require('../config/db'); // adjust path to your db connection
+
+// Add new subject
+exports.addSubject = (req, res) => {
+  const { Subject_name, Description, Grade } = req.body;
+  if (!Subject_name) {
+    return res.status(400).json({ message: "Subject name is required" });
+  }
+  const query = "INSERT INTO subject (Subject_name, Description, Grade) VALUES (?, ?, ?)";
+  db.query(query, [Subject_name, Description || null, Grade || null], (err, result) => {
+    if (err) {
+      console.error('Error inserting subject:', err);
+      return res.status(500).json({ message: "Error adding subject" });
+    }
+    res.status(201).json({ message: "Subject added successfully", subjectId: result.insertId });
+  });
+};
+
+// Get all subjects
+exports.getSubjects = (req, res) => {
+  db.query("SELECT * FROM subject", (err, results) => {
+    if (err) {
+      console.error('Error fetching subjects:', err);
+      return res.status(500).json({ message: "Error fetching subjects" });
+    }
+    res.status(200).json(results);
+  });
+};

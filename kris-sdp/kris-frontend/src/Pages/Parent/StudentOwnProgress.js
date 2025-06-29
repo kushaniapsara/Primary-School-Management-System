@@ -1,146 +1,187 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const COLORS = [
+  "#1976d2", "#ff7043", "#43a047", "#8e24aa", "#fbc02d",
+  "#00acc1", "#e53935", "#7e57c2", "#ffa000", "#00897b"
+];
 
 const ProgressPage = () => {
-  const { studentId: paramStudentId } = useParams();
-  const [studentId, setStudentId] = useState(paramStudentId || "");
-  const [progress, setProgress] = useState([]);
+  const [marks, setMarks] = useState([]);
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState([]);
+  const [studentId, setStudentId] = useState(null);
+  const [datasets, setDatasets] = useState([]);
+  const [labels, setLabels] = useState([]);
 
-  const [authFailed, setAuthFailed] = useState(false);
-
-  const calculateAverage = () => {
-    if (progress.length === 0) return 0;
-    const total = progress.reduce((sum, item) => sum + Number(item.Marks), 0);
-    return (total / progress.length).toFixed(2);
-  };
-
-
-  // 1. If no paramStudentId, get studentId from token
+  // 1. Get studentId from token
   useEffect(() => {
-    if (!paramStudentId && !authFailed) {
-      axios
-        .get("http://localhost:5001/api/progress/me", {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          const id = res.data.studentId;
-          setStudentId(id);
-
-          // Fetch progress after studentId is known
-          fetch(`http://localhost:5001/api/progress/${id}`)
-            .then((res) => res.json())
-            .then((data) => setProgress(Array.isArray(data) ? data : []))
-            .catch((err) => console.error("Error fetching progress:", err));
-
-          // Fetch comments after studentId is known
-          fetch(`http://localhost:5001/api/progress/comment/${id}`)
-            .then((res) => res.json())
-            .then((data) => setComments(Array.isArray(data) ? data : []))
-            .catch((err) => console.error("Error fetching comments:", err));
-        })
-        .catch((err) => {
-          console.error("Auth error:", err);
-          if (!authFailed) {
-            alert("Authentication failed. Please log in again.");
-            setAuthFailed(true); // Prevents future alerts
-          }
+    const fetchStudentId = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("http://localhost:5001/api/progress/me", {
+          headers: { Authorization: token },
         });
-    }
-  }, [paramStudentId]);
+        setStudentId(res.data.studentId);
+      } catch (e) {
+        setStudentId(null);
+      }
+    };
+    fetchStudentId();
+  }, []);
 
-
-
-  // 2. Load progress data
+  // 2. Load subject marks
   useEffect(() => {
-    if (!paramStudentId || !studentId) return;
-    fetch(`http://localhost:5001/api/progress/${studentId}`)
-      .then((res) => res.json())
-      .then((data) => setProgress(Array.isArray(data) ? data : []))
-      .catch((err) => console.error("Error fetching progress:", err));
-  }, [studentId, paramStudentId]);
+    if (!studentId) return;
+    const fetchMarks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("http://localhost:5001/api/progress/my-marks", {
+          headers: { Authorization: token },
+        });
+        setMarks(res.data || []);
+      } catch (e) {
+        setMarks([]);
+      }
+    };
+    fetchMarks();
+  }, [studentId]);
 
-
-  // 3. Load comments
+  // 3. Prepare chart data
   useEffect(() => {
-    if (!paramStudentId || !studentId) return;
-    fetch(`http://localhost:5001/api/progress/comment/${studentId}`)
-      .then((res) => res.json())
-      .then((data) => setComments(Array.isArray(data) ? data : []))
-      .catch((err) => console.error("Error fetching comments:", err));
-  }, [studentId, paramStudentId]);
+    const uniqueTerms = Array.from(new Set(marks.map((m) => m.Term))).sort((a, b) => a - b);
+    const subjects = {};
 
-  const handleCommentSubmit = (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+    marks.forEach((m) => {
+      if (!subjects[m.Subject_ID]) {
+        subjects[m.Subject_ID] = {
+          label: m.Subject_name,
+          data: {},
+        };
+      }
+      subjects[m.Subject_ID].data[m.Term] = m.Marks;
+    });
 
-    fetch("http://localhost:5001/api/progress/comment/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ studentId, comment: newComment }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        fetch(`http://localhost:5001/api/progress/comment/${studentId}`)
-          .then((res) => res.json())
-          .then((data) => setComments(Array.isArray(data) ? data : []));
-        setNewComment("");
-      })
-      .catch((err) => console.error("Error adding comment:", err));
-  };
+    const datasets = Object.values(subjects).map((subj, idx) => ({
+      label: subj.label,
+      data: uniqueTerms.map((t) => subj.data[t] ?? null),
+      borderColor: COLORS[idx % COLORS.length],
+      backgroundColor: COLORS[idx % COLORS.length],
+      tension: 0.3,
+      spanGaps: true,
+    }));
+
+    setLabels(uniqueTerms.map((t) => `Term ${t}`));
+    setDatasets(datasets);
+  }, [marks]);
+
+  // 4. Load comments
+  useEffect(() => {
+    if (!studentId) return;
+    const fetchComments = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5001/api/progress/comment/${studentId}`);
+        setComments(Array.isArray(res.data) ? res.data : []);
+      } catch (e) {
+        setComments([]);
+      }
+    };
+    fetchComments();
+  }, [studentId]);
 
   return (
-    <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-blue-100 p-6">
+    <div className="flex flex-col h-full max-h-[calc(100vh-80px)] overflow-y-auto bg-blue-100 p-6">
+      <div className="max-w-4xl w-full mx-auto">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">My Subject Progress</h1>
 
-      <div className="p-6 max-w-5xl mx-auto">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6">Student Progress</h1>
-
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Progress Section */}
-          <div className="md:w-2/3">
-            {progress.length > 0 ? (
-              <div className="space-y-4">
-                <div className="bg-blue-100 text-blue-800 p-3 rounded-md mb-4">
-                  <strong>Average Marks:</strong> {calculateAverage()}
-                </div>
-                {progress.map((item, index) => (
-                  <div key={index} className="bg-white p-4 shadow-md rounded-md border">
-                    <p className="text-lg font-medium text-gray-700">
-                      <strong>Subject:</strong> {item.Subject_name}
-                    </p>
-                    <p className="text-gray-600"><strong>Marks:</strong> {item.Marks}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500">No progress data available.</p>
-            )}
-          </div>
-
-          {/* Comments Section */}
-          <div className="mt-10 bg-white p-6 shadow-md rounded-md border">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
-
-            <div className="space-y-2 mb-4 max-h-64 overflow-y-auto">
-              {comments.length > 0 ? (
-                comments.map((comment, index) => (
-                  <div key={index} className="border p-2 rounded-md bg-gray-50">
-                    <p className="text-gray-700">{comment.Comment}</p>
-                    <p className="text-sm text-gray-500">
-                      on {new Date(comment.Created_At).toLocaleDateString()}
-                    </p>
-                  </div>
-                ))
+        {/* Marks Table */}
+        <div className="bg-white rounded-md shadow-md overflow-x-auto mb-6">
+          <table className="w-full table-auto text-left">
+            <thead className="bg-gray-200 text-gray-700">
+              <tr>
+                <th className="py-3 px-4">Subject</th>
+                <th className="py-3 px-4">Term</th>
+                <th className="py-3 px-4">Marks</th>
+                <th className="py-3 px-4">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {marks.length === 0 ? (
+                <tr>
+                  <td className="py-3 px-4" colSpan="4">No marks found.</td>
+                </tr>
               ) : (
-                <p className="text-gray-500">No comments yet.</p>
+                marks.map((m, idx) => (
+                  <tr key={idx} className="border-t">
+                    <td className="py-3 px-4">{m.Subject_name}</td>
+                    <td className="py-3 px-4">{m.Term}</td>
+                    <td className="py-3 px-4">{m.Marks}</td>
+                    <td className="py-3 px-4">
+                      {m.Date ? new Date(m.Date).toLocaleDateString() : "-"}
+                    </td>
+                  </tr>
+                ))
               )}
-            </div>
+            </tbody>
+          </table>
+        </div>
 
+        {/* Chart Section */}
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Progress Chart (All Subjects)</h2>
+        <div className="bg-white rounded-md shadow-md p-4 mb-10">
+          <Line
+            data={{ labels, datasets }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { display: true, position: "top" },
+                title: { display: false },
+              },
+              scales: {
+                y: { beginAtZero: true, max: 100 },
+              },
+            }}
+          />
+        </div>
 
+        {/* Comments Section */}
+        <div className="bg-white p-6 rounded-md shadow-md border mb-4">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <div key={index} className="border p-3 rounded-md bg-gray-50">
+                  <p className="text-gray-700">{comment.Comment}</p>
+                  <p className="text-sm text-gray-500">
+                    {comment.Created_At
+                      ? "on " + new Date(comment.Created_At).toLocaleDateString()
+                      : ""}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No comments yet.</p>
+            )}
           </div>
         </div>
       </div>

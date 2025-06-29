@@ -55,7 +55,7 @@ const StudentProfiles = () => {
                   onClick={() => navigate(`/progress/${student.Student_ID}`)}
                   className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
                 >
-                  Progress
+                  Add Comments
                 </button>
                 <button
                   onClick={() => navigate(`/extra-curricular/${student.Student_ID}`)}

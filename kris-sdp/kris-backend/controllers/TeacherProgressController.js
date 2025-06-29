@@ -98,4 +98,22 @@ exports.addSubject = (req, res) => {
   });
 };
 
+
+//classwise
+exports.getSubjectAverageForClass = (req, res) => {
+  const classID = req.classID;
+
+  if (!classID) {
+    return res.status(403).json({ error: "Class ID missing in token" });
+  }
+
+  TeacherProgressModel.getSubjectWiseAverageByClass(classID, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error", details: err });
+    }
+
+    res.json(results);
+  });
+};
+
   //module.exports = { getStudentsByClass};

@@ -5,6 +5,15 @@ const { getAllStudents, addCustomFee, updateMonthlyAmount, addMonthlyForAll, add
 
 const router = express.Router();
 
+const subjectController = require('../controllers/adminController');
+
+// POST /api/subjects
+router.post('/addSubject', subjectController.addSubject);
+
+// GET /api/subjects
+router.get('/getSubjects', subjectController.getSubjects);
+
+
 router.get("/", getAdmins);
 router.post("/", addAdmin);
 

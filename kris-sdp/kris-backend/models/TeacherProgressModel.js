@@ -57,7 +57,21 @@ const addSubject = (subjectName, callback) => {
 };
 
 
+//classwise
+const getSubjectWiseAverageByClass = (classID, callback) => {
+  const sql = `
+    SELECT s.Subject_name, ROUND(AVG(ss.Marks), 2) AS AverageMarks
+    FROM StudentSubject ss
+    JOIN Subject s ON ss.Subject_ID = s.Subject_ID
+    JOIN StudentClass sc ON ss.Student_ID = sc.Student_ID
+    WHERE sc.Class_ID = ?
+    GROUP BY ss.Subject_ID
+  `;
+  db.query(sql, [classID], callback);
+};
+
+
 module.exports = {
   getStudentsByClass,
-  getProgressByStudent, getAllSubjects, saveMark, getSubjectWiseAverage, addSubject
+  getProgressByStudent, getAllSubjects, saveMark, getSubjectWiseAverage, addSubject, getSubjectWiseAverageByClass
 };

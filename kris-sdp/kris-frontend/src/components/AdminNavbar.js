@@ -10,6 +10,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import AttachMoneyIcon from "@mui/icons-material/CalendarToday";
 import VerifiedIcon from '@mui/icons-material/Verified';
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline"; // <-- NEW ICON IMPORT
+
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { NavLink } from 'react-router-dom';
 
@@ -90,6 +92,14 @@ useEffect(() => {
               Admin Details
             </NavLink>
           </li>
+
+          <li>
+            <NavLink to="/AdminWorks" className={linkClasses}>
+              <WorkOutlineIcon className="mr-2" />
+              Admin Works
+            </NavLink>
+          </li>
+
 
           <li>
             <NavLink to="/Profile" className={linkClasses}>

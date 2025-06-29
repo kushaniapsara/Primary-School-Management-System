@@ -93,7 +93,7 @@ const ProgressPage = () => {
         <div className="flex flex-col h-full max-h-[calc(100vh-40px)] overflow-y-auto bg-gray-100 p-6">
 
     <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Student Progress</h1>
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Comments about Student and the Progress</h1>
 
       <div className="flex flex-col md:flex-row gap-6">
         {/* Progress Section */}
@@ -113,7 +113,7 @@ const ProgressPage = () => {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">No progress data available.</p>
+            <p className="text-gray-500"></p>
           )}
         </div>
 

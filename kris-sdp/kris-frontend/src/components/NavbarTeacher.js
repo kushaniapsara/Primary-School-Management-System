@@ -95,12 +95,12 @@ const Navbar = () => {
             </NavLink>
           </li>
 
-          <li>
+          {/* <li>
             <NavLink to="/Reports" className={linkClasses}>
               <AssessmentIcon className="mr-2" />
               Reports
             </NavLink>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </div>

@@ -200,3 +200,26 @@ exports.getStudentsByClassAndYear = (req, res) => {
     res.json(results);
   });
 };
+
+// progressController.js
+
+exports.getOwnSubjectMarks = (req, res) => {
+  const studentId = req.userID; // From your middleware
+
+  const sql = `
+    SELECT
+      sub.Subject_name,
+      ss.Subject_ID,
+      ss.Marks,
+      ss.Term,
+      ss.Date
+    FROM studentsubject ss
+    JOIN subject sub ON ss.Subject_ID = sub.Subject_ID
+    WHERE ss.Student_ID = ?
+    ORDER BY ss.Subject_ID, ss.Term
+  `;
+  db.query(sql, [studentId], (err, results) => {
+    if (err) return res.status(500).json({ message: "DB error", error: err });
+    res.json(results);
+  });
+};

@@ -49,6 +49,7 @@ import StudentManagement from './Pages/Admin/StudentManagement.js';
 import TeacherManagement from './Pages/Admin/TeacherManagement.js';
 import AdminDetails from './Pages/Admin/AdminDetails.js';
 import AdminPayment from './Pages/Admin/AdminPayment.js';
+import AdminWorks from './Pages/Admin/AdminWorks.js';
 
 // Navbars
 import AdminNavbar from './components/AdminNavbar.js';
@@ -168,6 +169,7 @@ function App() {
                     <Route path="/TeacherManagement" element={<TeacherManagement />} />
                     <Route path="/AdminDetails" element={<AdminDetails />} />
                     <Route path="/AdminPayment" element={<AdminPayment />} />
+                    <Route path="/AdminWorks" element={<AdminWorks />} />
   
                     {/* Shared Pages */}
                     <Route path="/Profile" element={<Profile />} />

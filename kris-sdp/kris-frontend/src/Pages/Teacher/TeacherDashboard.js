@@ -36,6 +36,8 @@ const TeacherDashboard = () => {
   // ✅ Fetch all student progress data (for subjects and marks)
   useEffect(() => {
     fetch("http://localhost:5001/api/teacher-progress/subject-averages")
+    //    fetch("http://localhost:5001/api/teacher-progress/subject-averages-byclass")
+
       .then((res) => res.json())
       .then((data) => {
         const result = data.map((entry) => ({

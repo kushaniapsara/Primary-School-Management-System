@@ -162,10 +162,7 @@ const ParentDashboard = () => {
             </div>
 
             {/* Graph: Class Performance */}
-            <div className="col-span-3 bg-gray-200 p-4 mx-3 rounded shadow-md">
-              <h2 className="text-lg font-bold text-center mb-4">Performance</h2>
-              <Bar data={performanceData} options={chartOptions} height={70} />
-            </div>
+        
 
             {/* Special Notices */}
             <div className="col-span-3 p-2 mx-3 rounded shadow-md">

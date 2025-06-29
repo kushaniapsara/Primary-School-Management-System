@@ -13,6 +13,8 @@ router.get(
 
 router.post("/addsubmarks", verifyToken, progressController.addSubjectMarks);
 
+router.get('/my-marks', verifyToken, progressController.getOwnSubjectMarks);
+
 // In routes/progress.js:
 router.get("/subjects", verifyToken, progressController.getSubjectsForClass);
 router.get('/students', verifyToken, progressController.getStudentsByClassAndYear)

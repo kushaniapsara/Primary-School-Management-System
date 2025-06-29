@@ -20,5 +20,9 @@ router.get('/:studentId', TeacherProgressController.getProgressByStudent);
 
 router.post('/save-mark', TeacherProgressController.saveMark);
 
+//classwise
+router.get('/subject-averages-byclass', verifyToken, TeacherProgressController.getSubjectAverageForClass);
+
+
 
 module.exports = router;
