@@ -22,7 +22,6 @@ const router = express.Router();
 router.get("/", getStudents);
 router.post("/", addStudent);
 
-//router.post('/addStudent', studentController.addStudent);
 
 // For teacher-specific class students
 router.get("/by-class", verifyToken, getStudentsByClass);

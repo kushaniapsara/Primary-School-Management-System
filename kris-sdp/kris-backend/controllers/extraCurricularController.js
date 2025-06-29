@@ -1,4 +1,4 @@
-const db = require("../config/db"); // Make sure you have a database connection
+const db = require("../config/db"); 
 const extraCurricularModel = require("../models/extraCurricularModel");
 
 exports.getAllActivities = (req, res) => {

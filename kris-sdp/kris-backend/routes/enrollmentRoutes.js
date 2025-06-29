@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const enrollmentController = require('../controllers/enrollmentController');
-const verifyToken = require('../middleware/auth'); // Import your middleware
+const verifyToken = require('../middleware/auth'); // Import middleware
 
 // Route for enrolling a student in an activity
 router.post('/', verifyToken, enrollmentController.enrollInActivity);

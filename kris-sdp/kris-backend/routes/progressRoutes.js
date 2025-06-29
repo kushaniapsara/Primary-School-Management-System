@@ -18,12 +18,6 @@ router.get('/my-marks', verifyToken, progressController.getOwnSubjectMarks);
 // In routes/progress.js:
 router.get("/subjects", verifyToken, progressController.getSubjectsForClass);
 router.get('/students', verifyToken, progressController.getStudentsByClassAndYear)
-//router.post('/add', progressController.addProgress);
-
-//router.put('/update', progressController.updateProgress);
-
-// // New route for fetching all subjects
-// router.get('/subjects', progressController.getAllSubjects);
 
 
 // Comment-related routes

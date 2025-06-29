@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const cors = require('cors'); // Import cors middleware
 const homeworkRoutes = require('./routes/HomeworkRoutes'); // Import homework-related routes
 const authRoutes = require('./routes/authRoutes'); // Import authRoutes
-//const attendanceRoutes = require('./routes/attendanceRoutes'); // Import authRoutes
 const extraCurricularRoutes = require("./routes/extraCurricularRoutes");
 const uploadRoutes = require('./routes/uploadRoutes');
 const imageRoutes = require('./routes/imageRoutes');
@@ -47,8 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 // CORS Configuration
 app.use(cors()); // Allow all origins by default
 
-// Alternatively, restrict CORS to specific origins (for production):
-// app.use(cors({ origin: "http://localhost:3000" })); // Replace with your frontend URL
+
 
 // Routes
 app.use('/api/homework', homeworkRoutes); // Homework-related routes

@@ -17,7 +17,7 @@ const queryAsync = (query, values) => {
   });
 };
 
-exports.login = async (req, res) => { // Make sure the login function is async
+exports.login = async (req, res) => { 
   const { username, password, role } = req.body;
 
   try {

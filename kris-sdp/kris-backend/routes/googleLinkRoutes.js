@@ -6,7 +6,7 @@ const googleLinkController = require('../controllers/googleLinkController');
 const checkAdmin = (req, res, next) => {
   const token = req.headers.authorization;
   // Decode token logic here (e.g., jwtDecode) and check role
-  // You can adapt this from your existing auth system
+  // adapt this from your existing auth system
   const role = token && token.includes("admin"); // Simplified
   if (role) {
     next();

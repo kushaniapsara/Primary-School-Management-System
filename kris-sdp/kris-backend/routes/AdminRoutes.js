@@ -17,7 +17,6 @@ router.get('/getSubjects', subjectController.getSubjects);
 router.get("/", getAdmins);
 router.post("/", addAdmin);
 
-//router.post('/addStudent', studentController.addStudent);
 router.post('/payable/addCustomFee', addCustomFee);
 
 router.put('/:id/status', updateAdminStatus);

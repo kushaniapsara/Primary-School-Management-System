@@ -34,7 +34,7 @@ const saveImage = (req, res) => {
     }
     console.log("Received file:", req.file);
     console.log("Received activityId:", req.body.activityId);
-    console.log("Received caption:", req.body.caption); // <-- Add this line
+    console.log("Received caption:", req.body.caption); 
 
     
     const { activityId, caption } = req.body; // Extract Activity_ID from form data

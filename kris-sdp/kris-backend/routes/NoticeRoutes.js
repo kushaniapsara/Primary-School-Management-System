@@ -7,7 +7,6 @@ router.get("/", noticeController.getAllNotice);
 router.post("/", noticeController.addNotice);
 router.put("/:id", noticeController.updateNotice);
 router.delete("/:id", noticeController.deleteNotice);
-//router.get("/upcoming", noticeController.getUpcomingHomework);
-//router.get("/recent", noticeController.getRecentHomework);
+
 
 module.exports = router;

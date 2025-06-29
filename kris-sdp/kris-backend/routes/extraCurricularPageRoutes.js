@@ -10,14 +10,5 @@ router.get('/extra-curricular/:studentId', extraCurricularPageController.getStud
 // Update award
 router.put('/extra-curricular/:studentId/:activityId/award', extraCurricularPageController.updateAward);
 
-// //for own progress of student
-// router.get("/extra-curricular/me", verifyToken, (req, res) => {
-//   console.log(" /me hit", req.userID); // <--- Add this
-
-//   if (req.userRole !== "Student") {
-//     return res.status(403).json({ message: "Access denied" });
-//   }
-//   res.json({ studentId: req.userID });
-// });
 
 module.exports = router;

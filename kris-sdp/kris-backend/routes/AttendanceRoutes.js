@@ -3,8 +3,6 @@ const router = express.Router();
 const AttendanceController = require("../controllers/AttendanceController");
 const verifyToken = require("../middleware/auth");
 
-// GET students
-//router.get('/students', AttendanceController.getStudentsByClass);
 
 // GET attendance records for last 5 days
 router.get("/attendance", AttendanceController.getAttendance);

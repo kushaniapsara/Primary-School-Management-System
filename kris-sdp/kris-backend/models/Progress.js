@@ -12,12 +12,6 @@ const Progress = {
     `;
     db.query(sql, [studentId], callback);
   },
-
-// //get all subjects
-//   getAllSubjects: (callback) => {
-//     const sql = `SELECT Subject_ID, Subject_name FROM Subject`;
-//     db.query(sql, callback);
-//   },
   
 
 // Add a general progress comment for a student

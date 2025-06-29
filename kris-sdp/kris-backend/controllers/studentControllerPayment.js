@@ -1,5 +1,5 @@
 // controllers/studentControllerPayment.js
-const pool = require('../config/db');  // ✅ correct path to db
+const pool = require('../config/db');  // ✅ path to db
 const generatePdf = require('../utils/pdfSlipGenerator'); // ⬅️ This is the new utility for generating payment slip PDF
 
 
@@ -27,7 +27,6 @@ const getStudentByID = (req, res) => {
 
 
 
-// In your controller file (e.g., studentController.js)
 
 // Route to get total payable amount for a student
 const getStudentAmount = (req, res) => {

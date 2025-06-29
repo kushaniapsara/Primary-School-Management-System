@@ -95,12 +95,6 @@ const Navbar = () => {
             </NavLink>
           </li>
 
-          {/* <li>
-            <NavLink to="/Reports" className={linkClasses}>
-              <AssessmentIcon className="mr-2" />
-              Reports
-            </NavLink>
-          </li> */}
         </ul>
       </nav>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../../components/NavbarTeacher'; // Import Navbar correctly
+import Navbar from '../../components/NavbarTeacher'; // Import Navbar 
 
 const Reports = () => {
   const [fromDate, setFromDate] = useState('');

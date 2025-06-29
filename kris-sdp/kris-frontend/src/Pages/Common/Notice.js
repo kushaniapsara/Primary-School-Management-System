@@ -8,9 +8,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { jwtDecode } from "jwt-decode";
 
 
-
-//import Navbar from "../../components/NavbarTeacher";
-
 const Notice = () => {
   const [noticeList, setNoticeList] = useState([]); // State for notices
   const [showModal, setShowModal] = useState(false); // Modal visibility (for add/edit)
@@ -38,7 +35,7 @@ const Notice = () => {
 
       } catch (error) {
         console.error("Invalid token", error);
-        setUserRole(""); // assuming your token has a 'role' field
+        setUserRole(""); 
       }
     }
   }, []);

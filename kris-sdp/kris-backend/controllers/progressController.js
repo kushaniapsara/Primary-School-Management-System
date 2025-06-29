@@ -1,13 +1,6 @@
 const Progress = require('../models/Progress');
-const db = require("../config/db"); // Your MySQL connection
-/*exports.addProgress = (req, res) => {
-  const { studentId, subjectId, date, marks, average } = req.body;
+const db = require("../config/db"); //  MySQL connection
 
-  Progress.addProgress(studentId, subjectId, date, marks, average, (err, result) => {
-    if (err) return res.status(500).json({ message: 'Database error', error: err });
-    res.status(201).json({ message: 'Progress added successfully' });
-  });
-};*/
 
 exports.getProgressByStudent = (req, res) => {
   const studentId = req.params.studentId;
@@ -17,28 +10,6 @@ exports.getProgressByStudent = (req, res) => {
     res.json(results);
   });
 };
-
-/*exports.updateProgress = (req, res) => {
-  const { studentId, subjectId, marks, average } = req.body;
-
-  Progress.updateProgress(studentId, subjectId, marks, average, (err, result) => {
-    if (err) return res.status(500).json({ message: 'Database error', error: err });
-    res.json({ message: 'Progress updated successfully' });
-  });
-};*/
-
-// // get subjects
-// exports.getAllSubjects = (req, res) => {
-//     Progress.getAllSubjects((err, results) => {
-//       if (err) {
-//         console.error("Error fetching subjects:", err);
-//         return res.status(500).json({ message: "Error fetching subjects", error: err });
-//       }
-//       console.log("Subjects fetched:", results);  // Log the results
-//       res.json(results);
-//     });
-//   };
-  
 
   // Add comment
 exports.addComment = (req, res) => {
@@ -79,7 +50,7 @@ exports.getMyProgress = (req, res) => {
 
 exports.getStudentSubjectsByClassAndYear = async (req, res) => {
   try {
-    const classId = req.classID; // from your middleware
+    const classId = req.classID; // from middleware
     const year = req.query.year;
 
     if (!classId || !year) {
@@ -166,7 +137,7 @@ exports.getSubjectsForClass = (req, res) => {
   const classId = req.classID; // from token/middleware
   const year = req.query.year;
 
-  // For simplicity, let's get all subjects for this class/grade (customize as needed)
+  // For simplicity,  get all subjects for this class/grade 
   const sql = `
     SELECT Subject_ID, Subject_name
     FROM subject
@@ -181,7 +152,7 @@ exports.getSubjectsForClass = (req, res) => {
 };
 
 exports.getStudentsByClassAndYear = (req, res) => {
-  const classId = req.classID;    // Set by your auth middleware
+  const classId = req.classID;    // Set by auth middleware
   const year = req.query.year;    // From frontend query param
 
   if (!classId || !year) {
@@ -201,10 +172,9 @@ exports.getStudentsByClassAndYear = (req, res) => {
   });
 };
 
-// progressController.js
 
 exports.getOwnSubjectMarks = (req, res) => {
-  const studentId = req.userID; // From your middleware
+  const studentId = req.userID; // From middleware
 
   const sql = `
     SELECT

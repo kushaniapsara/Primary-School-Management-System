@@ -90,15 +90,6 @@ const saveAttendance = (classID, date, attendanceData, callback) => {
             }
           }
         );
-
-        // db.query(
-        //   "INSERT INTO Attendance (Student_ID, Date, Status,Class_ID) VALUES (?, ?, ?,?) ON DUPLICATE KEY UPDATE Status = VALUES(Status)",
-        //   [entry.student_id, date, entry.status, classID],
-        //   (error, result) => {
-        //     if (error) reject(error);
-        //     else resolve(result);
-        //   }
-        // );
       })
   );
 

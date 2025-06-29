@@ -1,4 +1,4 @@
-const pool = require('../config/db'); // Ensure the correct database connection is used
+const pool = require('../config/db'); 
 
 // Insert new study material into the database
 const addStudyMaterial = (materialId, title, description, classId, fileType, filePath, callback) => {

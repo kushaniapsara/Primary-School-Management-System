@@ -15,7 +15,7 @@ const getStudentsByClass = (req, res) => {
       console.error("Error fetching students by class:", err.message);
       return res.status(500).json({ error: "Internal server error" });
     }
-    console.log("Students fetched:", results); // Add this log to verify
+    console.log("Students fetched:", results); // log to verify
 
     res.json(results);
   });

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-//import Navbar from "../../components/AdminNavbar";
 import axios from "axios";
 import MealChart from '../Common/MealChart';
 
@@ -78,7 +77,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/api/attendance-chart") // Adjust endpoint if needed
+      .get("http://localhost:5001/api/attendance-chart") 
       .then((res) => {
         console.log("Chart Data:", res.data); // Debugging log
 
@@ -142,12 +141,7 @@ const AdminDashboard = () => {
           {/* Header */}
           <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
             <div className="flex justify-between items-center px-8 py-4">
-              {/* <div className="flex space-x-4">
-              <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-                <SearchIcon className="mr-2" />
-                Search
-              </button>
-            </div> */}
+             
             </div>
 
           </header>
@@ -183,20 +177,7 @@ const AdminDashboard = () => {
           </section>
 
 
-          {/* <section className="bg-gray-100 p-4 mx-3 rounded shadow-md mb-4">
-          <h2 className="text-lg font-bold">Special Notices</h2>
-          <ul className="space-y-2">
-            <li className="bg-white px-4 py-2 rounded">
-              Annual English Day of KRIS Kegalle will be held on 20th December 2024
-            </li>
-            <li className="bg-white px-4 py-2 rounded">
-              Applications for new intake will be closed on 16th November 2024
-            </li>
-            <li className="bg-white px-4 py-2 rounded">
-              Chess class will be held every Sunday from 3rd November 2024
-            </li>
-          </ul>
-        </section>*/}
+        
         </div>
       </div>
     </div>

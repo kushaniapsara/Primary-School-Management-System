@@ -171,12 +171,7 @@ const TeacherDashboard = () => {
           {/* Header */}
           <header className="flex justify-between items-center bg-white px-8 py-2 border-b border-gray-300">
             <div className="flex justify-between items-center px-8 py-4">
-              {/* <div className="flex space-x-4">
-              <button className="flex items-center bg-gray-200 w-64 px-4 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-                <SearchIcon className="mr-2" />
-                Search
-              </button>
-            </div> */}
+              
 
             </div>
 

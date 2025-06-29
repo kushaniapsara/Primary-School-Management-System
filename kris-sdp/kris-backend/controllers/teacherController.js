@@ -74,7 +74,7 @@ exports.addTeacher = (req, res) => {
       const generateClassName = (grade) => {
         const classes = [];
         for (let i = 1; i <= 3; i++) {
-          // Assuming 3 classes per grade
+          // 3 classes per grade
           classes.push(`${grade}${String.fromCharCode(64 + i)}`); // 65 -> A, 66 -> B, etc.
         }
         return classes;

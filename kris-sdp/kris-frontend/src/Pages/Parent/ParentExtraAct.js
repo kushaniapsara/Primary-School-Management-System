@@ -149,18 +149,6 @@ const ExtraActParent = () => {
 
           </div>
 
-          {/* enrolled activities
-        <button
-          onClick={handleEnrolledActivities}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-        >
-          Enrolled Activities
-        </button> */}
-
-
-
-
-
           {/* Activity Cards */}
           <div className="flex-1 overflow-y-auto p-6">
 

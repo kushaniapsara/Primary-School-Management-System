@@ -30,18 +30,7 @@ async function generateLeavingCertificate(student) {
     } = student;
 
 
-    // Set gender-specific pronouns
-//   const genderLower = (typeof Gender === 'string' ? Gender.toLowerCase().trim() : '');
-//   const isMale = genderLower === 'male';
-//   const pronoun = isMale ? 'he' : 'she';
-//   const pronounCapitalized = isMale ? 'He' : 'She';
-//   const possessivePronoun = isMale ? 'his' : 'her';
 
-// console.log('Raw Gender value:', Gender);
-// console.log('Lowercased + trimmed:', (Gender || '').toLowerCase().trim());
-
-
-// console.log('Pronouns used:', pronounCapitalized, pronoun, possessivePronoun);
 
 
 

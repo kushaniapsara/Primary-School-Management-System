@@ -50,17 +50,6 @@ const Profile = () => {
     navigate("/");
   };
 
-  // const handleViewStudents = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:5001/api/students");
-  //     if (response.status === 200) {
-  //       localStorage.setItem("students", JSON.stringify(response.data));
-  //       navigate("/StudentProfiles");
-  //     }
-  //   } catch (error) {
-  //     setMessage(error.response?.data?.message || "Error fetching student profiles");
-  //   }
-  // };
 
   const handlePasswordReset = async () => {
     if (newPassword !== confirmPassword) {
@@ -261,13 +250,6 @@ const Profile = () => {
               </div>
             )}
 
-
-            {/* <button
-              onClick={handleViewStudents}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg transition-all"
-            >
-              👥 View Student Profiles
-            </button> */}
             <button
               onClick={() => setShowPasswordModal(true)}
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-lg transition-all"

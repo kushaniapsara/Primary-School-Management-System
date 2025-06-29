@@ -36,7 +36,7 @@ const Homework = () => {
 
       } catch (error) {
         console.error("Invalid token", error);
-        setUserRole(""); // assuming your token has a 'role' field
+        setUserRole(""); 
       }
     }
   }, []);

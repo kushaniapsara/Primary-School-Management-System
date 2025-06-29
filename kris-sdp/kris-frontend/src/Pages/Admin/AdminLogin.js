@@ -10,16 +10,6 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
 
-// Retrieve userType from localStorage
-//useEffect(() => {
-  //const storedUserType = localStorage.getItem('userType');
-  //if (storedUserType === 'Admin') {
-    //navigate('/AdminDashboard');
-  //}
-//}, [navigate]);
-
-
-
 
   const handleLogin = async () => {
     try {

@@ -1,5 +1,3 @@
-// backend/routes/studyMaterials.js
-
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -10,7 +8,6 @@ router.get('/:category', studyMaterialController.getStudyMaterials);
 
 router.post('/upload/:category', studyMaterialController.uploadStudyMaterial);
 
-//router.get("/study-materials/:category", getMaterialsByCategory); //new
 
 
 
@@ -23,29 +20,7 @@ const getFilesFromFolder = (folderName) => {
   }));
 };
 
-/*  // API to get all files in the 'music' folder
-router.get('/music', (req, res) => {
-  const files = getFilesFromFolder('music');
-  res.json(files); // Send file paths and names
-});
 
-// API to get all files in the 'reading' folder
-router.get('/reading', (req, res) => {
-  const files = getFilesFromFolder('reading');
-  res.json(files);
-});
-
-// API to get all files in the 'videos' folder
-router.get('/videos', (req, res) => {
-  const files = getFilesFromFolder('videos');
-  res.json(files);
-});
-
-// API to get all files in the 'general_knowledge' folder
-router.get('/general-knowledge', (req, res) => {
-  const files = getFilesFromFolder('general_knowledge');
-  res.json(files);
-}); */
 
 router.get("/api/study-materials/:category", async (req, res) => {
   const category = req.params.category;

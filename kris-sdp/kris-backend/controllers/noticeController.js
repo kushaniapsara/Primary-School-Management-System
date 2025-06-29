@@ -27,7 +27,7 @@ exports.addNotice = (req, res) => {
   });
 };
 
-// Update existing homework
+// Update existing notice
 exports.updateNotice = (req, res) => {
   const { id } = req.params;
   const { Heading, Date, Description, Admin_ID } = req.body;
@@ -58,26 +58,3 @@ exports.deleteNotice = (req, res) => {
   });
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*// Get upcoming homework
-exports.getUpcomingNotice = (req, res) => {
-  HomeworkModel.getUpcomingHomework((err, results) => {
-    if (err) {
-      console.error("Error fetching upcoming homework:", err.message);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(results);
-  });
-};
-
-// Get recent homework
-exports.getRecentHomework = (req, res) => {
-  HomeworkModel.getRecentHomework((err, results) => {
-    if (err) {
-      console.error("Error fetching recent homework:", err.message);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(results);
-  });
-};
-*/
